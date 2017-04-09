@@ -3,6 +3,7 @@
 body{
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 /*@media (min-width: 768px) {
@@ -26,7 +27,6 @@ body{
 .tabs-link{
   font-size: 0;
   overflow-x: auto;
-  white-space: nowrap;
 }
 
 .tab-link{
@@ -48,10 +48,9 @@ body{
 
 .indicator{
   height: 100%;
+  width: 1px;
   background-color: green;
-  display: inline-block;
-  width: 3rem;
-  vertical-align: top;
+  transition: transform 0.4s;
 }
 
 .tabs-move{

@@ -10,14 +10,20 @@ var startPosition = null,
   lastTab = tabs.getElementsByClassName('tab').length - 1,
   tabsLink = document.getElementsByClassName('tabs-link')[0],
   tabsLinkArray = document.getElementsByClassName('tab-link'),
+  indicator = document.getElementsByClassName('indicator')[0],
   startTranslate = 0,
   endTranslate = -100 * lastTab,
   currentTranslate = startTranslate,
   sliding = false,
-  distanceToChangeView = 100,
+  distanceToChangeView = 150,
   touchOffset = 50,
   currentTab = 0,
-  changingTab = false;
+  changingTab = false,
+
+  indicatorMargin = 0,
+  prevTab = {},
+  nextTab = {},
+  containerWdith = tabsContainer.clientWidth;
 
 [].forEach.call( tabsLinkArray, function(element, index) {
   element.setAttribute('data-id', index);
@@ -25,10 +31,35 @@ var startPosition = null,
 
 tabsLinkArray[currentTab].classList.add('active');
 
+var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
+
+nextTab = {
+  id: currentTab+1,
+  width: tabsLinkArray[currentTab+1].clientWidth,
+  marginLeft: Math.floor(a.width/2 + a.left + tabsLink.scrollLeft)
+}
+//console.log( nextTab );
+moveIndicator();
+
 tabs.addEventListener('touchend', mouseUp);
 tabs.addEventListener('touchstart', mouseDown);
 tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
+
+function updateIndicatorWidth(){
+  indicator.style.transform =  "scaleX(" + tabsLinkArray[currentTab].clientWidth + ")";
+}
+
+function updateIndicatorPosition(){
+  var currentTabDistance = tabsLinkArray[currentTab].getBoundingClientRect();
+  indicatorMargin = Math.floor(currentTabDistance.width/2 + currentTabDistance.left + tabsLink.scrollLeft);
+  indicator.style.marginLeft = indicatorMargin +'px';
+}
+
+function moveIndicator(){
+  updateIndicatorWidth();
+  updateIndicatorPosition();
+}
 
 function tabLink(event){
   if( changingTab ){ return; }
@@ -41,6 +72,8 @@ function tabLink(event){
   currentTranslate = currentTab*-100;
   setTranslationPercen( currentTranslate );
   tabsLinkArray[currentTab].classList.add('active');
+
+  moveIndicator();
 
   changingTab = false;
 }
@@ -91,7 +124,8 @@ function mouseUp(event) {
   }
   
   tabsLinkArray[currentTab].classList.add('active');
-
+  moveIndicator();
+  
 }
 
 function mouseDown(event) {
@@ -110,9 +144,33 @@ function mouseMove(event){
 
   if ( toRight( event ) ) {
     setTranslation( "calc( " + (event.touches[0].clientX - touchOffset - startPosition) + "px + " + currentTranslate + "% )" );
+    //indicator.style.marginLeft = indicatorMargin + (event.touches[0].clientX - touchOffset - startPosition) +'px';
   } else if ( toLeft( event ) ) {
     setTranslation( "calc( " + currentTranslate + "% - " + (startPosition - event.touches[0].clientX - touchOffset) + "px)" );
+console.log( 'calc ----------------------------------------' );
+    //indicator.style.marginLeft = indicatorMargin + (startPosition - event.touches[0].clientX - touchOffset) +'px';
+    /*nextTab = {
+      id: currentTab+1,
+      width: tabsLinkArray[currentTab+1].clientWidth,
+      marginLeft: Math.floor(a.width/2 + a.left + tabsLink.scrollLeft)
+    }*/
+    var vistaRespectoPantalla = containerWdith / (startPosition - event.touches[0].clientX - touchOffset);
+    console.log('vistaRespectoPantalla', vistaRespectoPantalla);
+    //console.log(vistaRespectoPantalla);
+    var currentTab = {
+      id: 0,
+      width: tabsLinkArray[0].clientWidth,
+      marginLeft: Math.floor(tabsLinkArray[0].clientWidth/2 + tabsLinkArray[0].getBoundingClientRect().left + tabsLink.scrollLeft)
+    }
+    console.log('currentTab', currentTab);
+    var auxWidth = nextTab.marginLeft - currentTab.marginLeft;
+    console.log('auxWidth', auxWidth);
+    var newPos = auxWidth / vistaRespectoPantalla;
+    console.log('newPos', newPos);
+    indicator.style.marginLeft = indicatorMargin + newPos +'px';
+
   }
+
 }
 
 function setTranslation( translation ){
@@ -124,7 +182,7 @@ function setTranslationPercen( translation ){
 }
 
 function setTransition(){
-  tabs.style.transition = "transform 0.2s ease-out";
+  tabs.style.transition = "transform 0.4s ease-out";
 }
 
 function removeTransition(){
