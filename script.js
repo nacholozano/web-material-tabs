@@ -7,16 +7,17 @@ var startPosition = null,
   endPosition = null,
   tabsContainer = document.getElementById('tabs-container'),
   tabs = document.getElementById('tabs-move'),
-  numTabs = tabs.getElementsByClassName('tab').length - 1,
+  lastTab = tabs.getElementsByClassName('tab').length - 1,
   tabsLink = document.getElementsByClassName('tabs-link')[0],
   tabsLinkArray = document.getElementsByClassName('tab-link'),
   startTranslate = 0,
-  endTranslate = -100 * numTabs,
+  endTranslate = -100 * lastTab,
   currentTranslate = startTranslate,
   sliding = false,
   distanceToChangeView = 100,
   touchOffset = 50,
-  currentTab = 0;
+  currentTab = 0,
+  changingTab = false;
 
 [].forEach.call( tabsLinkArray, function(element, index) {
   element.setAttribute('data-id', index);
@@ -30,12 +31,18 @@ tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
 
 function tabLink(event){
+  if( changingTab ){ return; }
+
+  changingTab = true;
+
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   currentTab = event.target.getAttribute('data-id');
   currentTranslate = currentTab*-100;
   setTranslationPercen( currentTranslate );
   tabsLinkArray[currentTab].classList.add('active');
+
+  changingTab = false;
 }
 
 function mouseUp(event) {
@@ -50,10 +57,13 @@ function mouseUp(event) {
     calcTranslation();
     setTranslationPercen( currentTranslate );
     
-    var currentTabLeftDistance = tabsLinkArray[ currentTab ].getBoundingClientRect().left;
+    var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
+      currentTabLeftDistance = currentTabDistance.left;
 
     if( currentTabLeftDistance < 0 ){
       tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
+    }else if ( currentTabDistance.right > tabsLink.clientWidth ){
+      tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
   } else if ( moveToRightView() ) {
@@ -61,10 +71,13 @@ function mouseUp(event) {
     calcTranslation();
     setTranslationPercen( currentTranslate );
 
-    var currentTabRightDistance = tabsLinkArray[ currentTab ].getBoundingClientRect().right;
+    var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect(),
+      currentTabRightDistance = currentTabDistance.right;
 
     if( tabsLink.clientWidth < currentTabRightDistance ){
       tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
+    }else if( currentTabRightDistance < 0 ){
+      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
     
   } else if ( leftLimit() ) {

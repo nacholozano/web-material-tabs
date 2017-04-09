@@ -32,8 +32,9 @@ body{
 .tab-link{
   font-size: 1rem;
   display: inline-block;
-  line-height: 3rem;
+  line-height: 3.5rem;
   padding: 0 1em;
+  cursor: pointer;
 }
 
 .active{
