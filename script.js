@@ -193,7 +193,9 @@ function mouseMove(event){
     
     //var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
+    //var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
+    var auxWidth = previousTab.width;
+
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
     //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft-newPos)/tabsData[currentTab].width +"px)";
@@ -209,9 +211,17 @@ function mouseMove(event){
     
     //var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
+    //var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
+    var auxWidth = tabsData[ currentTab ].width;
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
+
+    /*if ( previousTab.width < tabsData[currentTab].width ){
+      var x = ;
+    }else if( previousTab.width > tabsData[currentTab].width ){
+
+    }*/
+
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
     //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft+newPos)/tabsData[currentTab].width +"px)";
     
