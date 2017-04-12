@@ -43,7 +43,7 @@ body{
 }
 
 .tab-indicator{
-  height: 0.5rem;
+  height: 0.3rem;
 }
 
 .indicator{
@@ -52,11 +52,21 @@ body{
   background-color: green;
   /*transition: transform 0.4s, margin 0.4s;*/
 }
+/*@supports will-change {
+  .indicator{
+    will-change: transform;
+  }
+}*/
 
 .tabs-move{
   font-size: 0px;
   height: calc( 100% - 3.5rem );
 }
+/*@supports (will-change) {
+  .tabs-move{
+    will-change: transform;
+  }
+}*/
 
 .tab{
   display: inline-block;

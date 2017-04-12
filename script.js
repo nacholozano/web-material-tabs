@@ -58,11 +58,15 @@ tabsLinkArray[currentTab].classList.add('active');
 
 var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
 
-nextTab = {
+nextTab = tabsData[currentTab+1];
+
+/*nextTab = {
   id: currentTab+1,
   width: tabsLinkArray[currentTab+1].clientWidth,
   marginLeft: Math.floor(a.width/2 + a.left + tabsLink.scrollLeft)
-}
+}*/
+
+previousTab = null;
 
 moveIndicator();
 
@@ -111,6 +115,9 @@ function mouseUp(event) {
   tabsLinkArray[currentTab].classList.remove('active');
   
   if ( moveToLeftView() ) {
+
+    nextTab = tabsData[ currentTab ];
+
     currentTab--;
     calcTranslation();
     setTranslationPercen( currentTranslate );
@@ -124,7 +131,12 @@ function mouseUp(event) {
       tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
+    previousTab = tabsData[ currentTab - 1 ];
+
   } else if ( moveToRightView() ) {
+
+    previousTab = tabsData[ currentTab ];
+
     currentTab++;
     calcTranslation();
     setTranslationPercen( currentTranslate );
@@ -137,14 +149,18 @@ function mouseUp(event) {
     }else if( currentTabRightDistance < 0 ){
       tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
+
+    nextTab = tabsData[ currentTab+1 ];
     
-  } else if ( leftLimit() ) {
+  } 
+  /*else if ( leftLimit() ) {
     setTranslationPercen( startTranslate );
     
   } else if ( rightLimit() ) {
     setTranslationPercen( endTranslate );
     
-  } else {
+  } */
+  else {
     setTranslationPercen( currentTranslate );
   }
   
@@ -168,32 +184,31 @@ function mouseMove(event){
   removeTransition();
 
   if ( toRight( event ) && !leftLimit() ) {
-    setTranslation( "calc( " + (event.touches[0].clientX - touchOffset - startPosition) + "px + " + currentTranslate + "% )" );
 
-    var vistaRespectoPantalla = containerWdith / (event.touches[0].clientX - touchOffset - startPosition);
+    var touchMove = event.touches[0].clientX - touchOffset - startPosition;
+
+    setTranslation( "calc( " + touchMove + "px + " + currentTranslate + "% )" );
+
+    var vistaRespectoPantalla = containerWdith / touchMove;
     
-    var currentTab = {
-      id: 0,
-      width: tabsLinkArray[0].clientWidth,
-      marginLeft: Math.floor(tabsLinkArray[0].clientWidth/2 + tabsLinkArray[0].getBoundingClientRect().left + tabsLink.scrollLeft)
-    }
+    var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = nextTab.marginLeft - currentTab.marginLeft;
+    //var auxWidth = nextTab.marginLeft - currentTab2.marginLeft;
+    var auxWidth = currentTab2.marginLeft -previousTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = indicatorMargin - newPos +'px';
 
   } else if ( toLeft( event ) && !rightLimit() ) {
-    setTranslation( "calc( " + currentTranslate + "% - " + (startPosition - event.touches[0].clientX - touchOffset) + "px)" );
 
-    var vistaRespectoPantalla = containerWdith / (startPosition - event.touches[0].clientX - touchOffset);
+    var touchMove = startPosition - event.touches[0].clientX - touchOffset;
+
+    setTranslation( "calc( " + currentTranslate + "% - " + touchMove + "px)" );
+
+    var vistaRespectoPantalla = containerWdith / touchMove;
     
-    var currentTab = {
-      id: 0,
-      width: tabsLinkArray[0].clientWidth,
-      marginLeft: Math.floor(tabsLinkArray[0].clientWidth/2 + tabsLinkArray[0].getBoundingClientRect().left + tabsLink.scrollLeft)
-    }
+    var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = nextTab.marginLeft - currentTab.marginLeft;
+    var auxWidth = nextTab.marginLeft - currentTab2.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = indicatorMargin + newPos +'px';
 
@@ -210,8 +225,9 @@ function setTranslationPercen( translation ){
 }
 
 function setTransition(){
-  tabs.style.transition = "transform 0.3s ease-out";
-  indicator.style.transition = "transform 0.3s, margin 0.3s";
+  tabs.style.transition = "transform 0.3s";
+  //indicator.style.transition = "transform 0.3s, margin 0.3s";
+  indicator.style.transition = "transform 0.3s";
 }
 
 function removeTransition(){
