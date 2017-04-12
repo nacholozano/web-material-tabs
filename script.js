@@ -24,7 +24,7 @@ var startPosition = null,
   prevTab = {},
   nextTab = {},
   containerWdith = tabsContainer.clientWidth;
-  currentTranslateIndicator = 0;
+  //currentTranslateIndicator = 0;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ];
@@ -72,7 +72,7 @@ tabsLink.addEventListener('click', tabLink);
 
 function updateIndicatorWidth(){
   indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-  currentTranslateIndicator = tabsData[currentTab].width;
+  //currentTranslateIndicator = tabsData[currentTab].width;
 }
 
 function updateIndicatorPosition(){
