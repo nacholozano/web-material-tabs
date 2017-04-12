@@ -36,7 +36,8 @@ function setData( element, index ){
 
   var tab = {
     id: index,
-    width: element.getBoundingClientRect().width
+    width: element.getBoundingClientRect().width,
+    translate: index * -100,
   };
   tab.center = tab.width/2;
 
@@ -59,12 +60,6 @@ tabsLinkArray[currentTab].classList.add('active');
 var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
 
 nextTab = tabsData[currentTab+1];
-
-/*nextTab = {
-  id: currentTab+1,
-  width: tabsLinkArray[currentTab+1].clientWidth,
-  marginLeft: Math.floor(a.width/2 + a.left + tabsLink.scrollLeft)
-}*/
 
 previousTab = null;
 
@@ -98,8 +93,8 @@ function tabLink(event){
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   currentTab = event.target.getAttribute('data-id');
-  currentTranslate = currentTab*-100;
-  setTranslationPercen( currentTranslate );
+  //currentTranslate = currentTab*-100;
+  setTranslationPercen( tabsData[ currentTab ].translate );
   tabsLinkArray[currentTab].classList.add('active');
 
   moveIndicator();
@@ -119,8 +114,9 @@ function mouseUp(event) {
     nextTab = tabsData[ currentTab ];
 
     currentTab--;
-    calcTranslation();
-    setTranslationPercen( currentTranslate );
+    /*calcTranslation();
+    setTranslationPercen( currentTranslate );*/
+    setTranslationPercen( tabsData[ currentTab ].translate );
     
     var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
       currentTabLeftDistance = currentTabDistance.left;
@@ -138,8 +134,9 @@ function mouseUp(event) {
     previousTab = tabsData[ currentTab ];
 
     currentTab++;
-    calcTranslation();
-    setTranslationPercen( currentTranslate );
+    /*calcTranslation();
+    setTranslationPercen( currentTranslate );*/
+    setTranslationPercen( tabsData[ currentTab ].translate );
 
     var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect(),
       currentTabRightDistance = currentTabDistance.right;
@@ -161,7 +158,8 @@ function mouseUp(event) {
     
   } */
   else {
-    setTranslationPercen( currentTranslate );
+    //setTranslationPercen( currentTranslate );
+    setTranslationPercen( tabsData[ currentTab ].translate );
   }
   
   tabsLinkArray[currentTab].classList.add('active');
@@ -187,14 +185,13 @@ function mouseMove(event){
 
     var touchMove = event.touches[0].clientX - touchOffset - startPosition;
 
-    setTranslation( "calc( " + touchMove + "px + " + currentTranslate + "% )" );
+    setTranslation( "calc( " + touchMove + "px + " + tabsData[ currentTab ].translate + "% )" );
 
     var vistaRespectoPantalla = containerWdith / touchMove;
     
     var currentTab2 = tabsData[ currentTab ];
     
-    //var auxWidth = nextTab.marginLeft - currentTab2.marginLeft;
-    var auxWidth = currentTab2.marginLeft -previousTab.marginLeft;
+    var auxWidth = currentTab2.marginLeft - previousTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = indicatorMargin - newPos +'px';
 
@@ -202,7 +199,7 @@ function mouseMove(event){
 
     var touchMove = startPosition - event.touches[0].clientX - touchOffset;
 
-    setTranslation( "calc( " + currentTranslate + "% - " + touchMove + "px)" );
+    setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
 
     var vistaRespectoPantalla = containerWdith / touchMove;
     
@@ -244,11 +241,11 @@ function toRight(event){
 }
 
 function leftLimit(){
-  return currentTranslate === startTranslate;
+  return tabsData[ currentTab ].translate === startTranslate;
 }
 
 function rightLimit(){
-  return currentTranslate === endTranslate;
+  return tabsData[ currentTab ].translate === endTranslate;
 }
 
 function moveToRightView(){
