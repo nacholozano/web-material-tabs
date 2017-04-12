@@ -20,7 +20,7 @@ var startPosition = null,
   currentTab = 0,
   changingTab = false,
 
-  indicatorMargin = 0,
+  //indicatorMargin = 0,
   prevTab = {},
   nextTab = {},
   containerWdith = tabsContainer.clientWidth;
@@ -76,8 +76,7 @@ function updateIndicatorWidth(){
 }
 
 function updateIndicatorPosition(){
-  indicatorMargin = tabsData[currentTab].marginLeft;
-  indicator.style.marginLeft = indicatorMargin +'px';
+  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
 }
 
 function moveIndicator(){
@@ -189,11 +188,11 @@ function mouseMove(event){
 
     var vistaRespectoPantalla = containerWdith / touchMove;
     
-    var currentTab2 = tabsData[ currentTab ];
+    //var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = currentTab2.marginLeft - previousTab.marginLeft;
+    var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = indicatorMargin - newPos +'px';
+    indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
 
   } else if ( toLeft( event ) && !rightLimit() ) {
 
@@ -203,11 +202,11 @@ function mouseMove(event){
 
     var vistaRespectoPantalla = containerWdith / touchMove;
     
-    var currentTab2 = tabsData[ currentTab ];
+    //var currentTab2 = tabsData[ currentTab ];
     
-    var auxWidth = nextTab.marginLeft - currentTab2.marginLeft;
+    var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = indicatorMargin + newPos +'px';
+    indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
 
   }
 
