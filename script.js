@@ -59,9 +59,9 @@ tabsLinkArray[currentTab].classList.add('active');
 
 var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
 
-nextTab = tabsData[currentTab+1];
+var nextTab = tabsData[currentTab+1];
 
-previousTab = null;
+var previousTab = null;
 
 moveIndicator();
 
@@ -88,20 +88,24 @@ function moveIndicator(){
 }
 
 function tabLink(event){
-  if( changingTab ){ return; }
+  /*if( changingTab ){ return; }
 
-  changingTab = true;
+  changingTab = true;*/
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
-  currentTab = event.target.getAttribute('data-id');
+  currentTab = parseInt(event.target.getAttribute('data-id'));
+
+  nextTab = tabsData[ currentTab + 1 ] || null;
+  previousTab = tabsData[ currentTab - 1 ] || null;
+
   //currentTranslate = currentTab*-100;
   setTranslationPercen( tabsData[ currentTab ].translate );
   tabsLinkArray[currentTab].classList.add('active');
 
   moveIndicator();
 
-  changingTab = false;
+  //changingTab = false;
 }
 
 function mouseUp(event) {
@@ -129,7 +133,7 @@ function mouseUp(event) {
       tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
-    previousTab = tabsData[ currentTab - 1 ];
+    previousTab = tabsData[ currentTab - 1 ] || null;
 
   } else if ( moveToRightView() ) {
 
@@ -149,17 +153,9 @@ function mouseUp(event) {
       tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
 
-    nextTab = tabsData[ currentTab+1 ];
+    nextTab = tabsData[ currentTab+1 ] || null;
     
-  } 
-  /*else if ( leftLimit() ) {
-    setTranslationPercen( startTranslate );
-    
-  } else if ( rightLimit() ) {
-    setTranslationPercen( endTranslate );
-    
-  } */
-  else {
+  } else {
     //setTranslationPercen( currentTranslate );
     setTranslationPercen( tabsData[ currentTab ].translate );
   }
