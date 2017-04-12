@@ -160,16 +160,15 @@ function mouseDown(event) {
 
 function mouseMove(event){
   
-  if (!sliding) {
+  if (!sliding ) {
     return;
   }
   endPosition = event.touches[0].clientX;
 
   removeTransition();
 
-  if ( toRight( event ) ) {
+  if ( toRight( event ) && !leftLimit() ) {
     setTranslation( "calc( " + (event.touches[0].clientX - touchOffset - startPosition) + "px + " + currentTranslate + "% )" );
-    //indicator.style.marginLeft = indicatorMargin + (event.touches[0].clientX - touchOffset - startPosition) +'px';
 
     var vistaRespectoPantalla = containerWdith / (event.touches[0].clientX - touchOffset - startPosition);
     
@@ -183,7 +182,7 @@ function mouseMove(event){
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = indicatorMargin - newPos +'px';
 
-  } else if ( toLeft( event ) ) {
+  } else if ( toLeft( event ) && !rightLimit() ) {
     setTranslation( "calc( " + currentTranslate + "% - " + (startPosition - event.touches[0].clientX - touchOffset) + "px)" );
 
     var vistaRespectoPantalla = containerWdith / (startPosition - event.touches[0].clientX - touchOffset);
@@ -197,13 +196,6 @@ function mouseMove(event){
     var auxWidth = nextTab.marginLeft - currentTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
     indicator.style.marginLeft = indicatorMargin + newPos +'px';
-
-    //indicator.style.transform =  "scaleX(" + Math.floor(tabsLinkArray[0].clientWidth - newPos) + ")";
-    //console.log( tabsLinkArray[0].clientWidth - Math.floor(newPos) );
-    /*var repectoAnchuras = currentTab.width / nextTab.width;
-    indicator.style.transform =  "scaleX(" + currentTranslateIndicator - Math.floor(repectoAnchuras) + ")";
-    currentTranslateIndicator = currentTranslateIndicator - Math.floor(repectoAnchuras);
-    console.log(currentTranslateIndicator);*/
 
   }
 
