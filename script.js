@@ -26,9 +26,26 @@ var startPosition = null,
   containerWdith = tabsContainer.clientWidth;
   currentTranslateIndicator = 0;
 
-[].forEach.call( tabsLinkArray, function(element, index) {
+// Obtener datos de las pestañas  
+var tabsData = [ ],
+  marginLeftAux = 0;
+
+[].forEach.call( tabsLinkArray, setData);
+
+function setData( element, index ){
   element.setAttribute('data-id', index);
-} );
+
+  var tab = {
+    id: index,
+    width: element.getBoundingClientRect().width
+  };
+  tab.center = tab.width/2;
+  tab.marginLeft = marginLeftAux + tab.center;
+
+  tabsData.push(tab);
+
+  marginLeftAux += tab.width;
+}
 
 tabsLinkArray[currentTab].classList.add('active');
 
@@ -39,7 +56,7 @@ nextTab = {
   width: tabsLinkArray[currentTab+1].clientWidth,
   marginLeft: Math.floor(a.width/2 + a.left + tabsLink.scrollLeft)
 }
-//console.log( nextTab );
+
 moveIndicator();
 
 tabs.addEventListener('touchend', mouseUp);
@@ -48,13 +65,12 @@ tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
 
 function updateIndicatorWidth(){
-  indicator.style.transform =  "scaleX(" + tabsLinkArray[currentTab].clientWidth + ")";
-  currentTranslateIndicator = tabsLinkArray[currentTab].clientWidth;
+  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+  currentTranslateIndicator = tabsData[currentTab].width;
 }
 
 function updateIndicatorPosition(){
-  var currentTabDistance = tabsLinkArray[currentTab].getBoundingClientRect();
-  indicatorMargin = Math.floor(currentTabDistance.width/2 + currentTabDistance.left + tabsLink.scrollLeft);
+  indicatorMargin = tabsData[currentTab].marginLeft;
   indicator.style.marginLeft = indicatorMargin +'px';
 }
 
