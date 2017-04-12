@@ -50,7 +50,7 @@ body{
   height: 100%;
   width: 1px;
   background-color: green;
-  transform-origin: 0 0;
+  /*transform-origin: 0 0;*/
   display: inline-block;
   /*transition: transform 0.4s, margin 0.4s;*/
 }

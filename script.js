@@ -50,8 +50,7 @@ function setData( element, index ){
     tab.right = tab.width;
   }
 
-  tab.marginLeft = tab.left;
-  //+ tab.center;
+  tab.marginLeft = tab.left + tab.center;
 
   tabsData.push(tab);
 
@@ -84,10 +83,11 @@ function updateIndicatorPosition(){
 function moveIndicator(){
   /*updateIndicatorWidth();
   updateIndicatorPosition();*/
-  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
+  //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
+  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
   //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
   //8indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
-  //indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
+  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
 
 }
 
@@ -96,7 +96,7 @@ function tabLink(event){
 
   changingTab = true;*/
 
-  //setTransition();
+  setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   currentTab = parseInt(event.target.getAttribute('data-id'));
 
@@ -116,7 +116,7 @@ function mouseUp(event) {
   
   sliding = false;
   
-  //setTransition();
+  setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   
   if ( moveToLeftView() ) {
@@ -195,8 +195,9 @@ function mouseMove(event){
     
     var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    //indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
-    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft-newPos)/tabsData[currentTab].width +"px)";
+    indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
+    //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft-newPos)/tabsData[currentTab].width +"px)";
+    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
 
@@ -210,8 +211,10 @@ function mouseMove(event){
     
     var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    //indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
-    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft+newPos)/tabsData[currentTab].width +"px)";
+    indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
+    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+    //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft+newPos)/tabsData[currentTab].width +"px)";
+    
 
   }
 
