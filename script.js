@@ -71,17 +71,20 @@ tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
 
 function updateIndicatorWidth(){
-  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+  
   //currentTranslateIndicator = tabsData[currentTab].width;
 }
 
 function updateIndicatorPosition(){
-  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
+//  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
 }
 
 function moveIndicator(){
-  updateIndicatorWidth();
-  updateIndicatorPosition();
+  /*updateIndicatorWidth();
+  updateIndicatorPosition();*/
+  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
+  //indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
+
 }
 
 function tabLink(event){
@@ -192,7 +195,8 @@ function mouseMove(event){
     
     var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
+    //indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
+    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft-newPos)/tabsData[currentTab].width +"px)";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
 
@@ -206,7 +210,8 @@ function mouseMove(event){
     
     var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
     var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
+    //indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
+    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft+newPos)/tabsData[currentTab].width +"px)";
 
   }
 
@@ -259,9 +264,9 @@ function moveToLeftView(){
     !leftLimit();
 }
 
-function calcTranslation(){
+/*function calcTranslation(){
   currentTranslate = currentTab * -100;
-}
+}*/
 
 }
 
