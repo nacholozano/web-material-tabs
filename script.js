@@ -27,8 +27,7 @@ var startPosition = null,
   currentTranslateIndicator = 0;
 
 // Obtener datos de las pestañas  
-var tabsData = [ ],
-  marginLeftAux = 0;
+var tabsData = [ ];
 
 [].forEach.call( tabsLinkArray, setData);
 
@@ -40,11 +39,19 @@ function setData( element, index ){
     width: element.getBoundingClientRect().width
   };
   tab.center = tab.width/2;
-  tab.marginLeft = marginLeftAux + tab.center;
+
+  if( index ){
+    tab.left = tabsData[index-1].right;
+    tab.right = tab.left + tab.width;
+  }else{
+    tab.left = 0;
+    tab.right = tab.width;
+  }
+
+  tab.marginLeft = tab.left + tab.center;
 
   tabsData.push(tab);
 
-  marginLeftAux += tab.width;
 }
 
 tabsLinkArray[currentTab].classList.add('active');
