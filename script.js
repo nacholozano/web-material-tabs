@@ -210,11 +210,13 @@ function setTranslationPercen( translation ){
 }
 
 function setTransition(){
-  tabs.style.transition = "transform 0.4s ease-out";
+  tabs.style.transition = "transform 0.3s ease-out";
+  indicator.style.transition = "transform 0.3s, margin 0.3s";
 }
 
 function removeTransition(){
   tabs.style.transition = "";
+  indicator.style.transition = "";
 }
 
 function toLeft(event){

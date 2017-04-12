@@ -50,7 +50,7 @@ body{
   height: 100%;
   width: 1px;
   background-color: green;
-  transition: transform 0.4s;
+  /*transition: transform 0.4s, margin 0.4s;*/
 }
 
 .tabs-move{
