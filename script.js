@@ -11,6 +11,7 @@ var startPosition = null,
   tabsLink = document.getElementsByClassName('tabs-link')[0],
   tabsLinkArray = document.getElementsByClassName('tab-link'),
   indicator = document.getElementsByClassName('indicator')[0],
+  indicatorHelper = document.getElementsByClassName('indicator-helper')[0],
   startTranslate = 0,
   endTranslate = -100 * lastTab,
   currentTranslate = startTranslate,
@@ -49,7 +50,8 @@ function setData( element, index ){
     tab.right = tab.width;
   }
 
-  tab.marginLeft = tab.left + tab.center;
+  tab.marginLeft = tab.left;
+  //+ tab.center;
 
   tabsData.push(tab);
 
@@ -83,6 +85,8 @@ function moveIndicator(){
   /*updateIndicatorWidth();
   updateIndicatorPosition();*/
   indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
+  //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+  //8indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
   //indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
 
 }
@@ -92,7 +96,7 @@ function tabLink(event){
 
   changingTab = true;*/
 
-  setTransition();
+  //setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   currentTab = parseInt(event.target.getAttribute('data-id'));
 
@@ -112,7 +116,7 @@ function mouseUp(event) {
   
   sliding = false;
   
-  setTransition();
+  //setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   
   if ( moveToLeftView() ) {
