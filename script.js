@@ -25,7 +25,7 @@ var startPosition = null,
   nextTab = {},
   containerWdith = tabsContainer.clientWidth;
 
-console.log( indicatorHelper );
+//console.log( indicatorHelper );
 
 //var x = null;
 
@@ -51,8 +51,17 @@ function setData( element, index ){
     tab.left = 0;
     tab.right = tab.width;
   }
-
+  
+  /*if( tabsData[index + 1] ){
+    tab.nextTabScreenRatio = ((tabsData[index+1].marginLeft + tabsData[index+1].center) - (tabsData[index].marginLeft + tabsData[index].center)) / containerWdith;
+  }*/
+  
   tab.marginLeft = tab.left + tab.center;
+
+  if( tabsData[index - 1] ){
+//    tab.previousTabScreenRatio = ((tab.marginLeft + tab.center) - (tabsData[index-1].marginLeft + tabsData[index-1].center) ) / containerWdith
+    tab.previousTabScreenRatio = ((tab.marginLeft) - (tabsData[index-1].marginLeft) ) / containerWdith
+  }
 
   tabsData.push(tab);
 
@@ -64,7 +73,7 @@ indicatorHelper.addEventListener('transitionend', function(event){
   }*/
 });
 
-tabsLinkArray[currentTab].classList.add('active');
+//tabsLinkArray[currentTab].classList.add('active');
 
 var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
 
@@ -171,12 +180,6 @@ function mouseDown(event) {
 
 function mouseMove(event){
   
-  /*if (!sliding ) {
-    return;
-  }*/
-
-  //event.preventDefault();
-
   endPosition = event.touches[0].clientX;
 
   removeTransition();
@@ -193,20 +196,26 @@ function mouseMove(event){
     var newPos = previousTab.width / vistaRespectoPantalla;
     
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-    indicatorHelper.style.transform = "translateX("+Math.floor(tabsData[currentTab].marginLeft - newPos)+"px)";
+    //indicatorHelper.style.transform = "translateX("+Math.floor(tabsData[currentTab].marginLeft - newPos)+"px)";
+    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
     event.preventDefault();
 
     var touchMove = startPosition - event.touches[0].clientX - touchOffset;
+
+    //console.log( touchMove );
+
     setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
     var vistaRespectoPantalla = containerWdith / touchMove;
 
     var newPos = tabsData[ currentTab ].width / vistaRespectoPantalla;
 
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + newPos)+"px)";
-    
+    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab+1 ].previousTabScreenRatio) )+"px)";
+
+    /*console.log( tabsData[ currentTab ].nextTabScreenRatio );
+    console.log( tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab ].nextTabScreenRatio) );*/
   }
 
 }
