@@ -60,7 +60,8 @@ function setData( element, index ){
 
   if( tabsData[index - 1] ){
 //    tab.previousTabScreenRatio = ((tab.marginLeft + tab.center) - (tabsData[index-1].marginLeft + tabsData[index-1].center) ) / containerWdith
-    tab.previousTabScreenRatio = ((tab.marginLeft) - (tabsData[index-1].marginLeft) ) / containerWdith
+    tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / containerWdith;
+    tab.widthRatio = (tab.width / tabsData[index-1].width );
   }
 
   tabsData.push(tab);
@@ -99,7 +100,10 @@ function tabLink(event){
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
-  currentTab = parseInt(event.target.getAttribute('data-id'));
+  //oldTab = currentTab;
+  currentTab = parseInt(event.target.getAttribute('data-id'))
+
+  //putTabInScreen( oldTab < currentTab ? 'left' : 'right' );
 
   nextTab = tabsData[ currentTab + 1 ] || null;
   previousTab = tabsData[ currentTab - 1 ] || null;
@@ -108,7 +112,7 @@ function tabLink(event){
   tabsLinkArray[currentTab].classList.add('active');
 
   moveIndicator();
-
+  
 }
 
 //var x = 5;
@@ -132,14 +136,7 @@ function mouseUp(event) {
     currentTab--;
     setTranslationPercen( tabsData[ currentTab ].translate );
     
-    var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
-      currentTabLeftDistance = currentTabDistance.left;
-
-    if( currentTabLeftDistance < 0 ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
-    }else if ( currentTabDistance.right > tabsLink.clientWidth ){
-      tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
-    }
+    putTabInScreenLeft();
 
     previousTab = tabsData[ currentTab - 1 ] || null;
 
@@ -150,14 +147,7 @@ function mouseUp(event) {
     currentTab++;
     setTranslationPercen( tabsData[ currentTab ].translate );
 
-    var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect(),
-      currentTabRightDistance = currentTabDistance.right;
-
-    if( tabsLink.clientWidth < currentTabRightDistance ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
-    }else if( currentTabRightDistance < 0 ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
-    }
+    putTabInScreenRight();
 
     nextTab = tabsData[ currentTab+1 ] || null;
     
@@ -168,6 +158,32 @@ function mouseUp(event) {
   tabsLinkArray[currentTab].classList.add('active');
   moveIndicator();
   
+}
+
+function putTabInScreenLeft( x ){
+  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
+      currentTabLeftDistance = currentTabDistance.left,
+      currentTabRightDistance = currentTabDistance.right;
+  
+    if( currentTabLeftDistance < 0 ){
+      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
+    }else if ( currentTabDistance.right > tabsLink.clientWidth ){
+      tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
+    }
+
+}
+
+function putTabInScreenRight( x ){
+  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
+      currentTabLeftDistance = currentTabDistance.left,
+      currentTabRightDistance = currentTabDistance.right;
+  
+    if( tabsLink.clientWidth < currentTabRightDistance ){
+      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
+    }else if( currentTabRightDistance < 0 ){
+      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
+    }
+
 }
 
 function mouseDown(event) {
@@ -196,15 +212,12 @@ function mouseMove(event){
     var newPos = previousTab.width / vistaRespectoPantalla;
     
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-    //indicatorHelper.style.transform = "translateX("+Math.floor(tabsData[currentTab].marginLeft - newPos)+"px)";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
     event.preventDefault();
 
     var touchMove = startPosition - event.touches[0].clientX - touchOffset;
-
-    //console.log( touchMove );
 
     setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
     var vistaRespectoPantalla = containerWdith / touchMove;
@@ -214,8 +227,6 @@ function mouseMove(event){
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab+1 ].previousTabScreenRatio) )+"px)";
 
-    /*console.log( tabsData[ currentTab ].nextTabScreenRatio );
-    console.log( tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab ].nextTabScreenRatio) );*/
   }
 
 }
