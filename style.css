@@ -27,6 +27,7 @@ body{
 .tabs-link{
   font-size: 0;
   overflow-x: auto;
+  /*width: 100vw;*/
 }
 
 .tab-link{

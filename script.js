@@ -21,6 +21,8 @@ var startPosition = null,
   currentTab = 0,
   changingTab = false,
 
+  tabWidth = 100 / tabsLinkArray.length;
+
   prevTab = {},
   nextTab = {},
   containerWdith = tabsContainer.clientWidth;
@@ -32,9 +34,12 @@ var startPosition = null,
 // Obtener datos de las pestañas  
 var tabsData = [ ];
 
+var speed = 5;
+
 [].forEach.call( tabsLinkArray, setData);
 
 function setData( element, index ){
+  //element.style.width = tabWidth+'%';
   element.setAttribute('data-id', index);
 
   var tab = {
@@ -67,6 +72,8 @@ function setData( element, index ){
   tabsData.push(tab);
 
 }
+
+console.log(tabsData);
 
 indicatorHelper.addEventListener('transitionend', function(event){
   /*if( animatingIndicatorHelper ){
@@ -102,13 +109,6 @@ function tabLink(event){
   tabsLinkArray[currentTab].classList.remove('active');
   //oldTab = currentTab;
   currentTab = parseInt(event.target.getAttribute('data-id'))
-
-  /*if ( oldTab < currentTab ){
-    putTabInScreenLeft();
-  }else if( currentTab > oldTab ){
-    putTabInScreenRight();
-  }*/
-  //putTabInScreen( oldTab < currentTab ? 'left' : 'right' );
 
   nextTab = tabsData[ currentTab + 1 ] || null;
   previousTab = tabsData[ currentTab - 1 ] || null;
@@ -165,15 +165,37 @@ function mouseUp(event) {
   
 }
 
+function avanzar(){
+  tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
+  if( tabsLinkArray[ currentTab ].getBoundingClientRect().left < 0 ){
+    requestAnimationFrame( avanzar );
+  }
+}
+/*function avanzar2(){
+  tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
+  if( tabsLinkArray[ currentTab ].getBoundingClientRect().right > tabsLink.clientWidth ){
+    requestAnimationFrame( avanzar );
+  }
+}*/
+
+function avanzar3(){
+  tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
+  if( tabsLink.clientWidth < tabsLinkArray[ currentTab ].getBoundingClientRect().right ){
+    requestAnimationFrame( avanzar3 );
+  }
+}
+
 function putTabInScreenLeft( x ){
   var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
       currentTabLeftDistance = currentTabDistance.left,
       currentTabRightDistance = currentTabDistance.right;
   
     if( currentTabLeftDistance < 0 ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
+      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
+      requestAnimationFrame(avanzar);
     }else if ( currentTabDistance.right > tabsLink.clientWidth ){
-      tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
+      //requestAnimationFrame(avanzar2);
+      //tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
 }
@@ -184,9 +206,10 @@ function putTabInScreenRight( x ){
       currentTabRightDistance = currentTabDistance.right;
   
     if( tabsLink.clientWidth < currentTabRightDistance ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
+      requestAnimationFrame(avanzar3);
+      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
     }else if( currentTabRightDistance < 0 ){
-      tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
+      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
 
 }
