@@ -21,11 +21,13 @@ var startPosition = null,
   currentTab = 0,
   changingTab = false,
 
-  //indicatorMargin = 0,
   prevTab = {},
   nextTab = {},
   containerWdith = tabsContainer.clientWidth;
-  //currentTranslateIndicator = 0;
+
+console.log( indicatorHelper );
+
+var x = null;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ];
@@ -50,7 +52,8 @@ function setData( element, index ){
     tab.right = tab.width;
   }
 
-  tab.marginLeft = tab.left + tab.center;
+  tab.marginLeft = tab.left ;
+  //+ tab.center;
 
   tabsData.push(tab);
 
@@ -71,30 +74,13 @@ tabs.addEventListener('touchstart', mouseDown);
 tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
 
-function updateIndicatorWidth(){
-  
-  //currentTranslateIndicator = tabsData[currentTab].width;
-}
-
-function updateIndicatorPosition(){
-//  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
-}
-
 function moveIndicator(){
-  /*updateIndicatorWidth();
-  updateIndicatorPosition();*/
-  //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
   indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-  //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-  //8indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft/tabsData[currentTab].width +"px)";
-  indicator.style.marginLeft = tabsData[currentTab].marginLeft +'px';
-
+  indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft +"px)";
 }
 
 function tabLink(event){
-  /*if( changingTab ){ return; }
-
-  changingTab = true;*/
+  if( sliding ){ return; }
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
@@ -103,13 +89,11 @@ function tabLink(event){
   nextTab = tabsData[ currentTab + 1 ] || null;
   previousTab = tabsData[ currentTab - 1 ] || null;
 
-  //currentTranslate = currentTab*-100;
   setTranslationPercen( tabsData[ currentTab ].translate );
   tabsLinkArray[currentTab].classList.add('active');
 
   moveIndicator();
 
-  //changingTab = false;
 }
 
 function mouseUp(event) {
@@ -124,8 +108,6 @@ function mouseUp(event) {
     nextTab = tabsData[ currentTab ];
 
     currentTab--;
-    /*calcTranslation();
-    setTranslationPercen( currentTranslate );*/
     setTranslationPercen( tabsData[ currentTab ].translate );
     
     var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
@@ -139,13 +121,13 @@ function mouseUp(event) {
 
     previousTab = tabsData[ currentTab - 1 ] || null;
 
+
+
   } else if ( moveToRightView() ) {
 
     previousTab = tabsData[ currentTab ];
 
     currentTab++;
-    /*calcTranslation();
-    setTranslationPercen( currentTranslate );*/
     setTranslationPercen( tabsData[ currentTab ].translate );
 
     var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect(),
@@ -160,7 +142,6 @@ function mouseUp(event) {
     nextTab = tabsData[ currentTab+1 ] || null;
     
   } else {
-    //setTranslationPercen( currentTranslate );
     setTranslationPercen( tabsData[ currentTab ].translate );
   }
   
@@ -179,6 +160,9 @@ function mouseMove(event){
   if (!sliding ) {
     return;
   }
+
+  event.preventDefault();
+
   endPosition = event.touches[0].clientX;
 
   removeTransition();
@@ -191,41 +175,27 @@ function mouseMove(event){
 
     var vistaRespectoPantalla = containerWdith / touchMove;
     
-    //var currentTab2 = tabsData[ currentTab ];
+    var newPos = previousTab.width / vistaRespectoPantalla;
     
-    //var auxWidth = tabsData[ currentTab ].marginLeft - previousTab.marginLeft;
-    var auxWidth = previousTab.width;
-
-    var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = tabsData[currentTab].marginLeft - newPos +'px';
-    //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft-newPos)/tabsData[currentTab].width +"px)";
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+    indicatorHelper.style.transform = "translateX("+Math.floor(tabsData[currentTab].marginLeft - newPos)+"px)";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
 
     var touchMove = startPosition - event.touches[0].clientX - touchOffset;
-
     setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
-
     var vistaRespectoPantalla = containerWdith / touchMove;
-    
-    //var currentTab2 = tabsData[ currentTab ];
-    
-    //var auxWidth = nextTab.marginLeft - tabsData[ currentTab ].marginLeft;
-    var auxWidth = tabsData[ currentTab ].width;
-    var newPos = auxWidth / vistaRespectoPantalla;
-    indicator.style.marginLeft = tabsData[currentTab].marginLeft + newPos +'px';
+
+    var newPos = tabsData[ currentTab ].width / vistaRespectoPantalla;
 
     /*if ( previousTab.width < tabsData[currentTab].width ){
-      var x = ;
+      //var x = ;
     }else if( previousTab.width > tabsData[currentTab].width ){
 
     }*/
-
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-    //indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ") translateX("+ (tabsData[currentTab].marginLeft+newPos)/tabsData[currentTab].width +"px)";
+    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + newPos)+"px)";
     
-
   }
 
 }
@@ -240,7 +210,6 @@ function setTranslationPercen( translation ){
 
 function setTransition(){
   tabs.style.transition = "transform 0.3s";
-  //indicator.style.transition = "transform 0.3s, margin 0.3s";
   indicator.style.transition = "transform 0.3s";
 }
 
@@ -276,10 +245,6 @@ function moveToLeftView(){
     endPosition - startPosition > distanceToChangeView &&
     !leftLimit();
 }
-
-/*function calcTranslation(){
-  currentTranslate = currentTab * -100;
-}*/
 
 }
 
