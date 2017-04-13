@@ -120,6 +120,16 @@ function tabLink(event){
       requestAnimationFrame(avanzar3);
     }
 
+  if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
+    requestAnimationFrame(function(){
+      avanzar( currentTab-1 );
+    });
+  }else if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
+    requestAnimationFrame(function(){
+      avanzar3( currentTab+1 );
+    });
+  }
+
   nextTab = tabsData[ currentTab + 1 ] || null;
   previousTab = tabsData[ currentTab - 1 ] || null;
 
@@ -175,10 +185,12 @@ function mouseUp(event) {
   
 }
 
-function avanzar(){
+function avanzar( currentTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
   if( tabsLinkArray[ currentTab ].getBoundingClientRect().left < 0 ){
-    requestAnimationFrame( avanzar );
+    requestAnimationFrame( function(){
+      avanzar(currentTab);
+    } );
   }
 }
 function avanzar2(){
@@ -189,10 +201,12 @@ function avanzar2(){
   }
 }
 
-function avanzar3(){
+function avanzar3( currentTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
   if( tabsLink.clientWidth < tabsLinkArray[ currentTab ].getBoundingClientRect().right ){
-    requestAnimationFrame( avanzar3 );
+    requestAnimationFrame( function(){
+      avanzar3( currentTab );
+    } );
   }
 }
 
@@ -210,10 +224,20 @@ function putTabInScreenLeft( x ){
   
     if( currentTabLeftDistance < 0 ){
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
-      requestAnimationFrame(avanzar);
+      requestAnimationFrame(function(){
+        avanzar( currentTab );
+      });
     }else if ( currentTabDistance.right > tabsLink.clientWidth ){
-      requestAnimationFrame(avanzar2);
+      requestAnimationFrame(function(){
+        avanzar2( currentTab );
+      });
       //tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
+    }
+
+    if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
+      requestAnimationFrame(function(){
+        avanzar( currentTab-1 );
+      });
     }
 
 }
@@ -224,11 +248,21 @@ function putTabInScreenRight( x ){
       currentTabRightDistance = currentTabDistance.right;
   
     if( tabsLink.clientWidth < currentTabRightDistance ){
-      requestAnimationFrame(avanzar3);
+      requestAnimationFrame(function(){
+        avanzar3( currentTab );
+      });
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
     }else if( currentTabLeftDistance < 0 ){
-      requestAnimationFrame(avanzar4);
+      requestAnimationFrame(function(){
+        avanzar4( currentTab );
+      });
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
+    }
+
+    if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
+      requestAnimationFrame(function(){
+        avanzar3( currentTab+1 );
+      });
     }
 
 }
