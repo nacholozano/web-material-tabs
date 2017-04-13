@@ -4,6 +4,7 @@ body{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: "Arial";
 }
 
 /*@media (min-width: 768px) {
@@ -28,6 +29,8 @@ body{
   font-size: 0;
   overflow-x: auto;
   /*width: 100vw;*/
+  color: #3a3a3a;
+  font-weight: 300;
 }
 
 .tab-link{
@@ -58,7 +61,9 @@ body{
   /*opacity: 1;*/
 }
 .active{
-  color: green;
+  /*color: green;*/
+  color: #4CAF50;
+  font-weight: 600;
 }
 
 .tab-indicator{
@@ -68,7 +73,7 @@ body{
 .indicator{
   height: 100%;
   width: 1px;
-  background-color: green;
+  background-color: #4CAF50;
   /*transform-origin: 0 0;*/
   display: inline-block;
   /*transition: transform 0.4s, margin 0.4s;*/
@@ -109,6 +114,7 @@ body{
 /*}*/
 
 .tab:nth-child(odd){
-  background-color: #add8ff;
+  background-color: #4CAF50;
+  color: white;
 }
 
