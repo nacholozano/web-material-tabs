@@ -181,6 +181,7 @@ function mouseMove(event){
   removeTransition();
 
   if ( toRight( event ) && !leftLimit() ) {
+    event.preventDefault();
 
     var touchMove = event.touches[0].clientX - touchOffset - startPosition;
 
@@ -194,6 +195,7 @@ function mouseMove(event){
     indicatorHelper.style.transform = "translateX("+Math.floor(tabsData[currentTab].marginLeft - newPos)+"px)";
 
   } else if ( toLeft( event ) && !rightLimit() ) {
+    event.preventDefault();
 
     var touchMove = startPosition - event.touches[0].clientX - touchOffset;
     setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
