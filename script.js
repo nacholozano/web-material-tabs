@@ -108,7 +108,17 @@ function tabLink(event){
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   //oldTab = currentTab;
-  currentTab = parseInt(event.target.getAttribute('data-id'))
+  currentTab = parseInt(event.target.getAttribute('data-id'));
+
+  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
+      currentTabLeftDistance = currentTabDistance.left,
+      currentTabRightDistance = currentTabDistance.right;
+  
+    if( currentTabLeftDistance < 0 ){
+      requestAnimationFrame(avanzar);
+    }else if( tabsLink.clientWidth < currentTabRightDistance ){
+      requestAnimationFrame(avanzar3);
+    }
 
   nextTab = tabsData[ currentTab + 1 ] || null;
   previousTab = tabsData[ currentTab - 1 ] || null;
