@@ -52,8 +52,7 @@ function setData( element, index ){
     tab.right = tab.width;
   }
 
-  tab.marginLeft = tab.left ;
-  //+ tab.center;
+  tab.marginLeft = tab.left + tab.center;
 
   tabsData.push(tab);
 
