@@ -34,7 +34,7 @@ var startPosition = null,
 // Obtener datos de las pestañas  
 var tabsData = [ ];
 
-var speed = 5;
+var speed = 10;
 
 [].forEach.call( tabsLinkArray, setData);
 
@@ -181,17 +181,25 @@ function avanzar(){
     requestAnimationFrame( avanzar );
   }
 }
-/*function avanzar2(){
+function avanzar2(){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
-  if( tabsLinkArray[ currentTab ].getBoundingClientRect().right > tabsLink.clientWidth ){
-    requestAnimationFrame( avanzar );
+  var b = tabsLinkArray[ currentTab ].getBoundingClientRect().right;
+  if( b  > tabsLink.clientWidth ){
+    requestAnimationFrame( avanzar2 );
   }
-}*/
+}
 
 function avanzar3(){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
   if( tabsLink.clientWidth < tabsLinkArray[ currentTab ].getBoundingClientRect().right ){
     requestAnimationFrame( avanzar3 );
+  }
+}
+
+function avanzar4(){
+  tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
+  if( tabsLinkArray[ currentTab ].getBoundingClientRect().left < 0 ){
+    requestAnimationFrame( avanzar4 );
   }
 }
 
@@ -204,7 +212,7 @@ function putTabInScreenLeft( x ){
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
       requestAnimationFrame(avanzar);
     }else if ( currentTabDistance.right > tabsLink.clientWidth ){
-      //requestAnimationFrame(avanzar2);
+      requestAnimationFrame(avanzar2);
       //tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
@@ -218,7 +226,8 @@ function putTabInScreenRight( x ){
     if( tabsLink.clientWidth < currentTabRightDistance ){
       requestAnimationFrame(avanzar3);
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
-    }else if( currentTabRightDistance < 0 ){
+    }else if( currentTabLeftDistance < 0 ){
+      requestAnimationFrame(avanzar4);
       //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
 
