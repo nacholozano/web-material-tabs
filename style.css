@@ -37,6 +37,7 @@ body{
   cursor: pointer;
   /*transition: background-color 0.2s;*/
   position: relative;
+  transition: color 0.3s;
 }
 
 .tab-link:before{
@@ -53,7 +54,10 @@ body{
 }
 
 .active.tab-link:before{
-  opacity: 1;
+  /*opacity: 1;*/
+}
+.active{
+  color: green;
 }
 
 .tab-indicator{

@@ -96,13 +96,18 @@ function moveIndicator(){
 
 function tabLink(event){
 
-  if( sliding || event.target.className !== 'tab-link' ){ return; }
+  if( sliding || event.target.className !== 'tab-link' || currentTab === parseInt(event.target.getAttribute('data-id')) ){ return; }
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   //oldTab = currentTab;
   currentTab = parseInt(event.target.getAttribute('data-id'))
 
+  /*if ( oldTab < currentTab ){
+    putTabInScreenLeft();
+  }else if( currentTab > oldTab ){
+    putTabInScreenRight();
+  }*/
   //putTabInScreen( oldTab < currentTab ? 'left' : 'right' );
 
   nextTab = tabsData[ currentTab + 1 ] || null;
