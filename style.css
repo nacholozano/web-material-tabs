@@ -4,6 +4,7 @@ body{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: "Arial";
 }
 
 /*@media (min-width: 768px) {
@@ -27,6 +28,9 @@ body{
 .tabs-link{
   font-size: 0;
   overflow-x: auto;
+  /*width: 100vw;*/
+  color: #3a3a3a;
+  font-weight: 300;
 }
 
 .tab-link{
@@ -35,28 +39,67 @@ body{
   line-height: 3.5rem;
   padding: 0 1em;
   cursor: pointer;
-  transition: background-color 0.2s;
+  /*transition: background-color 0.2s;*/
+  position: relative;
+  transition: color 0.3s;
 }
 
-.active{
+.tab-link:before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   background-color: red;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.active.tab-link:before{
+  /*opacity: 1;*/
+}
+.active{
+  /*color: green;*/
+  color: #4CAF50;
+  font-weight: 600;
 }
 
 .tab-indicator{
-  height: 0.5rem;
+  height: 0.2rem;
 }
 
 .indicator{
   height: 100%;
   width: 1px;
-  background-color: green;
-  transition: transform 0.4s;
+  background-color: #4CAF50;
+  /*transform-origin: 0 0;*/
+  display: inline-block;
+  /*transition: transform 0.4s, margin 0.4s;*/
 }
+.indicator-helper{
+  transform-origin: 0 0;
+  width: 1px;
+  height: 100%;
+  display: inline-block;
+  /*margin-left: -1px;*/
+}
+/*@supports will-change {
+  .indicator{
+    will-change: transform;
+  }
+}*/
 
 .tabs-move{
   font-size: 0px;
   height: calc( 100% - 3.5rem );
 }
+/*@supports (will-change) {
+  .tabs-move{
+    will-change: transform;
+  }
+}*/
 
 .tab{
   display: inline-block;
@@ -71,6 +114,7 @@ body{
 /*}*/
 
 .tab:nth-child(odd){
-  background-color: #add8ff;
+  background-color: #4CAF50;
+  color: white;
 }
 
