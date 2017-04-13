@@ -17,7 +17,7 @@ var startPosition = null,
   currentTranslate = startTranslate,
   sliding = false,
   distanceToChangeView = 150,
-  touchOffset = 50,
+  touchOffset = 30,
   currentTab = 0,
   changingTab = false,
 
@@ -27,7 +27,7 @@ var startPosition = null,
 
 console.log( indicatorHelper );
 
-var x = null;
+//var x = null;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ];
@@ -102,10 +102,15 @@ function tabLink(event){
 
 }
 
+//var x = 5;
+
 function mouseUp(event) {
   
-  sliding = false;
-  
+  if( !( (startPosition > endPosition && startPosition - endPosition >= touchOffset) ||
+      (endPosition > startPosition && endPosition - startPosition >= touchOffset) ) ){
+        return ;
+  }
+
   animatingIndicatorHelper = true;
   indicatorHelper.style.transition = "transform 0.3s";
   setTransition();
@@ -128,8 +133,6 @@ function mouseUp(event) {
     }
 
     previousTab = tabsData[ currentTab - 1 ] || null;
-
-
 
   } else if ( moveToRightView() ) {
 
@@ -159,7 +162,7 @@ function mouseUp(event) {
 }
 
 function mouseDown(event) {
-  sliding = true;
+  //sliding = true;
   startPosition = event.touches[0].clientX;
   animatingIndicatorHelper = false;
   indicatorHelper.style.transition = "";
@@ -167,11 +170,11 @@ function mouseDown(event) {
 
 function mouseMove(event){
   
-  if (!sliding ) {
+  /*if (!sliding ) {
     return;
-  }
+  }*/
 
-  event.preventDefault();
+  //event.preventDefault();
 
   endPosition = event.touches[0].clientX;
 
@@ -198,11 +201,6 @@ function mouseMove(event){
 
     var newPos = tabsData[ currentTab ].width / vistaRespectoPantalla;
 
-    /*if ( previousTab.width < tabsData[currentTab].width ){
-      //var x = ;
-    }else if( previousTab.width > tabsData[currentTab].width ){
-
-    }*/
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + newPos)+"px)";
     
