@@ -1,10 +1,11 @@
-// Code goes here
 (function(window){
 
 window.onload = function() {
 
-var startPosition = null,
-  endPosition = null,
+var startPosition = null, // Posición de inicio al tocar la vista
+  endPosition = null, // Posición de fin al dejar de tocar la vista
+
+  // DOM elements
   tabsContainer = document.getElementById('tabs-container'),
   tabs = document.getElementById('tabs-move'),
   lastTab = tabs.getElementsByClassName('tab').length - 1,
@@ -12,34 +13,24 @@ var startPosition = null,
   tabsLinkArray = document.getElementsByClassName('tab-link'),
   indicator = document.getElementsByClassName('indicator')[0],
   indicatorHelper = document.getElementsByClassName('indicator-helper')[0],
-  startTranslate = 0,
-  endTranslate = -100 * lastTab,
-  currentTranslate = startTranslate,
-  sliding = false,
+
+  startTranslate = 0, // Traslación de la primera vista
+  endTranslate = -100 * lastTab, // Traslación de la última vista
+  sliding = false, // Bandera para saber si estamos cambiando de vista
   distanceToChangeView = 150,
   touchOffset = 30,
-  currentTab = 0,
-  changingTab = false,
-
-  tabWidth = 100 / tabsLinkArray.length;
-
-  prevTab = {},
-  nextTab = {},
-  containerWdith = tabsContainer.clientWidth;
-
-//console.log( indicatorHelper );
-
-//var x = null;
+  currentTab = 0, // ïndice de la vista actual
+  prevTab = {}, // Datos de la vista anterior a la actual
+  nextTab = {}, // Datos de la vista siguiente a la actual
+  containerWdith = tabsContainer.clientWidth, // Anchura del contenedor
+  speed = 10; // Velocidad de la animación de scroll en las pestañas
 
 // Obtener datos de las pestañas  
-var tabsData = [ ];
-
-var speed = 10;
+var tabsData = [ ]; 
 
 [].forEach.call( tabsLinkArray, setData);
 
 function setData( element, index ){
-  //element.style.width = tabWidth+'%';
   element.setAttribute('data-id', index);
 
   var tab = {
@@ -57,57 +48,39 @@ function setData( element, index ){
     tab.right = tab.width;
   }
   
-  /*if( tabsData[index + 1] ){
-    tab.nextTabScreenRatio = ((tabsData[index+1].marginLeft + tabsData[index+1].center) - (tabsData[index].marginLeft + tabsData[index].center)) / containerWdith;
-  }*/
-  
   tab.marginLeft = tab.left + tab.center;
 
   if( tabsData[index - 1] ){
-//    tab.previousTabScreenRatio = ((tab.marginLeft + tab.center) - (tabsData[index-1].marginLeft + tabsData[index-1].center) ) / containerWdith
     tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / containerWdith;
-    tab.widthRatio = (tab.width / tabsData[index-1].width );
   }
 
   tabsData.push(tab);
-
 }
 
-console.log(tabsData);
+var nextTab = tabsData[currentTab+1],
+  previousTab = null;
 
-indicatorHelper.addEventListener('transitionend', function(event){
-  /*if( animatingIndicatorHelper ){
-    console.log( event );
-  }*/
-});
-
-//tabsLinkArray[currentTab].classList.add('active');
-
-var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
-
-var nextTab = tabsData[currentTab+1];
-
-var previousTab = null;
-
-moveIndicator();
-
+// Eventos
 tabs.addEventListener('touchend', mouseUp);
 tabs.addEventListener('touchstart', mouseDown);
 tabs.addEventListener('touchmove', mouseMove);
 tabsLink.addEventListener('click', tabLink);
 
+moveIndicator();
+
+// Cambiar anchura y posición del indicador según la vista actual
 function moveIndicator(){
   indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
   indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft +"px)";
 }
 
+// Evento cuando pulsamos una pestaña
 function tabLink(event){
 
   if( sliding || event.target.className !== 'tab-link' || currentTab === parseInt(event.target.getAttribute('data-id')) ){ return; }
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
-  //oldTab = currentTab;
   currentTab = parseInt(event.target.getAttribute('data-id'));
 
   var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
@@ -140,13 +113,12 @@ function tabLink(event){
   
 }
 
-//var x = 5;
-
+// Levantamos el dedo
 function mouseUp(event) {
   
   if( !endPosition || !( (startPosition > endPosition && startPosition - endPosition >= touchOffset) ||
       (endPosition > startPosition && endPosition - startPosition >= touchOffset) ) ){
-        return ;
+        return;
   }
 
   animatingIndicatorHelper = true;
@@ -223,7 +195,6 @@ function putTabInScreenLeft( x ){
       currentTabRightDistance = currentTabDistance.right;
   
     if( currentTabLeftDistance < 0 ){
-      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabLeftDistance;
       requestAnimationFrame(function(){
         avanzar( currentTab );
       });
@@ -231,7 +202,6 @@ function putTabInScreenLeft( x ){
       requestAnimationFrame(function(){
         avanzar2( currentTab );
       });
-      //tabsLink.scrollLeft = currentTabDistance.right - tabsLink.clientWidth;
     }
 
     if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
@@ -251,12 +221,10 @@ function putTabInScreenRight( x ){
       requestAnimationFrame(function(){
         avanzar3( currentTab );
       });
-      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabRightDistance - tabsLink.clientWidth;
     }else if( currentTabLeftDistance < 0 ){
       requestAnimationFrame(function(){
         avanzar4( currentTab );
       });
-      //tabsLink.scrollLeft = tabsLink.scrollLeft + currentTabDistance.left;
     }
 
     if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
@@ -267,14 +235,15 @@ function putTabInScreenRight( x ){
 
 }
 
+// El dedo toca la vista
 function mouseDown(event) {
-  //sliding = true;
   startPosition = event.touches[0].clientX;
   endPosition = null;
   animatingIndicatorHelper = false;
   indicatorHelper.style.transition = "";
 }
 
+// El dedo se mueve
 function mouseMove(event){
   
   endPosition = event.touches[0].clientX;
@@ -312,6 +281,7 @@ function mouseMove(event){
 
 }
 
+// Fijar transición de las vistas
 function setTranslation( translation ){
   tabs.style.transform = "translateX(" + translation + ")";
 }
@@ -320,28 +290,34 @@ function setTranslationPercen( translation ){
   setTranslation( translation+'%' );
 }
 
+// Poner transición a las vista y al indicador cuando no nos desplazamos con el dedo
 function setTransition(){
   tabs.style.transition = "transform 0.3s";
   indicator.style.transition = "transform 0.3s";
 }
 
+// Quitar transición a las vista y al indicador mientras desplazamos con el dedo 
 function removeTransition(){
   tabs.style.transition = "";
   indicator.style.transition = "";
 }
 
+// Comprobar si el dedo se mueve para la izquierda de la pantalla 
 function toLeft(event){
   return event.touches[0].clientX < startPosition - touchOffset;
 }
 
+// Comprobar si el dedo se mueve para la derecha de la pantalla 
 function toRight(event){
   return event.touches[0].clientX > startPosition + touchOffset;
 }
 
+// Comprobar si estamos al principio
 function leftLimit(){
   return tabsData[ currentTab ].translate === startTranslate;
 }
 
+// Comprobar si estamos al final
 function rightLimit(){
   return tabsData[ currentTab ].translate === endTranslate;
 }
