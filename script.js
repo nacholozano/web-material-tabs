@@ -59,9 +59,9 @@ function setData( element, index ){
 }
 
 indicatorHelper.addEventListener('transitionend', function(event){
-  if( animatingIndicatorHelper ){
+  /*if( animatingIndicatorHelper ){
     console.log( event );
-  }
+  }*/
 });
 
 tabsLinkArray[currentTab].classList.add('active');
@@ -85,7 +85,8 @@ function moveIndicator(){
 }
 
 function tabLink(event){
-  if( sliding ){ return; }
+
+  if( sliding || event.target.className !== 'tab-link' ){ return; }
 
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
