@@ -106,7 +106,7 @@ function tabLink(event){
 
 function mouseUp(event) {
   
-  if( !( (startPosition > endPosition && startPosition - endPosition >= touchOffset) ||
+  if( !endPosition || !( (startPosition > endPosition && startPosition - endPosition >= touchOffset) ||
       (endPosition > startPosition && endPosition - startPosition >= touchOffset) ) ){
         return ;
   }
@@ -164,6 +164,7 @@ function mouseUp(event) {
 function mouseDown(event) {
   //sliding = true;
   startPosition = event.touches[0].clientX;
+  endPosition = null;
   animatingIndicatorHelper = false;
   indicatorHelper.style.transition = "";
 }
