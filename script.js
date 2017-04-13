@@ -58,6 +58,12 @@ function setData( element, index ){
 
 }
 
+indicatorHelper.addEventListener('transitionend', function(event){
+  if( animatingIndicatorHelper ){
+    console.log( event );
+  }
+});
+
 tabsLinkArray[currentTab].classList.add('active');
 
 var a = tabsLinkArray[currentTab+1].getBoundingClientRect();
@@ -99,6 +105,8 @@ function mouseUp(event) {
   
   sliding = false;
   
+  animatingIndicatorHelper = true;
+  indicatorHelper.style.transition = "transform 0.3s";
   setTransition();
   tabsLinkArray[currentTab].classList.remove('active');
   
@@ -152,6 +160,8 @@ function mouseUp(event) {
 function mouseDown(event) {
   sliding = true;
   startPosition = event.touches[0].clientX;
+  animatingIndicatorHelper = false;
+  indicatorHelper.style.transition = "";
 }
 
 function mouseMove(event){
