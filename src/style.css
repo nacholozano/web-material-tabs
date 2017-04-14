@@ -1,6 +1,9 @@
 /*html{
   font-size: $base-font;
 }*/
+html, body {
+  height: 100%; }
+
 * {
   box-sizing: border-box; }
 
@@ -10,7 +13,7 @@ body {
   font-family: "Arial"; }
 
 .tabs-container {
-  height: 100vh;
+  height: 100%;
   white-space: nowrap;
   overflow-x: hidden;
   user-select: none; }
