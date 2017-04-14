@@ -1,5 +1,5 @@
 //TODO: No se por qué no funciona en ordenador, aunque no es su objetivo
-(function(window){
+//(function(window){
 
 window.onload = function() {
 
@@ -389,4 +389,4 @@ function moveToLeftView(){
 
 }
 
-})(window);
+//})(window);
