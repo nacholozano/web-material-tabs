@@ -27,7 +27,6 @@ body {
       padding: 1em;
       cursor: pointer;
       position: relative;
-      transition: color 0.3s;
       white-space: normal; }
       .tabs-container .tabs-link .tab-link.active {
         color: #4CAF50;

@@ -22,9 +22,11 @@ var startPosition = null, // Posición de inicio al tocar la vista
   touchOffset = 30,
   currentTab = 0, // ïndice de la vista actual
   prevTab = {}, // Datos de la vista anterior a la actual
-  nextTab = {}, // Datos de la vista siguiente a la actual
+  //nextTab = {}, // Datos de la vista siguiente a la actual
   containerWdith = tabsContainer.clientWidth, // Anchura del contenedor
-  speed = 10; // Velocidad de la animación de scroll en las pestañas
+  speed = 10, // Velocidad de la animación de scroll en las pestañas
+
+  touchMove = null;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ]; 
@@ -58,8 +60,8 @@ function setData( element, index ){
   tabsData.push(tab);
 }
 
-var nextTab = tabsData[currentTab+1],
-  previousTab = null;
+//var nextTab = tabsData[currentTab+1],
+//var previousTab = null;
 
 // Eventos
 tabs.addEventListener('touchend', mouseUp);
@@ -116,8 +118,8 @@ function tabLink(event){
   }
 
   // Fijamos las nuevas anterior y siguiente vistas
-  nextTab = tabsData[ currentTab + 1 ] || null;
-  previousTab = tabsData[ currentTab - 1 ] || null;
+  //nextTab = tabsData[ currentTab + 1 ] || null;
+  //previousTab = tabsData[ currentTab - 1 ] || null;
 
   // Animamos la vista elegida, marcamos la pestaña activa y movemos el indicador
   setTranslationPercen( tabsData[ currentTab ].translate );
@@ -149,20 +151,20 @@ function mouseUp(event) {
   // Nos movemos a hacia una vista de la parte izquierda
   if ( moveToLeftView() ) {
 
-    nextTab = tabsData[ currentTab ];
+    //nextTab = tabsData[ currentTab ];
     currentTab--;
     setTranslationPercen( tabsData[ currentTab ].translate );
     putTabInScreenLeft();
-    previousTab = tabsData[ currentTab - 1 ] || null;
+    //previousTab = tabsData[ currentTab - 1 ] || null;
 
   // Nos movemos a hacia una vista de la parte derecha
   } else if ( moveToRightView() ) {
 
-    previousTab = tabsData[ currentTab ];
+    //previousTab = tabsData[ currentTab ];
     currentTab++;
     setTranslationPercen( tabsData[ currentTab ].translate );
     putTabInScreenRight();
-    nextTab = tabsData[ currentTab+1 ] || null;
+    //nextTab = tabsData[ currentTab+1 ] || null;
   
   // Si no nos movemos una distancia mínima para cambiar de vista, volvemos a la vista actual
   } else {
@@ -309,10 +311,8 @@ function mouseMove(event){
     event.preventDefault();
 
     // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
-    var touchMove = event.touches[0].clientX - touchOffset - startPosition;
+    touchMove = event.touches[0].clientX - touchOffset - startPosition;
     setTranslation( "calc( " + touchMove + "px + " + tabsData[ currentTab ].translate + "% )" );
-    var vistaRespectoPantalla = containerWdith / touchMove;
-    var newPos = previousTab.width / vistaRespectoPantalla;
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
 
@@ -323,10 +323,8 @@ function mouseMove(event){
     event.preventDefault();
 
     // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
-    var touchMove = startPosition - event.touches[0].clientX - touchOffset;
+    touchMove = startPosition - event.touches[0].clientX - touchOffset;
     setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
-    var vistaRespectoPantalla = containerWdith / touchMove;
-    var newPos = tabsData[ currentTab ].width / vistaRespectoPantalla;
     indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab+1 ].previousTabScreenRatio) )+"px)";
 
