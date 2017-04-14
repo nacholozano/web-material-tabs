@@ -36,21 +36,21 @@ body {
 
   .tabs-link {
     font-size: 0; // Eliminar espacio entre pestañas
-    overflow-x: auto; // Scroll para ver todas las pestañas
+    //overflow-x: auto; // Scroll para ver todas las pestañas
     color: $tab-font-color;
     font-weight: $tab-font-weight; 
     text-transform: uppercase;
     
     .tab-link {
       line-height: $tab-link-space;
-      //text-align: center;
+      text-align: center;
       font-size: $tab-link-space;
       display: inline-block;
       padding: 1em;
       cursor: pointer;
       position: relative;
-      //transition: color 0.3s;
-      white-space: normal;
+      //white-space: normal;
+      vertical-align: middle;
 
       &.active{
         color: $green;

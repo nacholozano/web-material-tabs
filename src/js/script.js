@@ -17,7 +17,7 @@ var startPosition = null, // Posición de inicio al tocar la vista
   startTranslate = 0, // Traslación de la primera vista
   sliding = false, // Bandera para saber si estamos cambiando de vista
   distanceToChangeView = 150,
-  touchOffset = 30,
+  touchOffset = 40,
   currentTab = 0, // ïndice de la vista actual
   containerWdith = null, // Anchura del contenedor
   speed = 10, // Velocidad de la animación de scroll en las pestañas
@@ -25,10 +25,12 @@ var startPosition = null, // Posición de inicio al tocar la vista
   touchMove = null,
   requestAnimationFrameReference = null
   throttleTime = 300
-  throttleTimeOut = null;
+  throttleTimeOut = null,
+  equalTabs = false;
 
-// Obtener datos de las pestañas  
+// Obtener datos de las pestañas 
 var tabsData = [ ]; 
+var equalWdith;
 
 initialize();
 
@@ -43,6 +45,11 @@ function onResize(){
 
 function initialize(){
   containerWdith = tabsContainer.clientWidth;
+  if( equalTabs ){
+    equalWdith = 100 / tabsLinkArray.length;
+  }else{
+    tabsLink.style.overflowX = 'auto';
+  }
   prepareTabs();
   tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
   moveIndicator();
@@ -55,6 +62,9 @@ function prepareTabs(){
 
 function setData( element, index ){
     element.setAttribute('data-id', index);
+    if( equalTabs ){
+      element.style.width = equalWdith+'%';
+    }
 
     var tab = {
       id: index,

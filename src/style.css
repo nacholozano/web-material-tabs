@@ -19,18 +19,18 @@ body {
   user-select: none; }
   .tabs-container .tabs-link {
     font-size: 0;
-    overflow-x: auto;
     color: #3a3a3a;
     font-weight: 300;
     text-transform: uppercase; }
     .tabs-container .tabs-link .tab-link {
       line-height: 1rem;
+      text-align: center;
       font-size: 1rem;
       display: inline-block;
       padding: 1em;
       cursor: pointer;
       position: relative;
-      white-space: normal; }
+      vertical-align: middle; }
       .tabs-container .tabs-link .tab-link.active {
         color: #4CAF50;
         font-weight: 600; }
