@@ -133,21 +133,21 @@ function manageTabs( numTab ){
   cancelAnimationFrame(requestAnimationFrameReference);
 
   if ( tabDesaparecePorLaIzquierda(numTab) ){
-    requestAnimationFrame(function(){
+    requestAnimationFrameReference = requestAnimationFrame(function(){
       retrocederScroll( numTab );
     });
   }else if( tabDesaparecePorLaDerecha(numTab) ){
-    requestAnimationFrame(function(){ 
+    requestAnimationFrameReference = requestAnimationFrame(function(){ 
       avanzarScroll( numTab );
     });
   }
 
   if( numTab > 0 && tabDesaparecePorLaIzquierda( numTab-1 ) ){
-    requestAnimationFrame(function(){
+    requestAnimationFrameReference = requestAnimationFrame(function(){
       retrocederScroll( numTab-1 );
     });
   }else if( numTab < tabsData.length-1 && tabDesaparecePorLaDerecha( numTab+1 ) ){
-    requestAnimationFrame(function(){
+    requestAnimationFrameReference = requestAnimationFrame(function(){
       avanzarScroll( numTab+1 );
     });
   }
