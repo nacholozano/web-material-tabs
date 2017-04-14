@@ -60,7 +60,7 @@ function setData( element, index ){
   tabsData.push(tab);
 }
 
-//console.log( tabsData );
+console.log( tabsData );
 
 // Eventos
 tabs.addEventListener('touchend', mouseUp);
@@ -225,6 +225,7 @@ function avanzar4(){
 // TODO: Hay casos que se pueden reutilizar
 // Controlar la posición de pestañas en la parte izquierda
 function putTabInScreenLeft( x ){
+
   var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
       currentTabLeftDistance = currentTabDistance.left,
       currentTabRightDistance = currentTabDistance.right;
@@ -232,9 +233,10 @@ function putTabInScreenLeft( x ){
   /**
    * Cuando la pestaña actual aparece en la pantalla pero se corta por la parte izquierda
    */
-  if( currentTabLeftDistance < 0 ){
+  //if( currentTabLeftDistance < 0 ){
+  if( tabDesaparecePorLaDerecha( currentTab ) ){
     requestAnimationFrame(function(){
-      avanzar( currentTab );
+      avanzar3( currentTab );
     });
 
   /**
@@ -244,18 +246,20 @@ function putTabInScreenLeft( x ){
    * Ej: estoy en la primera pestaña, hago scroll hasta el final y desplazo una vista, ahora la pestaña queda a la izquierda de la pantalla
    * y no se ve
    */
-  }else if ( currentTabDistance.right > tabsLink.clientWidth ){
+  }
+  /*else if ( currentTabDistance.right > tabsLink.clientWidth ){
     requestAnimationFrame(function(){
       avanzar2( currentTab );
     });
-  }
+  }*/
 
   /**
    * Mostrar también la pestaña anterior de la elegida. Es la elegida !!!
    */
-  if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
+  //if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
+  if( currentTab > 0 && tabDesaparecePorLaDerecha( currentTab-1 ) ){
     requestAnimationFrame(function(){
-      avanzar( currentTab-1 );
+      avanzar3( currentTab-1 );
     });
   }
 
@@ -270,27 +274,30 @@ function putTabInScreenRight( x ){
   /**
    * Si la pestaña está en la pantalla pero se corta por la parte derecha
    */
-  if( tabsLink.clientWidth < currentTabRightDistance ){
+  //if( tabsLink.clientWidth < currentTabRightDistance ){
+  if( tabDesaparecePorLaIzquierda( currentTab ) ){
     requestAnimationFrame(function(){
-      avanzar3( currentTab );
+      avanzar( currentTab );
     });
   /**
    * Si las pestañas se mueven hacia la derecha y la parte izquierda de la pestaña actual está fuera al aizquierda de la pantalla
    * Ej: estoy en la primera pestaña, hago scroll hasta el final y desplazo una vista, ahora la pestaña queda a la izquierda de la pantalla
    * y no se ve
    */
-  }else if( currentTabLeftDistance < 0 ){
+  }
+  /*else if( currentTabLeftDistance < 0 ){
     requestAnimationFrame(function(){
       avanzar4( currentTab );
     });
-  }
+  }*/
 
   /**
    * Mostrar también la pestaña siguiente de la elegida. Es la elegida !!!
    */
-  if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
+  //if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
+  if( currentTab < tabsLinkArray.length-1 && tabDesaparecePorLaIzquierda(currentTab+1) ){
     requestAnimationFrame(function(){
-      avanzar3( currentTab+1 );
+      avanzar( currentTab+1 );
     });
   }
 
