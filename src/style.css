@@ -1,32 +1,34 @@
+/*html{
+  font-size: $base-font;
+}*/
+* {
+  box-sizing: border-box; }
+
 body {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
   font-family: "Arial"; }
 
 .tabs-container {
   height: 100vh;
   white-space: nowrap;
   overflow-x: hidden;
-  user-select: none;
-  /*@supports (will-change) {
-    .tabs-move{
-      will-change: transform;
-    }
-  }*/ }
+  user-select: none; }
   .tabs-container .tabs-link {
     font-size: 0;
     overflow-x: auto;
     color: #3a3a3a;
-    font-weight: 300; }
+    font-weight: 300;
+    text-transform: uppercase; }
     .tabs-container .tabs-link .tab-link {
+      line-height: 1rem;
       font-size: 1rem;
       display: inline-block;
-      line-height: 3.3rem;
-      padding: 0 1em;
+      padding: 1em;
       cursor: pointer;
       position: relative;
-      transition: color 0.3s; }
+      transition: color 0.3s;
+      white-space: normal; }
       .tabs-container .tabs-link .tab-link.active {
         color: #4CAF50;
         font-weight: 600; }
@@ -36,21 +38,20 @@ body {
         transform-origin: 0 0;
         width: 1px;
         height: 100%;
-        display: inline-block;
-        /*@supports will-change {
-          .indicator{
-            will-change: transform;
-          }
-        }*/ }
+        display: inline-block; }
         .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
           height: 100%;
           width: 1px;
           background-color: #4CAF50;
           display: inline-block; }
+          @supports (will-change: transform) {
+            .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
+              will-change: transform; } }
   .tabs-container .tabs-move {
     font-size: 0px;
-    height: calc( 100% - 3.5rem); }
+    height: calc( 100% - 3.2rem); }
     .tabs-container .tabs-move .tab {
+      padding: 2em;
       display: inline-block;
       width: 100%;
       height: 100%;
@@ -61,3 +62,6 @@ body {
       .tabs-container .tabs-move .tab:nth-child(odd) {
         background-color: #4CAF50;
         color: white; }
+    @supports (will-change: transform) {
+      .tabs-container .tabs-move {
+        will-change: transform; } }

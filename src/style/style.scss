@@ -1,40 +1,56 @@
 $green: #4CAF50;
+$base-font: 15px;
 $tab-font-color: #3a3a3a;
-$tabs-link-height: 3.5rem;
+$tab-font-weight: 300;
+$tab-active-font-weight: 600;
+// Cálculos para que se ajuste perfectamente a la pantalla
 $tab-indicator-height: 0.2rem;
-$tab-height: $tabs-link-height - $tab-indicator-height;
+$tab-height: 3rem;
+$tabs-link-height: $tab-indicator-height + $tab-height;
+$base-font-size: 1rem;
+$tab-link-space: $base-font-size;
+
+/*html{
+  font-size: $base-font;
+}*/
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
   font-family: "Arial"; 
 }
-
+ 
 .tabs-container {
   height: 100vh;
-  white-space: nowrap;
-  overflow-x: hidden;
+  white-space: nowrap; // Para que todo este en una línea
+  overflow-x: hidden; // Evitar scroll en la pantalla completa
   user-select: none; 
 
   .tabs-link {
-    font-size: 0;
-    overflow-x: auto;
+    font-size: 0; // Eliminar espacio entre pestañas
+    overflow-x: auto; // Scroll para ver todas las pestañas
     color: $tab-font-color;
-    font-weight: 300; 
-
+    font-weight: $tab-font-weight; 
+    text-transform: uppercase;
+    
     .tab-link {
-      font-size: 1rem;
+      line-height: $tab-link-space;
+      //text-align: center;
+      font-size: $tab-link-space;
       display: inline-block;
-      line-height: $tab-height;
-      padding: 0 1em;
+      padding: 1em;
       cursor: pointer;
       position: relative;
-      transition: color 0.3s; 
+      transition: color 0.3s;
+      white-space: normal;
 
       &.active{
         color: $green;
-        font-weight: 600; 
+        font-weight: $tab-active-font-weight; 
       }
     }
  
@@ -52,40 +68,40 @@ body {
           width: 1px;
           background-color: $green;
           display: inline-block;
-        }
-        /*@supports will-change {
-          .indicator{
+          @supports (will-change: transform) {
             will-change: transform;
           }
-        }*/
+        }
+
       }
     }
 
   }
 
   .tabs-move {
-    font-size: 0px;
-    height: calc( 100% - #{$tabs-link-height} );  
+    font-size: 0px; // Eliminar espacio entre pestañas
+    height: calc( 100% - #{$tabs-link-height} ); // CAlcular altura de las pestañas  
  
     .tab {
+      padding: 2em;
       display: inline-block;
       width: 100%;
       height: 100%;
-      font-size: 1rem;
+      font-size: $base-font-size;
       white-space: normal;
       vertical-align: top;
-      overflow-y: auto; 
+      overflow-y: auto; //Scroll individual de cada pestaña
 
       &:nth-child(odd) {
         background-color: $green;
         color: white; 
       }
     }
-  }
-  /*@supports (will-change) {
-    .tabs-move{
+
+    @supports (will-change: transform) {
       will-change: transform;
     }
-  }*/
-
+    
+  } 
+  
 }
