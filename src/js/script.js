@@ -26,11 +26,13 @@ var startPosition = null, // Posición de inicio al tocar la vista
   requestAnimationFrameReference = null
   throttleTime = 300
   throttleTimeOut = null,
-  equalTabs = false;
+  equalTabs = true;
 
 // Obtener datos de las pestañas 
-var tabsData = [ ]; 
+var tabsData = [ ];
+// Anchura de las pestañas según el número de pestañas
 var equalWdith = null;
+// Traslación de la última vista
 var endTranslate = null;
 
 initialize();
@@ -59,7 +61,6 @@ function initialize(){
 function prepareTabs(){
   tabsData = [];
   [].forEach.call( tabsLinkArray, setData);
-  // Traslación de la última vista
   endTranslate = tabsData[ tabsData.length -1 ].translatePX;
 }
 
@@ -139,6 +140,8 @@ function tabLink(event){
 }
 
 function manageTabs( numTab ){
+
+  if( equalWdith ){ return; }
 
   cancelAnimationFrame(requestAnimationFrameReference);
 
