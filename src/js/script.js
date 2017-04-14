@@ -94,37 +94,35 @@ function tabLink(event){
   tabsLinkArray[currentTab].classList.remove('active');
   currentTab = parseInt(event.target.getAttribute('data-id'));
 
-  // Animación para que la pestaña elegida y la siguiente (o anterior) entren en la pantalla
-  // TODO: refactorizar
-  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
-      currentTabLeftDistance = currentTabDistance.left,
-      currentTabRightDistance = currentTabDistance.right;
-  
-  if ( tabDesaparecePorLaIzquierda(currentTab) ){
-    requestAnimationFrame(function(){
-      avanzar( currentTab );
-    });
-  }else if( tabDesaparecePorLaDerecha(currentTab) ){
-    requestAnimationFrame(function(){ 
-      avanzar3( currentTab );
-    });
-  }
-
-  if( currentTab > 0 && tabDesaparecePorLaIzquierda( currentTab-1 ) ){
-    requestAnimationFrame(function(){
-      avanzar( currentTab-1 );
-    });
-  }else if( currentTab < tabsData.length-1 && tabDesaparecePorLaDerecha( currentTab+1 ) ){
-    requestAnimationFrame(function(){
-      avanzar3( currentTab+1 );
-    });
-  }
+  manageTabs(currentTab);
 
   // Animamos la vista elegida, marcamos la pestaña activa y movemos el indicador
   tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
   tabsLinkArray[currentTab].classList.add('active');
   moveIndicator();
   
+}
+
+function manageTabs( numTab ){
+  if ( tabDesaparecePorLaIzquierda(numTab) ){
+    requestAnimationFrame(function(){
+      avanzar( numTab );
+    });
+  }else if( tabDesaparecePorLaDerecha(numTab) ){
+    requestAnimationFrame(function(){ 
+      avanzar3( numTab );
+    });
+  }
+
+  if( numTab > 0 && tabDesaparecePorLaIzquierda( numTab-1 ) ){
+    requestAnimationFrame(function(){
+      avanzar( numTab-1 );
+    });
+  }else if( numTab < tabsData.length-1 && tabDesaparecePorLaDerecha( numTab+1 ) ){
+    requestAnimationFrame(function(){
+      avanzar3( numTab+1 );
+    });
+  }
 }
 
 function tabDesaparecePorLaIzquierda( numTab ){
@@ -150,7 +148,6 @@ function mouseUp(event) {
   }
 
   // Fijamos transiciones
-  indicatorHelper.style.transition = "transform 0.3s";
   setTransition();
   // Desmarcamos la pestaña activa
   tabsLinkArray[currentTab].classList.remove('active');
@@ -158,25 +155,20 @@ function mouseUp(event) {
   // Nos movemos a hacia una vista de la parte izquierda
   if ( moveToLeftView() ) {
 
-    //nextTab = tabsData[ currentTab ];
     currentTab--;
     tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-    putTabInScreenLeft();
-    //previousTab = tabsData[ currentTab - 1 ] || null;
+    manageTabs( currentTab );
 
   // Nos movemos a hacia una vista de la parte derecha
   } else if ( moveToRightView() ) {
 
     //previousTab = tabsData[ currentTab ];
     currentTab++;
-    //setTranslationPercen( tabsData[ currentTab ].translate );
     tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-    putTabInScreenRight();
-    //nextTab = tabsData[ currentTab+1 ] || null;
+    manageTabs( currentTab );
   
   // Si no nos movemos una distancia mínima para cambiar de vista, volvemos a la vista actual
   } else {
-    //setTranslationPercen( tabsData[ currentTab ].translate );
     tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
   }
 
@@ -191,20 +183,20 @@ function mouseUp(event) {
  */
 function avanzar( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
-  //if( tabsLinkArray[ numTab ].getBoundingClientRect().left < 0 ){
+
   if( tabDesaparecePorLaIzquierda(numTab) ){
     requestAnimationFrame( function(){
       avanzar(numTab);
     } );
   }
 }
-function avanzar2(){
+/*function avanzar2(){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
   var b = tabsLinkArray[ currentTab ].getBoundingClientRect().right;
   if( b  > tabsLink.clientWidth ){
     requestAnimationFrame( avanzar2 );
   }
-}
+}*/
 
 function avanzar3( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
@@ -213,94 +205,6 @@ function avanzar3( numTab ){
       avanzar3( numTab );
     } );
   }
-}
-
-function avanzar4(){
-  tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
-  if( tabsLinkArray[ currentTab ].getBoundingClientRect().left < 0 ){
-    requestAnimationFrame( avanzar4 );
-  }
-}
-
-// TODO: Hay casos que se pueden reutilizar
-// Controlar la posición de pestañas en la parte izquierda
-function putTabInScreenLeft( x ){
-
-  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
-      currentTabLeftDistance = currentTabDistance.left,
-      currentTabRightDistance = currentTabDistance.right;
-    
-  /**
-   * Cuando la pestaña actual aparece en la pantalla pero se corta por la parte izquierda
-   */
-  //if( currentTabLeftDistance < 0 ){
-  if( tabDesaparecePorLaDerecha( currentTab ) ){
-    requestAnimationFrame(function(){
-      avanzar3( currentTab );
-    });
-
-  /**
-   * El siguiente es el mismo comentario que más abajo, en este caso es lo mismo pero por el otro lado
-   * 
-   * Si las pestañas se mueven hacia la derecha y la parte izquierda de la pestaña actual está fuera al aizquierda de la pantalla
-   * Ej: estoy en la primera pestaña, hago scroll hasta el final y desplazo una vista, ahora la pestaña queda a la izquierda de la pantalla
-   * y no se ve
-   */
-  }
-  /*else if ( currentTabDistance.right > tabsLink.clientWidth ){
-    requestAnimationFrame(function(){
-      avanzar2( currentTab );
-    });
-  }*/
-
-  /**
-   * Mostrar también la pestaña anterior de la elegida. Es la elegida !!!
-   */
-  //if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
-  if( currentTab > 0 && tabDesaparecePorLaDerecha( currentTab-1 ) ){
-    requestAnimationFrame(function(){
-      avanzar3( currentTab-1 );
-    });
-  }
-
-}
-
-// Controlar la posición de pestañas en la parte derecha
-function putTabInScreenRight( x ){
-  var currentTabDistance = tabsLinkArray[ currentTab ].getBoundingClientRect();
-      currentTabLeftDistance = currentTabDistance.left,
-      currentTabRightDistance = currentTabDistance.right;
-    
-  /**
-   * Si la pestaña está en la pantalla pero se corta por la parte derecha
-   */
-  //if( tabsLink.clientWidth < currentTabRightDistance ){
-  if( tabDesaparecePorLaIzquierda( currentTab ) ){
-    requestAnimationFrame(function(){
-      avanzar( currentTab );
-    });
-  /**
-   * Si las pestañas se mueven hacia la derecha y la parte izquierda de la pestaña actual está fuera al aizquierda de la pantalla
-   * Ej: estoy en la primera pestaña, hago scroll hasta el final y desplazo una vista, ahora la pestaña queda a la izquierda de la pantalla
-   * y no se ve
-   */
-  }
-  /*else if( currentTabLeftDistance < 0 ){
-    requestAnimationFrame(function(){
-      avanzar4( currentTab );
-    });
-  }*/
-
-  /**
-   * Mostrar también la pestaña siguiente de la elegida. Es la elegida !!!
-   */
-  //if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
-  if( currentTab < tabsLinkArray.length-1 && tabDesaparecePorLaIzquierda(currentTab+1) ){
-    requestAnimationFrame(function(){
-      avanzar( currentTab+1 );
-    });
-  }
-
 }
 
 // El dedo toca la vista, aquí nos preparamos para mover la vista
@@ -352,12 +256,14 @@ function mouseMove(event){
 
 // Poner transición a las vista y al indicador cuando no nos desplazamos con el dedo
 function setTransition(){
+  indicatorHelper.style.transition = "transform 0.3s";
   tabs.style.transition = "transform 0.3s";
   indicator.style.transition = "transform 0.3s";
 }
 
 // Quitar transición a las vista y al indicador mientras desplazamos con el dedo 
 function removeTransition(){
+  indicatorHelper.style.transition = "";
   tabs.style.transition = "";
   indicator.style.transition = "";
 }
