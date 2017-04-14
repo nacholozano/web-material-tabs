@@ -1,0 +1,91 @@
+$green: #4CAF50;
+$tab-font-color: #3a3a3a;
+$tabs-link-height: 3.5rem;
+$tab-indicator-height: 0.2rem;
+$tab-height: $tabs-link-height - $tab-indicator-height;
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Arial"; 
+}
+
+.tabs-container {
+  height: 100vh;
+  white-space: nowrap;
+  overflow-x: hidden;
+  user-select: none; 
+
+  .tabs-link {
+    font-size: 0;
+    overflow-x: auto;
+    color: $tab-font-color;
+    font-weight: 300; 
+
+    .tab-link {
+      font-size: 1rem;
+      display: inline-block;
+      line-height: $tab-height;
+      padding: 0 1em;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s; 
+
+      &.active{
+        color: $green;
+        font-weight: 600; 
+      }
+    }
+ 
+    .tab-indicator {
+      height: $tab-indicator-height;  
+
+      .indicator-helper {
+        transform-origin: 0 0;
+        width: 1px;
+        height: 100%;
+        display: inline-block;
+
+        .indicator {
+          height: 100%;
+          width: 1px;
+          background-color: $green;
+          display: inline-block;
+        }
+        /*@supports will-change {
+          .indicator{
+            will-change: transform;
+          }
+        }*/
+      }
+    }
+
+  }
+
+  .tabs-move {
+    font-size: 0px;
+    height: calc( 100% - #{$tabs-link-height} );  
+ 
+    .tab {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      font-size: 1rem;
+      white-space: normal;
+      vertical-align: top;
+      overflow-y: auto; 
+
+      &:nth-child(odd) {
+        background-color: $green;
+        color: white; 
+      }
+    }
+  }
+  /*@supports (will-change) {
+    .tabs-move{
+      will-change: transform;
+    }
+  }*/
+
+}

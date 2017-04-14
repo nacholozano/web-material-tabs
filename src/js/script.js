@@ -5,7 +5,7 @@ window.onload = function() {
 
 var startPosition = null, // Posición de inicio al tocar la vista
   endPosition = null, // Posición de fin al dejar de tocar la vista
-
+ 
   // DOM elements
   tabsContainer = document.getElementById('tabs-container'),
   tabs = document.getElementById('tabs-move'),

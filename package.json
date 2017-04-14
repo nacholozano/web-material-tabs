@@ -1,0 +1,19 @@
+{
+  "name": "infinite-views",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/nacholozano/infinite-views.git",
+  "author": "Nacho Lozano <nacholozanogui@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "watch:scss": "node-sass --watch src/style/ -o src/",
+    "sync": "browser-sync start --server 'src/' --files 'src/*.html,src/js/*.js,src/*.css' --host 192.168.1.39",
+    "dev": "concurrently --kill-others 'yarn run watch:scss' 'yarn run sync'" 
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "concurrently": "^3.4.0",
+    "node-sass": "^4.5.2"
+  }
+}
