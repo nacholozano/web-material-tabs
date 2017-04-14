@@ -24,7 +24,8 @@ var startPosition = null, // Posición de inicio al tocar la vista
   containerWdith = tabsContainer.clientWidth, // Anchura del contenedor
   speed = 10, // Velocidad de la animación de scroll en las pestañas
 
-  touchMove = null;
+  touchMove = null,
+  requestAnimationFrameReference = null;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ]; 
@@ -106,21 +107,21 @@ function tabLink(event){
 function manageTabs( numTab ){
   if ( tabDesaparecePorLaIzquierda(numTab) ){
     requestAnimationFrame(function(){
-      avanzar( numTab );
+      retrocederScroll( numTab );
     });
   }else if( tabDesaparecePorLaDerecha(numTab) ){
     requestAnimationFrame(function(){ 
-      avanzar3( numTab );
+      avanzarScroll( numTab );
     });
   }
 
   if( numTab > 0 && tabDesaparecePorLaIzquierda( numTab-1 ) ){
     requestAnimationFrame(function(){
-      avanzar( numTab-1 );
+      retrocederScroll( numTab-1 );
     });
   }else if( numTab < tabsData.length-1 && tabDesaparecePorLaDerecha( numTab+1 ) ){
     requestAnimationFrame(function(){
-      avanzar3( numTab+1 );
+      avanzarScroll( numTab+1 );
     });
   }
 }
@@ -181,28 +182,21 @@ function mouseUp(event) {
  * Animar el scroll en las pestañas
  * TODO: Hay casos que se pueden reutilizar
  */
-function avanzar( numTab ){
+function retrocederScroll( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
 
   if( tabDesaparecePorLaIzquierda(numTab) ){
     requestAnimationFrame( function(){
-      avanzar(numTab);
+      retrocederScroll(numTab);
     } );
   }
 }
-/*function avanzar2(){
-  tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
-  var b = tabsLinkArray[ currentTab ].getBoundingClientRect().right;
-  if( b  > tabsLink.clientWidth ){
-    requestAnimationFrame( avanzar2 );
-  }
-}*/
 
-function avanzar3( numTab ){
+function avanzarScroll( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
   if( tabDesaparecePorLaDerecha(numTab) ){
     requestAnimationFrame( function(){
-      avanzar3( numTab );
+      avanzarScroll( numTab );
     } );
   }
 }
