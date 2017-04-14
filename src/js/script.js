@@ -306,7 +306,9 @@ function mouseMove(event){
   endPosition = event.touches[0].clientX;
 
   // Comprobamos si podemos ir hacia las vistas de la izquierda
-  if ( !leftLimit() && toRight( event ) ) {
+  // y Comprobar si el dedo se mueve para la derecha de la pantalla 
+  //  if ( !leftLimit() && toRight( event ) ) {
+  if ( !leftLimit() && (event.touches[0].clientX > startPosition + touchOffset) ) {
     //Evitamos le scroll sobre la vista mientras cambiamos de vista
     event.preventDefault();
 
@@ -317,8 +319,10 @@ function mouseMove(event){
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
 
     // Comprobamos si podemos ir hacia las vistas de la derecha
-    } else if ( !rightLimit() && toLeft( event ) ) {
-  
+    // y si el dedo se mueve para la izquierda de la pantalla 
+  //  } else if ( !rightLimit() && toLeft( event ) ) {
+  } else if ( !rightLimit() && ( event.touches[0].clientX < startPosition - touchOffset ) ) {
+    
     //Evitamos le scroll sobre la vista mientras cambiamos de vista
     event.preventDefault();
 
@@ -354,14 +358,14 @@ function removeTransition(){
 }
 
 // Comprobar si el dedo se mueve para la izquierda de la pantalla 
-function toLeft(event){
+/*function toLeft(event){
   return event.touches[0].clientX < startPosition - touchOffset;
-}
+}*/
 
 // Comprobar si el dedo se mueve para la derecha de la pantalla 
-function toRight(event){
+/*function toRight(event){
   return event.touches[0].clientX > startPosition + touchOffset;
-}
+}*/
 
 // Comprobar si estamos al principio
 function leftLimit(){
