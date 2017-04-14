@@ -30,7 +30,8 @@ var startPosition = null, // Posición de inicio al tocar la vista
 
 // Obtener datos de las pestañas 
 var tabsData = [ ]; 
-var equalWdith;
+var equalWdith = null;
+var endTranslate = null;
 
 initialize();
 
@@ -58,6 +59,8 @@ function initialize(){
 function prepareTabs(){
   tabsData = [];
   [].forEach.call( tabsLinkArray, setData);
+  // Traslación de la última vista
+  endTranslate = tabsData[ tabsData.length -1 ].translatePX;
 }
 
 function setData( element, index ){
@@ -91,9 +94,6 @@ function setData( element, index ){
 
     tabsData.push(tab);
   }
-
-// Traslación de la última vista
-var endTranslate = tabsData[ tabsData.length -1 ].translatePX;
 
 //console.log( tabsData );
 
