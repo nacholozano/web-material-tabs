@@ -21,8 +21,6 @@ var startPosition = null, // Posición de inicio al tocar la vista
   distanceToChangeView = 150,
   touchOffset = 30,
   currentTab = 0, // ïndice de la vista actual
-  prevTab = {}, // Datos de la vista anterior a la actual
-  //nextTab = {}, // Datos de la vista siguiente a la actual
   containerWdith = tabsContainer.clientWidth, // Anchura del contenedor
   speed = 10, // Velocidad de la animación de scroll en las pestañas
 
@@ -46,9 +44,11 @@ function setData( element, index ){
   if( index ){
     tab.left = tabsData[index-1].right;
     tab.right = tab.left + tab.width;
+    tab.translatePX = -( containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
   }else{
     tab.left = 0;
     tab.right = tab.width;
+    tab.translatePX = 0;
   }
   
   tab.marginLeft = tab.left + tab.center;
@@ -60,8 +60,7 @@ function setData( element, index ){
   tabsData.push(tab);
 }
 
-//var nextTab = tabsData[currentTab+1],
-//var previousTab = null;
+//console.log( tabsData );
 
 // Eventos
 tabs.addEventListener('touchend', mouseUp);
@@ -101,31 +100,39 @@ function tabLink(event){
       currentTabLeftDistance = currentTabDistance.left,
       currentTabRightDistance = currentTabDistance.right;
   
-  if( currentTabLeftDistance < 0 ){
-    requestAnimationFrame(avanzar);
-  }else if( tabsLink.clientWidth < currentTabRightDistance ){
-    requestAnimationFrame(avanzar3);
+  if ( tabDesaparecePorLaIzquierda(currentTab) ){
+    requestAnimationFrame(function(){
+      avanzar( currentTab );
+    });
+  }else if( tabDesaparecePorLaDerecha(currentTab) ){
+    requestAnimationFrame(function(){ 
+      avanzar3( currentTab );
+    });
   }
 
-  if( currentTab > 0 && tabsLinkArray[ currentTab-1 ].getBoundingClientRect().left < 0 ){
+  if( currentTab > 0 && tabDesaparecePorLaIzquierda( currentTab-1 ) ){
     requestAnimationFrame(function(){
       avanzar( currentTab-1 );
     });
-  }else if( currentTab < tabsLinkArray.length-1 && tabsLinkArray[ currentTab+1 ].getBoundingClientRect().right > tabsLink.clientWidth ){
+  }else if( currentTab < tabsData.length-1 && tabDesaparecePorLaDerecha( currentTab+1 ) ){
     requestAnimationFrame(function(){
       avanzar3( currentTab+1 );
     });
   }
 
-  // Fijamos las nuevas anterior y siguiente vistas
-  //nextTab = tabsData[ currentTab + 1 ] || null;
-  //previousTab = tabsData[ currentTab - 1 ] || null;
-
   // Animamos la vista elegida, marcamos la pestaña activa y movemos el indicador
-  setTranslationPercen( tabsData[ currentTab ].translate );
+  tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
   tabsLinkArray[currentTab].classList.add('active');
   moveIndicator();
   
+}
+
+function tabDesaparecePorLaIzquierda( numTab ){
+  return tabsData[ numTab ].left < tabsLink.scrollLeft;
+}
+
+function tabDesaparecePorLaDerecha( numTab ){
+  return tabsLink.clientWidth+tabsLink.scrollLeft < tabsData[ numTab ].right
 }
 
 // Levantamos el dedo
@@ -153,7 +160,7 @@ function mouseUp(event) {
 
     //nextTab = tabsData[ currentTab ];
     currentTab--;
-    setTranslationPercen( tabsData[ currentTab ].translate );
+    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
     putTabInScreenLeft();
     //previousTab = tabsData[ currentTab - 1 ] || null;
 
@@ -162,13 +169,15 @@ function mouseUp(event) {
 
     //previousTab = tabsData[ currentTab ];
     currentTab++;
-    setTranslationPercen( tabsData[ currentTab ].translate );
+    //setTranslationPercen( tabsData[ currentTab ].translate );
+    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
     putTabInScreenRight();
     //nextTab = tabsData[ currentTab+1 ] || null;
   
   // Si no nos movemos una distancia mínima para cambiar de vista, volvemos a la vista actual
   } else {
-    setTranslationPercen( tabsData[ currentTab ].translate );
+    //setTranslationPercen( tabsData[ currentTab ].translate );
+    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
   }
 
   // Marcamos vista actual y movemos el indicador
@@ -180,11 +189,12 @@ function mouseUp(event) {
  * Animar el scroll en las pestañas
  * TODO: Hay casos que se pueden reutilizar
  */
-function avanzar( currentTab ){
+function avanzar( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
-  if( tabsLinkArray[ currentTab ].getBoundingClientRect().left < 0 ){
+  //if( tabsLinkArray[ numTab ].getBoundingClientRect().left < 0 ){
+  if( tabDesaparecePorLaIzquierda(numTab) ){
     requestAnimationFrame( function(){
-      avanzar(currentTab);
+      avanzar(numTab);
     } );
   }
 }
@@ -196,11 +206,11 @@ function avanzar2(){
   }
 }
 
-function avanzar3( currentTab ){
+function avanzar3( numTab ){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
-  if( tabsLink.clientWidth < tabsLinkArray[ currentTab ].getBoundingClientRect().right ){
+  if( tabDesaparecePorLaDerecha(numTab) ){
     requestAnimationFrame( function(){
-      avanzar3( currentTab );
+      avanzar3( numTab );
     } );
   }
 }
@@ -291,6 +301,7 @@ function mouseDown(event) {
   // Fijamos posición inicial
   startPosition = event.touches[0].clientX;
   endPosition = null;
+
   // Quitar transiciones para el indicador y las vistas
   indicatorHelper.style.transition = "";
   removeTransition();
@@ -307,20 +318,17 @@ function mouseMove(event){
 
   // Comprobamos si podemos ir hacia las vistas de la izquierda
   // y Comprobar si el dedo se mueve para la derecha de la pantalla 
-  //  if ( !leftLimit() && toRight( event ) ) {
   if ( !leftLimit() && (event.touches[0].clientX > startPosition + touchOffset) ) {
     //Evitamos le scroll sobre la vista mientras cambiamos de vista
     event.preventDefault();
 
     // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
     touchMove = event.touches[0].clientX - touchOffset - startPosition;
-    setTranslation( "calc( " + touchMove + "px + " + tabsData[ currentTab ].translate + "% )" );
-    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+    tabs.style.transform = "translateX(" + Math.floor(tabsData[ currentTab ].translatePX + touchMove) + "px)";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
 
     // Comprobamos si podemos ir hacia las vistas de la derecha
     // y si el dedo se mueve para la izquierda de la pantalla 
-  //  } else if ( !rightLimit() && toLeft( event ) ) {
   } else if ( !rightLimit() && ( event.touches[0].clientX < startPosition - touchOffset ) ) {
     
     //Evitamos le scroll sobre la vista mientras cambiamos de vista
@@ -328,21 +336,11 @@ function mouseMove(event){
 
     // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
     touchMove = startPosition - event.touches[0].clientX - touchOffset;
-    setTranslation( "calc( " + tabsData[ currentTab ].translate + "% - " + touchMove + "px)" );
-    indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
+    tabs.style.transform = "translateX(" + Math.floor(tabsData[ currentTab ].translatePX - touchMove) + "px)";
     indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab+1 ].previousTabScreenRatio) )+"px)";
 
   }
 
-}
-
-// Fijar transición de las vistas
-function setTranslation( translation ){
-  tabs.style.transform = "translateX(" + translation + ")";
-}
-
-function setTranslationPercen( translation ){
-  setTranslation( translation+'%' );
 }
 
 // Poner transición a las vista y al indicador cuando no nos desplazamos con el dedo
@@ -357,16 +355,6 @@ function removeTransition(){
   indicator.style.transition = "";
 }
 
-// Comprobar si el dedo se mueve para la izquierda de la pantalla 
-/*function toLeft(event){
-  return event.touches[0].clientX < startPosition - touchOffset;
-}*/
-
-// Comprobar si el dedo se mueve para la derecha de la pantalla 
-/*function toRight(event){
-  return event.touches[0].clientX > startPosition + touchOffset;
-}*/
-
 // Comprobar si estamos al principio
 function leftLimit(){
   return tabsData[ currentTab ].translate === startTranslate;
@@ -378,15 +366,15 @@ function rightLimit(){
 }
 
 function moveToRightView(){
-  return startPosition > endPosition&&
-    startPosition - endPosition > distanceToChangeView &&
-    !rightLimit();
+  return !rightLimit() && 
+    startPosition > endPosition &&
+    startPosition - endPosition > distanceToChangeView;
 }
 
 function moveToLeftView(){
-  return endPosition > startPosition &&
-    endPosition - startPosition > distanceToChangeView &&
-    !leftLimit();
+  return !leftLimit() &&
+    endPosition > startPosition &&
+    endPosition - startPosition > distanceToChangeView;
 }
 
 }
