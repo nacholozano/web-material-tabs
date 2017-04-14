@@ -1,5 +1,4 @@
 //TODO: No se por qué no funciona en ordenador, aunque no es su objetivo
-//(function(window){
 
 window.onload = function() {
 
@@ -16,52 +15,78 @@ var startPosition = null, // Posición de inicio al tocar la vista
   indicatorHelper = document.getElementsByClassName('indicator-helper')[0],
 
   startTranslate = 0, // Traslación de la primera vista
-  endTranslate = -100 * lastTab, // Traslación de la última vista
   sliding = false, // Bandera para saber si estamos cambiando de vista
   distanceToChangeView = 150,
   touchOffset = 30,
   currentTab = 0, // ïndice de la vista actual
-  containerWdith = tabsContainer.clientWidth, // Anchura del contenedor
+  containerWdith = null, // Anchura del contenedor
   speed = 10, // Velocidad de la animación de scroll en las pestañas
 
   touchMove = null,
-  requestAnimationFrameReference = null;
+  requestAnimationFrameReference = null
+  throttleTime = 300
+  throttleTimeOut = null;
 
 // Obtener datos de las pestañas  
 var tabsData = [ ]; 
 
-[].forEach.call( tabsLinkArray, setData);
+initialize();
 
-function setData( element, index ){
-  element.setAttribute('data-id', index);
+window.addEventListener('resize', onResize);
 
-  var tab = {
-    id: index,
-    width: Math.floor(element.getBoundingClientRect().width),
-    translate: index * -100,
-  };
-  tab.center = Math.floor(tab.width/2);
-
-  if( index ){
-    tab.left = tabsData[index-1].right;
-    tab.right = tab.left + tab.width;
-    tab.translatePX = -( containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
-  }else{
-    tab.left = 0;
-    tab.right = tab.width;
-    tab.translatePX = 0;
-  }
-  
-  tab.marginLeft = tab.left + tab.center;
-
-  if( tabsData[index - 1] ){
-    tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / containerWdith;
-  }
-
-  tabsData.push(tab);
+function onResize(){
+  clearTimeout(throttleTimeOut);
+  throttleTimeOut = setTimeout(function() {
+      alert( 'cambio ' );
+      initialize();
+  }, throttleTime);
 }
 
-console.log( tabsData );
+function initialize(){
+  containerWdith = tabsContainer.clientWidth;
+  prepareTabs();
+  tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
+  moveIndicator();
+}
+
+function prepareTabs(){
+  tabsData = [];
+  [].forEach.call( tabsLinkArray, setData);
+}
+
+function setData( element, index ){
+    element.setAttribute('data-id', index);
+
+    var tab = {
+      id: index,
+      width: Math.floor(element.getBoundingClientRect().width),
+      translate: index * -100,
+    };
+    tab.center = Math.floor(tab.width/2);
+
+    if( index ){
+      tab.left = tabsData[index-1].right;
+      tab.right = tab.left + tab.width;
+      tab.translatePX = -( containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
+    }else{
+      tab.left = 0;
+      tab.right = tab.width;
+      tab.translatePX = 0;
+    }
+    
+    tab.marginLeft = tab.left + tab.center;
+
+    if( tabsData[index - 1] ){
+      tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / containerWdith;
+    }
+
+    tabsData.push(tab);
+  }
+
+// Traslación de la última vista
+var endTranslate = tabsData[ tabsData.length -1 ].translatePX;
+
+//console.log( tabsData );
 
 // Eventos
 tabs.addEventListener('touchend', mouseUp);
@@ -264,12 +289,12 @@ function removeTransition(){
 
 // Comprobar si estamos al principio
 function leftLimit(){
-  return tabsData[ currentTab ].translate === startTranslate;
+  return tabsData[ currentTab ].translatePX === startTranslate;
 }
 
 // Comprobar si estamos al final
 function rightLimit(){
-  return tabsData[ currentTab ].translate === endTranslate;
+  return tabsData[ currentTab ].translatePX === endTranslate;
 }
 
 function moveToRightView(){
@@ -285,5 +310,3 @@ function moveToLeftView(){
 }
 
 }
-
-//})(window);
