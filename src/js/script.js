@@ -36,10 +36,10 @@ function setData( element, index ){
 
   var tab = {
     id: index,
-    width: element.getBoundingClientRect().width,
+    width: Math.floor(element.getBoundingClientRect().width),
     translate: index * -100,
   };
-  tab.center = tab.width/2;
+  tab.center = Math.floor(tab.width/2);
 
   if( index ){
     tab.left = tabsData[index-1].right;
