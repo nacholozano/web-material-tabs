@@ -129,6 +129,9 @@ function tabLink(event){
 }
 
 function manageTabs( numTab ){
+
+  cancelAnimationFrame(requestAnimationFrameReference);
+
   if ( tabDesaparecePorLaIzquierda(numTab) ){
     requestAnimationFrame(function(){
       retrocederScroll( numTab );
