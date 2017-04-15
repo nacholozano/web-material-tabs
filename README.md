@@ -4,10 +4,11 @@ Web clone of [Google Material Tabs](https://material.io/guidelines/components/ta
 Made with requestAnimationFrame and CSS 2D transforms. <br>
 Built with ionic2 in mind. So better test in mobile. <br>
 
-## Table of contents 
+### Table of contents 
 1. [Preview](#preview)
 2. [Demo](#demo)
 3. [Install & run](#install--run)
+4. [Usage](#usage)
 
 # Preview
 
@@ -23,3 +24,11 @@ Built with ionic2 in mind. So better test in mobile. <br>
 1. Install [yarn](https://yarnpkg.com/lang/en/)
 2. Run `yarn install` from package.json path.
 3. Run `yarn run dev` to start browser-sync server and watch sass files.
+
+# Usage
+
+### Tabs width equal width.
+Set `equalTabs = true` and use few tabs. 
+
+### Auto width tabs that allow scroll if you have many tabs.
+Set `equalTabs = false` and have all tabs you want.
