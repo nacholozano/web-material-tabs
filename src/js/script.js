@@ -8,7 +8,7 @@ var startPosition = null, // Posición de inicio al tocar la vista
   // DOM elements
   tabsContainer = document.getElementById('tabs-container'),
   tabs = document.getElementById('tabs-move'),
-  lastTab = tabs.getElementsByClassName('tab').length - 1,
+  //lastTab = tabs.getElementsByClassName('tab').length - 1,
   tabsLink = document.getElementsByClassName('tabs-link')[0],
   tabsLinkArray = document.getElementsByClassName('tab-link'),
   indicator = document.getElementsByClassName('indicator')[0],
@@ -26,7 +26,8 @@ var startPosition = null, // Posición de inicio al tocar la vista
   requestAnimationFrameReference = null
   throttleTime = 300
   throttleTimeOut = null,
-  equalTabs = true;
+  equalTabs = false,
+  tabManaged = null;
 
 // Obtener datos de las pestañas 
 var tabsData = [ ];
@@ -143,26 +144,29 @@ function manageTabs( numTab ){
 
   if( equalWdith ){ return; }
 
+  tabManaged = numTab;
+
   cancelAnimationFrame(requestAnimationFrameReference);
 
   if ( tabDesaparecePorLaIzquierda(numTab) ){
-    requestAnimationFrameReference = requestAnimationFrame(function(){
-      retrocederScroll( numTab );
-    });
+    requestAnimationFrameReference = requestAnimationFrame( retrocederScroll );
   }else if( tabDesaparecePorLaDerecha(numTab) ){
-    requestAnimationFrameReference = requestAnimationFrame(function(){ 
-      avanzarScroll( numTab );
-    });
+    requestAnimationFrameReference = requestAnimationFrame( avanzarScroll );
   }
 
   if( numTab > 0 && tabDesaparecePorLaIzquierda( numTab-1 ) ){
-    requestAnimationFrameReference = requestAnimationFrame(function(){
-      retrocederScroll( numTab-1 );
-    });
+
+    cancelAnimationFrame(requestAnimationFrameReference)
+    tabManaged = numTab-1;
+
+    requestAnimationFrameReference = requestAnimationFrame( retrocederScroll );
+    
   }else if( numTab < tabsData.length-1 && tabDesaparecePorLaDerecha( numTab+1 ) ){
-    requestAnimationFrameReference = requestAnimationFrame(function(){
-      avanzarScroll( numTab+1 );
-    });
+
+    cancelAnimationFrame(requestAnimationFrameReference)
+    tabManaged = numTab+1;
+
+    requestAnimationFrameReference = requestAnimationFrame( avanzarScroll );
   }
 }
 
@@ -222,22 +226,19 @@ function mouseUp(event) {
  * Animar el scroll en las pestañas
  * TODO: Hay casos que se pueden reutilizar
  */
-function retrocederScroll( numTab ){
+function retrocederScroll( ){
   tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
 
-  if( tabDesaparecePorLaIzquierda(numTab) ){
-    requestAnimationFrame( function(){
-      retrocederScroll(numTab);
-    } );
+  if( tabDesaparecePorLaIzquierda( tabManaged ) ){
+    requestAnimationFrame( retrocederScroll );
   }
 }
 
-function avanzarScroll( numTab ){
+function avanzarScroll( ){
   tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
-  if( tabDesaparecePorLaDerecha(numTab) ){
-    requestAnimationFrame( function(){
-      avanzarScroll( numTab );
-    } );
+
+  if( tabDesaparecePorLaDerecha( tabManaged ) ){
+    requestAnimationFrame( avanzarScroll );
   }
 }
 
