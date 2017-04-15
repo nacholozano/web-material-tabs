@@ -1,45 +1,169 @@
-//TODO: No se por qué no funciona en ordenador, aunque no es su objetivo
-
 window.onload = function() {
 
-var startPosition = null, // Posición de inicio al tocar la vista
-  endPosition = null, // Posición de fin al dejar de tocar la vista
- 
-  // DOM elements
-  tabsContainer = document.getElementById('tabs-container'),
-  tabs = document.getElementById('tabs-move'),
-  //lastTab = tabs.getElementsByClassName('tab').length - 1,
-  tabsLink = document.getElementsByClassName('tabs-link')[0],
-  tabsLinkArray = document.getElementsByClassName('tab-link'),
-  indicator = document.getElementsByClassName('indicator')[0],
-  indicatorHelper = document.getElementsByClassName('indicator-helper')[0],
-
-  startTranslate = 0, // Traslación de la primera vista
-  sliding = false, // Bandera para saber si estamos cambiando de vista
-  distanceToChangeView = 150,
-  touchOffset = 40,
-  currentTab = 0, // ïndice de la vista actual
-  containerWdith = null, // Anchura del contenedor
-  speed = 10, // Velocidad de la animación de scroll en las pestañas
-
-  touchMove = null,
-  requestAnimationFrameReference = null
-  throttleTime = 300
+var throttleTime = 300,
   throttleTimeOut = null,
-  equalTabs = false,
-  tabManaged = null;
-
-// Obtener datos de las pestañas 
-var tabsData = [ ];
-// Anchura de las pestañas según el número de pestañas
-var equalWdith = null;
-// Traslación de la última vista
-var endTranslate = null;
+  dom = {
+    tabsContainer: document.getElementById('tabs-container'),
+    tabs: document.getElementById('tabs-move'),
+    tabsLink: document.getElementsByClassName('tabs-link')[0],
+    tabsLinkArray: document.getElementsByClassName('tab-link'),
+    indicator: document.getElementsByClassName('indicator')[0],
+    indicatorHelper: document.getElementsByClassName('indicator-helper')[0]
+  },
+  touch = {
+    startPosition: null, // Position when user touch screen
+    endPosition: null, // Position when user stop touching the screen 
+    move: null, // Distance traversed 
+    offset: 40 // Minimum distance before start to slide views
+  },
+  tabsScroll = {
+    speed: 10, // Scroll speed if tab is not fully visible
+    requestAnimationFrameReference: null, // Reference to cancel raf
+    tabManaged: null, // Checking if this tab is fully visible
+    equalTabs: false, // All tabs have equal width
+    equalWdith: null
+  },
+  tabsViews = {
+    containerWdith: null,
+    startTranslate: 0, // First view translation
+    endTranslate: null, // Last view translation
+    sliding: false, // Know if user is changing view
+    distanceToChangeView: 150, // Minumum distance to change view
+    currentTab: 0
+  },
+  tabsData = [];
 
 initialize();
 
+/**
+ * Events
+ */
+dom.tabs.addEventListener('touchstart', touchDown);
+dom.tabs.addEventListener('touchmove', touchMove);
+dom.tabs.addEventListener('touchend', touchUp);
+dom.tabsLink.addEventListener('click', touchTab);
 window.addEventListener('resize', onResize);
 
+/**
+ * User touch the screen.
+ * @param {object} event 
+ */
+function touchDown(event) {
+  touch.startPosition = event.touches[0].clientX;
+  touch.endPosition = null;
+  removeTransition();
+}
+
+/**
+ * User move the finger.
+ * @param {object} event 
+ */
+function touchMove(event){
+  
+  /**
+   * 'touchend' would be the right event to set this variable. But it does not have 'clientX' property
+   */
+  touch.endPosition = event.touches[0].clientX;
+ 
+  if ( !leftLimit() && (event.touches[0].clientX > touch.startPosition + touch.offset) ) {
+    /**
+     * Avoid view's scroll while sliding
+     */
+    event.preventDefault();
+
+    touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
+    dom.tabs.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
+    dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft - (touch.move*tabsData[ tabsViews.currentTab ].previousTabScreenRatio) )+"px)";
+
+  } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
+    event.preventDefault();
+
+    touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
+    dom.tabs.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
+    dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft + (touch.move*tabsData[ tabsViews.currentTab+1 ].previousTabScreenRatio) )+"px)";
+
+  }
+
+}
+
+/**
+ * User stop touching the screen.
+ * @param {object} event 
+ */
+function touchUp(event) {
+  
+  /**
+   * - User's finger has change position
+   * - Enough distance has been traversed to change view
+   */
+  if( !touch.endPosition || 
+     !( (touch.startPosition > touch.endPosition && 
+        touch.startPosition - touch.endPosition >= touch.offset) ||
+        (touch.endPosition > touch.startPosition && 
+        touch.endPosition - touch.startPosition >= touch.offset) 
+      ) ){
+    return;
+  }
+
+  setTransition();
+  dom.tabsLinkArray[tabsViews.currentTab].classList.remove('active');
+  
+  /**
+   * See previous tab
+   */
+  if ( moveToLeftView() ) {
+    tabsViews.currentTab--;
+    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    manageTabs( tabsViews.currentTab );
+
+  /**
+   * See next tab
+   */
+  } else if ( moveToRightView() ) {
+    tabsViews.currentTab++;
+    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    manageTabs( tabsViews.currentTab );
+  
+  /**
+   * Touch move is not enough to change view. Return to current tab.
+   */
+  } else {
+    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  }
+
+  dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
+  updateIndicator();
+}
+
+/**
+ * User tap a tab.
+ * @param {object} event 
+ */
+function touchTab(event){
+
+  /**
+   * - User is not changing view with touch
+   * - User tap a tab
+   * - Tapped tab is not the current tab
+   */
+  if( tabsViews.sliding || 
+      event.target.className !== 'tab-link' || 
+      tabsViews.currentTab === parseInt(event.target.getAttribute('data-id')) ){ return; }
+
+  setTransition();
+  dom.tabsLinkArray[tabsViews.currentTab].classList.remove('active');
+  tabsViews.currentTab = parseInt(event.target.getAttribute('data-id'));
+  manageTabs(tabsViews.currentTab);
+
+  dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
+  updateIndicator();
+  
+}
+
+/**
+ * Recalculate data on screen orientation change
+ */
 function onResize(){
   clearTimeout(throttleTimeOut);
   throttleTimeOut = setTimeout(function() {
@@ -47,282 +171,194 @@ function onResize(){
   }, throttleTime);
 }
 
+/**
+ * Initialize data
+ */
 function initialize(){
-  containerWdith = tabsContainer.clientWidth;
-  if( equalTabs ){
-    equalWdith = 100 / tabsLinkArray.length;
+  tabsViews.containerWdith = dom.tabsContainer.clientWidth;
+
+  if( tabsScroll.equalTabs ){
+    tabsScroll.equalWdith = 100 / dom.tabsLinkArray.length;
   }else{
-    tabsLink.style.overflowX = 'auto';
+    dom.tabsLink.style.overflowX = 'auto';
   }
-  prepareTabs();
-  tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-  moveIndicator();
-}
 
-function prepareTabs(){
   tabsData = [];
-  [].forEach.call( tabsLinkArray, setData);
-  endTranslate = tabsData[ tabsData.length -1 ].translatePX;
-}
+  [].forEach.call( dom.tabsLinkArray, setData);
+  tabsViews.endTranslate = tabsData[ tabsData.length-1 ].translatePX;
 
-function setData( element, index ){
-    element.setAttribute('data-id', index);
-    if( equalTabs ){
-      element.style.width = equalWdith+'%';
-    }
-
-    var tab = {
-      id: index,
-      width: Math.floor(element.getBoundingClientRect().width),
-      translate: index * -100,
-    };
-    tab.center = Math.floor(tab.width/2);
-
-    if( index ){
-      tab.left = tabsData[index-1].right;
-      tab.right = tab.left + tab.width;
-      tab.translatePX = -( containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
-    }else{
-      tab.left = 0;
-      tab.right = tab.width;
-      tab.translatePX = 0;
-    }
-    
-    tab.marginLeft = tab.left + tab.center;
-
-    if( tabsData[index - 1] ){
-      tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / containerWdith;
-    }
-
-    tabsData.push(tab);
-  }
-
-//console.log( tabsData );
-
-// Eventos
-tabs.addEventListener('touchend', mouseUp);
-tabs.addEventListener('touchstart', mouseDown);
-tabs.addEventListener('touchmove', mouseMove);
-tabsLink.addEventListener('click', tabLink);
-
-moveIndicator();
-
-// Cambiar anchura y posición del indicador según la vista actual
-function moveIndicator(){
-  indicator.style.transform =  "scaleX(" + tabsData[currentTab].width + ")";
-  indicatorHelper.style.transform = "translateX("+ tabsData[currentTab].marginLeft +"px)";
-}
-
-// Evento cuando pulsamos una pestaña
-function tabLink(event){
-
-  /* Comprobar que:
-      - No estamos desplazando la vista
-      - Hemos pulsado una pestaña
-      - La pestaña que pulsamos no es la actual
-  */
-  if( sliding || event.target.className !== 'tab-link' || currentTab === parseInt(event.target.getAttribute('data-id')) ){ return; }
-
-  /* Fijamos la transición
-    Desmarcamos la pestaña actual
-    Elegimos nueva pestaña
-  */
-  setTransition();
-  tabsLinkArray[currentTab].classList.remove('active');
-  currentTab = parseInt(event.target.getAttribute('data-id'));
-
-  manageTabs(currentTab);
-
-  // Animamos la vista elegida, marcamos la pestaña activa y movemos el indicador
-  tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-  tabsLinkArray[currentTab].classList.add('active');
-  moveIndicator();
-  
-}
-
-function manageTabs( numTab ){
-
-  if( equalWdith ){ return; }
-
-  tabManaged = numTab;
-
-  cancelAnimationFrame(requestAnimationFrameReference);
-
-  if ( tabDesaparecePorLaIzquierda(numTab) ){
-    requestAnimationFrameReference = requestAnimationFrame( retrocederScroll );
-  }else if( tabDesaparecePorLaDerecha(numTab) ){
-    requestAnimationFrameReference = requestAnimationFrame( avanzarScroll );
-  }
-
-  if( numTab > 0 && tabDesaparecePorLaIzquierda( numTab-1 ) ){
-
-    cancelAnimationFrame(requestAnimationFrameReference)
-    tabManaged = numTab-1;
-
-    requestAnimationFrameReference = requestAnimationFrame( retrocederScroll );
-    
-  }else if( numTab < tabsData.length-1 && tabDesaparecePorLaDerecha( numTab+1 ) ){
-
-    cancelAnimationFrame(requestAnimationFrameReference)
-    tabManaged = numTab+1;
-
-    requestAnimationFrameReference = requestAnimationFrame( avanzarScroll );
-  }
-}
-
-function tabDesaparecePorLaIzquierda( numTab ){
-  return tabsData[ numTab ].left < tabsLink.scrollLeft;
-}
-
-function tabDesaparecePorLaDerecha( numTab ){
-  return tabsLink.clientWidth+tabsLink.scrollLeft < tabsData[ numTab ].right
-}
-
-// Levantamos el dedo
-function mouseUp(event) {
-  
-  /**
-   * Comprobamos que:
-   * - El dedo se haya movido ( fijamos la endposition en cada movimiento del dedo )
-   * - Nos hemos movido un mínimo de distancia para izquierda o derecha ( Esto es para evitar que cambiemos de vista 
-   * sin querer al hacer scroll vertical en una vista )
-   */
-  if( !endPosition || !( (startPosition > endPosition && startPosition - endPosition >= touchOffset) ||
-      (endPosition > startPosition && endPosition - startPosition >= touchOffset) ) ){
-        return;
-  }
-
-  // Fijamos transiciones
-  setTransition();
-  // Desmarcamos la pestaña activa
-  tabsLinkArray[currentTab].classList.remove('active');
-  
-  // Nos movemos a hacia una vista de la parte izquierda
-  if ( moveToLeftView() ) {
-
-    currentTab--;
-    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-    manageTabs( currentTab );
-
-  // Nos movemos a hacia una vista de la parte derecha
-  } else if ( moveToRightView() ) {
-
-    //previousTab = tabsData[ currentTab ];
-    currentTab++;
-    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-    manageTabs( currentTab );
-  
-  // Si no nos movemos una distancia mínima para cambiar de vista, volvemos a la vista actual
-  } else {
-    tabs.style.transform = "translateX(" + tabsData[ currentTab ].translatePX + "px)";
-  }
-
-  // Marcamos vista actual y movemos el indicador
-  tabsLinkArray[currentTab].classList.add('active');
-  moveIndicator();
+  dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  updateIndicator();
 }
 
 /**
- * Animar el scroll en las pestañas
- * TODO: Hay casos que se pueden reutilizar
+ * Set data for each tab.
+ * @param {object} element 
+ * @param {number} index 
  */
-function retrocederScroll( ){
-  tabsLink.scrollLeft = tabsLink.scrollLeft - speed;
-
-  if( tabDesaparecePorLaIzquierda( tabManaged ) ){
-    requestAnimationFrame( retrocederScroll );
+function setData( element, index ){
+  element.setAttribute('data-id', index);
+  if( tabsScroll.equalTabs ){
+    element.style.width = tabsScroll.equalWdith+'%';
   }
-}
 
-function avanzarScroll( ){
-  tabsLink.scrollLeft = tabsLink.scrollLeft + speed;
+  var tab = {
+    id: index,
+    width: Math.floor(element.getBoundingClientRect().width),
+    translate: index * -100,
+  };
+  tab.center = Math.floor(tab.width/2);
 
-  if( tabDesaparecePorLaDerecha( tabManaged ) ){
-    requestAnimationFrame( avanzarScroll );
+  if( index ){
+    tab.left = tabsData[index-1].right;
+    tab.right = tab.left + tab.width;
+    tab.translatePX = -( tabsViews.containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
+  }else{
+    tab.left = 0;
+    tab.right = tab.width;
+    tab.translatePX = 0;
   }
-}
-
-// El dedo toca la vista, aquí nos preparamos para mover la vista
-function mouseDown(event) {
-  // Fijamos posición inicial
-  startPosition = event.touches[0].clientX;
-  endPosition = null;
-
-  // Quitar transiciones para el indicador y las vistas
-  indicatorHelper.style.transition = "";
-  removeTransition();
-}
-
-// El dedo se mueve
-function mouseMove(event){
   
-  /**
-   * Fijamos la posición final en cada momento, lo idóneo sería fijar este valor cuando levantes el dedo, pero este valor no existe en
-   * el evento al levantar el dedo
-   */
-  endPosition = event.touches[0].clientX;
+  tab.marginLeft = tab.left + tab.center;
 
-  // Comprobamos si podemos ir hacia las vistas de la izquierda
-  // y Comprobar si el dedo se mueve para la derecha de la pantalla 
-  if ( !leftLimit() && (event.touches[0].clientX > startPosition + touchOffset) ) {
-    //Evitamos le scroll sobre la vista mientras cambiamos de vista
-    event.preventDefault();
-
-    // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
-    touchMove = event.touches[0].clientX - touchOffset - startPosition;
-    tabs.style.transform = "translateX(" + Math.floor(tabsData[ currentTab ].translatePX + touchMove) + "px)";
-    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft - (touchMove*tabsData[ currentTab ].previousTabScreenRatio) )+"px)";
-
-    // Comprobamos si podemos ir hacia las vistas de la derecha
-    // y si el dedo se mueve para la izquierda de la pantalla 
-  } else if ( !rightLimit() && ( event.touches[0].clientX < startPosition - touchOffset ) ) {
-    
-    //Evitamos le scroll sobre la vista mientras cambiamos de vista
-    event.preventDefault();
-
-    // Actualizamos la posición translación de la vista y del indicador según el movimiento del dedo
-    touchMove = startPosition - event.touches[0].clientX - touchOffset;
-    tabs.style.transform = "translateX(" + Math.floor(tabsData[ currentTab ].translatePX - touchMove) + "px)";
-    indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[currentTab].marginLeft + (touchMove*tabsData[ currentTab+1 ].previousTabScreenRatio) )+"px)";
-
+  if( tabsData[index - 1] ){
+    tab.previousTabScreenRatio = (tab.marginLeft - tabsData[index-1].marginLeft) / tabsViews.containerWdith;
   }
 
+  tabsData.push(tab);
 }
 
-// Poner transición a las vista y al indicador cuando no nos desplazamos con el dedo
+/**
+ * Change width and position of indicator.
+ */ 
+function updateIndicator(){
+  dom.indicator.style.transform =  "scaleX(" + tabsData[tabsViews.currentTab].width + ")";
+  dom.indicatorHelper.style.transform = "translateX("+ tabsData[tabsViews.currentTab].marginLeft +"px)";
+}
+
+/**
+ * Control tab is visible.
+ * @param {number} numTab 
+ */
+function manageTabs( numTab ){
+
+  if( tabsScroll.equalTabs ){ return; }
+
+  tabsScroll.tabManaged = numTab;
+
+  cancelAnimationFrame(tabsScroll.requestAnimationFrameReference);
+
+  if ( tabHideLeftPart(numTab) ){
+    tabsScroll.requestAnimationFrameReference = requestAnimationFrame( decreaseScroll );
+  }else if( tabHideRigthPart(numTab) ){
+    tabsScroll.requestAnimationFrameReference = requestAnimationFrame( increaseScroll );
+  }
+
+  if( numTab > 0 && tabHideLeftPart( numTab-1 ) ){
+
+    cancelAnimationFrame(tabsScroll.requestAnimationFrameReference)
+    tabsScroll.tabManaged = numTab-1;
+
+    tabsScroll.requestAnimationFrameReference = requestAnimationFrame( decreaseScroll );
+    
+  }else if( numTab < tabsData.length-1 && tabHideRigthPart( numTab+1 ) ){
+
+    cancelAnimationFrame(tabsScroll.requestAnimationFrameReference)
+    tabsScroll.tabManaged = numTab+1;
+
+    tabsScroll.requestAnimationFrameReference = requestAnimationFrame( increaseScroll );
+  }
+}
+
+/**
+ * Left border of screen cuts tab.
+ * @param {number} numTab 
+ * @return {boolean} 
+ */
+function tabHideLeftPart( numTab ){
+  return tabsData[ numTab ].left < dom.tabsLink.scrollLeft;
+}
+
+/**
+ * Right border of screen cuts tab.
+ * @param {number} numTab 
+ * @return {boolean} 
+ */
+function tabHideRigthPart( numTab ){
+  return dom.tabsLink.clientWidth+dom.tabsLink.scrollLeft < tabsData[ numTab ].right
+}
+
+/**
+ * Animate tabs' scroll and make the tab visible.
+ */
+function decreaseScroll( ){
+  dom.tabsLink.scrollLeft = dom.tabsLink.scrollLeft - tabsScroll.speed;
+
+  if( tabHideLeftPart( tabsScroll.tabManaged ) ){
+    requestAnimationFrame( decreaseScroll );
+  }
+}
+
+function increaseScroll( ){
+  dom.tabsLink.scrollLeft = dom.tabsLink.scrollLeft + tabsScroll.speed;
+
+  if( tabHideRigthPart( tabsScroll.tabManaged ) ){
+    requestAnimationFrame( increaseScroll );
+  }
+}
+
+/**
+ * Set transitions.
+ */
 function setTransition(){
-  indicatorHelper.style.transition = "transform 0.3s";
-  tabs.style.transition = "transform 0.3s";
-  indicator.style.transition = "transform 0.3s";
+  dom.indicatorHelper.style.transition = "transform 0.3s";
+  dom.tabs.style.transition = "transform 0.3s";
+  dom.indicator.style.transition = "transform 0.3s";
 }
 
-// Quitar transición a las vista y al indicador mientras desplazamos con el dedo 
+/**
+ * Remove transitions.
+ */
 function removeTransition(){
-  indicatorHelper.style.transition = "";
-  tabs.style.transition = "";
-  indicator.style.transition = "";
+  dom.indicatorHelper.style.transition = "";
+  dom.tabs.style.transition = "";
+  dom.indicator.style.transition = "";
 }
 
-// Comprobar si estamos al principio
+/**
+ * Check if current tab is the first one.
+ * @return {boolean}
+ */
 function leftLimit(){
-  return tabsData[ currentTab ].translatePX === startTranslate;
+  return tabsData[ tabsViews.currentTab ].translatePX === tabsViews.startTranslate;
 }
 
-// Comprobar si estamos al final
+/**
+ * Check if current tab is the last one.
+ * @return {boolean}
+ */
 function rightLimit(){
-  return tabsData[ currentTab ].translatePX === endTranslate;
+  return tabsData[ tabsViews.currentTab ].translatePX === tabsViews.endTranslate;
 }
 
+/**
+ * User want see next view.
+ * @return {boolean}
+ */
 function moveToRightView(){
   return !rightLimit() && 
-    startPosition > endPosition &&
-    startPosition - endPosition > distanceToChangeView;
+    touch.startPosition > touch.endPosition &&
+    touch.startPosition - touch.endPosition > tabsViews.distanceToChangeView;
 }
 
+/**
+ * User want see previous view.
+ * @return {boolean}
+ */
 function moveToLeftView(){
   return !leftLimit() &&
-    endPosition > startPosition &&
-    endPosition - startPosition > distanceToChangeView;
+    touch.endPosition > touch.startPosition &&
+    touch.endPosition - touch.startPosition > tabsViews.distanceToChangeView;
 }
 
 }
