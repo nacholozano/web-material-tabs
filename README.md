@@ -1,8 +1,9 @@
 # Web Google Material Tabs
 
 Web clone of [Google Material Tabs](https://material.io/guidelines/components/tabs.html). <br>
-Made with requestAnimationFrame and CSS 2D transforms. <br>
+Made in VanillaJS with requestAnimationFrame and CSS 2D transforms. <br>
 Built with ionic2 in mind. So better test in mobile. <br>
+Thinking of make more native app's behavior with web technologies. Specific for ionic2.
 
 ### Table of contents 
 1. [Preview](#preview)
