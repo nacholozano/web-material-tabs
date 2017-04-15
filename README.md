@@ -1,4 +1,4 @@
-# infinite-views
+# Web Google Material Tabs
 
 Web clone of [Google Material Tabs](https://material.io/guidelines/components/tabs.html). <br>
 Made with requestAnimationFrame and CSS 2D transforms. <br>
