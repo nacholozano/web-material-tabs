@@ -8,7 +8,7 @@ var startPosition = null, // Posición de inicio al tocar la vista
   // DOM elements
   tabsContainer = document.getElementById('tabs-container'),
   tabs = document.getElementById('tabs-move'),
-  lastTab = tabs.getElementsByClassName('tab').length - 1,
+  //lastTab = tabs.getElementsByClassName('tab').length - 1,
   tabsLink = document.getElementsByClassName('tabs-link')[0],
   tabsLinkArray = document.getElementsByClassName('tab-link'),
   indicator = document.getElementsByClassName('indicator')[0],

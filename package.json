@@ -7,13 +7,18 @@
   "license": "MIT",
   "scripts": {
     "watch:scss": "node-sass --watch src/style/ -o src/",
+    "build:js": "uglifyjs src/js/**.js -o dist/web-google-material-tabs.min.js -c -m --wrap='WGMT'",
+    "build:css": "cleancss src/style.css -o dist/web-google-material-tabs.min.css",
     "sync": "browser-sync start --server 'src/' --files 'src/*.html,src/js/*.js,src/*.css' --host 192.168.1.39",
-    "dev": "concurrently --kill-others 'yarn run watch:scss' 'yarn run sync'" 
+    "dev": "concurrently --kill-others 'yarn run watch:scss' 'yarn run sync'",
+    "build": "concurrently 'yarn run build:js' 'yarn run build:css'"
   },
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.18.8",
+    "clean-css-cli": "^4.0.12",
     "concurrently": "^3.4.0",
-    "node-sass": "^4.5.2"
+    "node-sass": "^4.5.2",
+    "uglify-js": "^2.8.22"
   }
 }
