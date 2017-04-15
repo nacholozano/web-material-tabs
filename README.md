@@ -28,8 +28,8 @@ Thinking of make more native app's behavior with web technologies. Specific for 
 
 # Usage
 
-### Tabs width equal width.
+### Tabs with equal width.
 Set `equalTabs = true` and use few tabs. 
 
-### Auto width tabs that allow scroll if you have many tabs.
+### Auto with tabs that allow scroll if you have many tabs.
 Set `equalTabs = false` and have all tabs you want.
