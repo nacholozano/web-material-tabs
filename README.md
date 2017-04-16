@@ -4,7 +4,7 @@ Web clone of [Google Material Tabs](https://material.io/guidelines/components/ta
 Made in VanillaJS with requestAnimationFrame and CSS 2D transforms. <br>
 Built with ionic2 in mind so Better test touch events in mobile. <br>
 At the moment is just plain js, not typescript or angular. <br>
-Good performance in Android 5.0-Chrome 57. Same technology that android WebView. <br>
+Good performance in Android 5.0-Chrome 57. Same technology that android WebView. I Can't test it on iphone.<br>
 Thinking of make more native app's behavior with web technologies.
 
 ### Table of contents 
