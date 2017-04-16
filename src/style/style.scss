@@ -3,7 +3,7 @@ $base-font: 15px;
 $tab-font-color: #3a3a3a;
 $tab-font-weight: 300;
 $tab-active-font-weight: 600;
-// Cálculos para que se ajuste perfectamente a la pantalla
+// Calculation to cover screen.
 $tab-indicator-height: 0.2rem;
 $tab-height: 3rem;
 $tabs-link-height: $tab-indicator-height + $tab-height;
@@ -34,8 +34,8 @@ body {
 .tabs-container {
   position: relative;
   height: 100%;
-  white-space: nowrap; // Para que todo este en una línea
-  overflow-x: hidden; // Evitar scroll en la pantalla completa
+  white-space: nowrap; // All tabs in the same line
+  overflow-x: hidden; // Avoid horizontal scroll
   user-select: none; 
 
   .tab-loader {
@@ -63,8 +63,7 @@ body {
   }
 
   .tabs-link {
-    font-size: 0; // Eliminar espacio entre pestañas
-    //overflow-x: auto; // Scroll para ver todas las pestañas
+    font-size: 0; // Remove space between tabs
     color: $tab-font-color;
     font-weight: $tab-font-weight; 
     text-transform: uppercase;
@@ -77,7 +76,6 @@ body {
       padding: 1em;
       cursor: pointer;
       position: relative;
-      //white-space: normal;
       vertical-align: middle;
 
       &.active{
@@ -111,8 +109,8 @@ body {
   }
 
   .tabs-move {
-    font-size: 0px; // Eliminar espacio entre pestañas
-    height: calc( 100% - #{$tabs-link-height} ); // Calcular altura de las pestañas  
+    font-size: 0px; // Remove space between tabs
+    height: calc( 100% - #{$tabs-link-height} ); // Calculate tabs container height
  
     .tab {
       padding: 1em;
@@ -122,7 +120,7 @@ body {
       font-size: $base-font-size;
       white-space: normal;
       vertical-align: top;
-      overflow-y: auto; //Scroll individual de cada pestaña
+      overflow-y: auto; //Scroll by tab
 
       &:nth-child(odd) {
         background-color: $green;
