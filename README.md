@@ -29,7 +29,7 @@ Thinking of make more native app's behavior with web technologies.
 - Change tab in any moment.
 - It works with mobile change orientation.
 - The current and next/previous tab is always visible.
-- Load tab data when tab is the current tab. <br>
+- Load tab data when user changes tab.
   (No request cancellation and not refresh at the moment) 
 - Two modes:
     - Many tabs with auto width and scrollable element. <br>
