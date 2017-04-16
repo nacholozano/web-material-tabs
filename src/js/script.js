@@ -4,11 +4,13 @@ var throttleTime = 300,
   throttleTimeOut = null,
   dom = {
     tabsContainer: document.getElementById('tabs-container'),
-    tabs: document.getElementById('tabs-move'),
+    tabsMove: document.getElementById('tabs-move'),
     tabsLink: document.getElementsByClassName('tabs-link')[0],
     tabsLinkArray: document.getElementsByClassName('tab-link'),
+    tabsArray: document.getElementsByClassName('tab'),
     indicator: document.getElementsByClassName('indicator')[0],
-    indicatorHelper: document.getElementsByClassName('indicator-helper')[0]
+    indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
+    tabLoader: document.getElementsByClassName('tab-loader')[0]
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -30,6 +32,28 @@ var throttleTime = 300,
     sliding: false, // Know if user is changing view
     distanceToChangeView: 150, // Minumum distance to change view
     currentTab: 0
+  }
+  requestForTab = {
+    2: {
+      received: false,
+      url: 'https://jsonplaceholder.typicode.com/posts/1',
+      success: function( data ){
+        dom.tabsArray[2].innerText = data.body;
+      },
+      error: function( data ){
+        dom.tabsArray[2].innerText = 'Error Loading data.';
+      }
+    },
+    3: {
+      received: false,
+      url: 'https://jsonplaceholder.typicode.com/posts/200000000',
+      success: function( data ){
+        dom.tabsArray[3].innerText = data.body;
+      },
+      error: function( data ){
+        dom.tabsArray[3].innerText = 'Error Loading data. Continue reading next tab if you want to know what lorem ipsum say.';
+      }
+    } 
   },
   tabsData = [];
 
@@ -38,11 +62,15 @@ initialize();
 /**
  * Events
  */
-dom.tabs.addEventListener('touchstart', touchDown);
-dom.tabs.addEventListener('touchmove', touchMove);
-dom.tabs.addEventListener('touchend', touchUp);
+dom.tabsMove.addEventListener('touchstart', touchDown);
+dom.tabsMove.addEventListener('touchmove', touchMove);
+dom.tabsMove.addEventListener('touchend', touchUp);
+dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
 window.addEventListener('resize', onResize);
+document.getElementById('button-change-tab').addEventListener('click', function(){
+  changeTab(1);
+});
 
 /**
  * User touch the screen.
@@ -72,14 +100,14 @@ function touchMove(event){
     event.preventDefault();
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
-    dom.tabs.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
+    dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft - (touch.move*tabsData[ tabsViews.currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
     event.preventDefault();
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
-    dom.tabs.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
+    dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft + (touch.move*tabsData[ tabsViews.currentTab+1 ].previousTabScreenRatio) )+"px)";
 
   }
@@ -113,22 +141,22 @@ function touchUp(event) {
    */
   if ( moveToLeftView() ) {
     tabsViews.currentTab--;
-    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     manageTabs( tabsViews.currentTab );
-
+    
   /**
    * See next tab
    */
   } else if ( moveToRightView() ) {
     tabsViews.currentTab++;
-    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     manageTabs( tabsViews.currentTab );
-  
+    
   /**
    * Touch move is not enough to change view. Return to current tab.
    */
   } else {
-    dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   }
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
@@ -141,24 +169,29 @@ function touchUp(event) {
  */
 function touchTab(event){
 
-  /**
-   * - User is not changing view with touch
-   * - User tap a tab
-   * - Tapped tab is not the current tab
-   */
-  if( tabsViews.sliding || 
-      event.target.className !== 'tab-link' || 
-      tabsViews.currentTab === parseInt(event.target.getAttribute('data-id')) ){ return; }
+  if( event.target.className !== 'tab-link' ){ return; }
+
+  changeTab( parseInt(event.target.getAttribute('data-id')) );
+}
+
+/**
+ * Open tab programatically
+ * @param {number} numTab 
+ */
+function changeTab( numTab ){
+
+  if ( numTab !== 0 && !numTab || 
+       tabsViews.currentTab === numTab ||
+       tabsViews.sliding ){ return; }
 
   setTransition();
-  dom.tabsLinkArray[tabsViews.currentTab].classList.remove('active');
-  tabsViews.currentTab = parseInt(event.target.getAttribute('data-id'));
+  dom.tabsLinkArray[ tabsViews.currentTab ].classList.remove('active');
+  tabsViews.currentTab = numTab;
   manageTabs(tabsViews.currentTab);
 
-  dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
-  
 }
 
 /**
@@ -187,7 +220,7 @@ function initialize(){
   [].forEach.call( dom.tabsLinkArray, setData);
   tabsViews.endTranslate = tabsData[ tabsData.length-1 ].translatePX;
 
-  dom.tabs.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   updateIndicator();
 }
 
@@ -312,7 +345,7 @@ function increaseScroll( ){
  */
 function setTransition(){
   dom.indicatorHelper.style.transition = "transform 0.3s";
-  dom.tabs.style.transition = "transform 0.3s";
+  dom.tabsMove.style.transition = "transform 0.3s";
   dom.indicator.style.transition = "transform 0.3s";
 }
 
@@ -321,7 +354,7 @@ function setTransition(){
  */
 function removeTransition(){
   dom.indicatorHelper.style.transition = "";
-  dom.tabs.style.transition = "";
+  dom.tabsMove.style.transition = "";
   dom.indicator.style.transition = "";
 }
 
@@ -359,6 +392,52 @@ function moveToLeftView(){
   return !leftLimit() &&
     touch.endPosition > touch.startPosition &&
     touch.endPosition - touch.startPosition > tabsViews.distanceToChangeView;
+}
+
+/**
+ * Run code when transition between views has finished
+ * @param {object} event 
+ */
+function transitionend(event) {
+  loadTabData( tabsViews.currentTab );
+}
+
+/**
+ * Load tab data if tab is empty
+ * @param {number} numTab 
+ */
+function loadTabData( numTab ){
+  if( !requestForTab[numTab] || requestForTab[numTab].received ){ return; }
+   
+  dom.tabLoader.classList.remove('tab-loader-hide');
+
+  setTimeout(function(){
+    makeTestRequest( numTab );
+  }, 1000);
+}
+
+/**
+ * Request fake data
+ * @param {number} numTab 
+ */
+function makeTestRequest( numTab ){
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState === 4) {
+
+      if( this.status === 200 && requestForTab[numTab].success ){
+        requestForTab[numTab].success( JSON.parse(this.responseText) );
+
+      }else if( requestForTab[numTab].error ){
+        requestForTab[numTab].error( JSON.parse(this.responseText) );
+      }
+
+      dom.tabLoader.classList.add('tab-loader-hide');
+      requestForTab[numTab].received = true;
+    }
+  };
+  xhttp.open("GET", requestForTab[numTab].url, true);
+  xhttp.send();  
 }
 
 }

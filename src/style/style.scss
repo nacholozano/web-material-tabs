@@ -10,12 +10,15 @@ $tabs-link-height: $tab-indicator-height + $tab-height;
 $base-font-size: 1rem;
 $tab-link-space: $base-font-size;
 
-/*html{
-  font-size: $base-font;
-}*/
+$loader-width: 0.3em;
+$loader-dimensions: 4em;
 
 html,body{
   height: 100%;
+}
+
+button{
+  padding: 1em;
 }
 
 * {
@@ -29,10 +32,35 @@ body {
 }
  
 .tabs-container {
+  position: relative;
   height: 100%;
   white-space: nowrap; // Para que todo este en una línea
   overflow-x: hidden; // Evitar scroll en la pantalla completa
   user-select: none; 
+
+  .tab-loader {
+    display: inline-block;
+    position: absolute;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: $loader-dimensions;
+    height: $loader-dimensions;
+    &:before{
+      content: '';
+      position: absolute;
+      border: $loader-width solid $green;
+      border-top: $loader-width solid white;
+      border-radius: 50%;
+      width: $loader-dimensions;
+      height: $loader-dimensions;
+      animation: spin 1s linear infinite;
+    }
+    &.tab-loader-hide{
+      display: none;
+    }
+  }
 
   .tabs-link {
     font-size: 0; // Eliminar espacio entre pestañas
@@ -84,10 +112,10 @@ body {
 
   .tabs-move {
     font-size: 0px; // Eliminar espacio entre pestañas
-    height: calc( 100% - #{$tabs-link-height} ); // CAlcular altura de las pestañas  
+    height: calc( 100% - #{$tabs-link-height} ); // Calcular altura de las pestañas  
  
     .tab {
-      padding: 2em;
+      padding: 1em;
       display: inline-block;
       width: 100%;
       height: 100%;
@@ -108,4 +136,9 @@ body {
     
   }
   
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
