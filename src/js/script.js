@@ -201,6 +201,7 @@ function onResize(){
   clearTimeout(throttleTimeOut);
   throttleTimeOut = setTimeout(function() {
       initialize();
+      manageTabs( tabsViews.currentTab );
   }, throttleTime);
 }
 
@@ -274,6 +275,8 @@ function updateIndicator(){
  * @param {number} numTab 
  */
 function manageTabs( numTab ){
+
+  //alert('managetabs');
 
   if( tabsScroll.equalTabs ){ return; }
 
