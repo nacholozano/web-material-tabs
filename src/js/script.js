@@ -66,7 +66,7 @@ initialize();
 dom.tabsMove.addEventListener('touchstart', touchDown);
 dom.tabsMove.addEventListener('touchmove', touchMove);
 dom.tabsMove.addEventListener('touchend', touchUp);
-dom.tabsMove.addEventListener("transitionend", transitionend);
+dom.tabsMoveClass.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
 window.addEventListener('resize', onResize);
 document.getElementById('button-change-tab').addEventListener('click', function(){
