@@ -41,10 +41,12 @@
       </div>
   </div>
 
-  <div class="cover tr">
-    <div class="tabs-move" style="display: table-cell;height: 100%;">  <!-- tab-move -->
+  <div id="tabs-move" class="cover tr">
+    <div  style="display: table-cell;height: 100%;overflow-x: hidden;position: relative">  <!-- tab-move -->
 
-      <div class="tab" style="height: 100%;overflow-y: auto;">  <!-- tabs -->
+    <div class="tabs-move" style="position: absolute;white-space: nowrap;font-size: 0px;height:100%">
+
+      <div class="tab" style="height: 100%;overflow-y: auto">  <!-- tabs -->
         <p>
             Web clone of <a href="https://material.io/guidelines/components/tabs.html">Google Material Tabs trying to imitate native apps' behavior.</a> <br>
             Made in VanillaJS with requestAnimationFrame and CSS 2D transforms.
@@ -96,7 +98,17 @@
 
           <button id="button-change-tab">I want to see more !</button>
       </div>
+
+      <div class="tab">
+        The next 2 tabs make a request. <br>
+        The first one receives data. <br>
+        The second one's request always fails. 
+      </div>
+
+      </div>
+
     </div>
+
   </div>
 
 </div>

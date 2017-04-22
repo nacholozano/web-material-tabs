@@ -5,6 +5,7 @@ var throttleTime = 300,
   dom = {
     tabsContainer: document.getElementById('tabs-container'),
     tabsMove: document.getElementById('tabs-move'),
+    tabsMoveClass: document.getElementsByClassName('tabs-move')[0],
     tabsLink: document.getElementsByClassName('tabs-link')[0],
     tabsLinkArray: document.getElementsByClassName('tab-link'),
     tabsArray: document.getElementsByClassName('tab'),
@@ -100,14 +101,14 @@ function touchMove(event){
     event.preventDefault();
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
-    dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
+    dom.tabsMoveClass.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft - (touch.move*tabsData[ tabsViews.currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
     event.preventDefault();
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
-    dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
+    dom.tabsMoveClass.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft + (touch.move*tabsData[ tabsViews.currentTab+1 ].previousTabScreenRatio) )+"px)";
 
   }
@@ -141,7 +142,7 @@ function touchUp(event) {
    */
   if ( moveToLeftView() ) {
     tabsViews.currentTab--;
-    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMoveClass.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     manageTabs( tabsViews.currentTab );
     
   /**
@@ -149,14 +150,14 @@ function touchUp(event) {
    */
   } else if ( moveToRightView() ) {
     tabsViews.currentTab++;
-    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMoveClass.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     manageTabs( tabsViews.currentTab );
     
   /**
    * Touch move is not enough to change view. Return to current tab.
    */
   } else {
-    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    dom.tabsMoveClass.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   }
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
@@ -189,7 +190,7 @@ function changeTab( numTab ){
   tabsViews.currentTab = numTab;
   manageTabs(tabsViews.currentTab);
 
-  dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  dom.tabsMoveClass.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
 }
@@ -221,7 +222,7 @@ function initialize(){
   [].forEach.call( dom.tabsLinkArray, setData);
   tabsViews.endTranslate = tabsData[ tabsData.length-1 ].translatePX;
 
-  dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+  dom.tabsMoveClass.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   updateIndicator();
 }
 
@@ -348,7 +349,7 @@ function increaseScroll( ){
  */
 function setTransition(){
   dom.indicatorHelper.style.transition = "transform 0.3s";
-  dom.tabsMove.style.transition = "transform 0.3s";
+  dom.tabsMoveClass.style.transition = "transform 0.3s";
   dom.indicator.style.transition = "transform 0.3s";
 }
 
@@ -357,7 +358,7 @@ function setTransition(){
  */
 function removeTransition(){
   dom.indicatorHelper.style.transition = "";
-  dom.tabsMove.style.transition = "";
+  dom.tabsMoveClass.style.transition = "";
   dom.indicator.style.transition = "";
 }
 
