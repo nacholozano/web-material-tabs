@@ -62,8 +62,8 @@ body {
     }
   }
 
-  .tabs-link {
-    font-size: 0; // Remove space between tabs
+  /*.tabs-link {
+    font-size: 0;
     color: $tab-font-color;
     font-weight: $tab-font-weight; 
     text-transform: uppercase;
@@ -106,7 +106,7 @@ body {
       }
     }
 
-  }
+  }*/
 
   .tabs-move {
     font-size: 0px; // Remove space between tabs
@@ -139,4 +139,69 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+html,body,table{
+  height: 100%;
+  margin: 0;
+}
+
+.table{
+  width: 100%;
+  table-layout: fixed;
+  display: table;
+  height: 100%;
+}
+/*
+tbody{
+  vertical-align: top;
+}*/
+.tr{
+  display: table-row;
+}
+
+.cover{
+  height: 100%;
+}
+
+.cover>div>div{
+  background-color: green;
+}
+
+.overflow{
+  overflow-x: auto;
+}
+
+
+
+
+
+.tabs-link {
+  font-size: 0;
+  color: $tab-font-color;
+  font-weight: $tab-font-weight; 
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow-x: auto;
+
+  .tab-link {
+    line-height: $tab-link-space;
+    text-align: center;
+    font-size: $tab-link-space;
+    display: inline-block;
+    padding: 1em;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+
+    &.active{
+      color: $green;
+      font-weight: $tab-active-font-weight; 
+    }
+  }
 }

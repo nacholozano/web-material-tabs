@@ -17,7 +17,52 @@ body {
   height: 100%;
   white-space: nowrap;
   overflow-x: hidden;
-  user-select: none; }
+  user-select: none;
+  /*.tabs-link {
+    font-size: 0;
+    color: $tab-font-color;
+    font-weight: $tab-font-weight; 
+    text-transform: uppercase;
+    
+    .tab-link {
+      line-height: $tab-link-space;
+      text-align: center;
+      font-size: $tab-link-space;
+      display: inline-block;
+      padding: 1em;
+      cursor: pointer;
+      position: relative;
+      vertical-align: middle;
+
+      &.active{
+        color: $green;
+        font-weight: $tab-active-font-weight; 
+      }
+    }
+ 
+    .tab-indicator {
+      height: $tab-indicator-height;  
+
+      .indicator-helper {
+        transform-origin: 0 0;
+        width: 1px;
+        height: 100%;
+        display: inline-block;
+
+        .indicator {
+          height: 100%;
+          width: 1px;
+          background-color: $green;
+          display: inline-block;
+          @supports (will-change: transform) {
+            will-change: transform;
+          }
+        }
+
+      }
+    }
+
+  }*/ }
   .tabs-container .tab-loader {
     display: inline-block;
     position: absolute;
@@ -38,38 +83,6 @@ body {
       animation: spin 1s linear infinite; }
     .tabs-container .tab-loader.tab-loader-hide {
       display: none; }
-  .tabs-container .tabs-link {
-    font-size: 0;
-    color: #3a3a3a;
-    font-weight: 300;
-    text-transform: uppercase; }
-    .tabs-container .tabs-link .tab-link {
-      line-height: 1rem;
-      text-align: center;
-      font-size: 1rem;
-      display: inline-block;
-      padding: 1em;
-      cursor: pointer;
-      position: relative;
-      vertical-align: middle; }
-      .tabs-container .tabs-link .tab-link.active {
-        color: #4CAF50;
-        font-weight: 600; }
-    .tabs-container .tabs-link .tab-indicator {
-      height: 0.2rem; }
-      .tabs-container .tabs-link .tab-indicator .indicator-helper {
-        transform-origin: 0 0;
-        width: 1px;
-        height: 100%;
-        display: inline-block; }
-        .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
-          height: 100%;
-          width: 1px;
-          background-color: #4CAF50;
-          display: inline-block; }
-          @supports (will-change: transform) {
-            .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
-              will-change: transform; } }
   .tabs-container .tabs-move {
     font-size: 0px;
     height: calc( 100% - 3.2rem); }
@@ -94,3 +107,49 @@ body {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+
+html, body, table {
+  height: 100%;
+  margin: 0; }
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  display: table;
+  height: 100%; }
+
+/*
+tbody{
+  vertical-align: top;
+}*/
+.tr {
+  display: table-row; }
+
+.cover {
+  height: 100%; }
+
+.cover > div > div {
+  background-color: green; }
+
+.overflow {
+  overflow-x: auto; }
+
+.tabs-link {
+  font-size: 0;
+  color: #3a3a3a;
+  font-weight: 300;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow-x: auto; }
+  .tabs-link .tab-link {
+    line-height: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    display: inline-block;
+    padding: 1em;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle; }
+    .tabs-link .tab-link.active {
+      color: #4CAF50;
+      font-weight: 600; }
