@@ -31,7 +31,8 @@ var throttleTime = 300,
     startTranslate: 0, // First view translation
     endTranslate: null, // Last view translation
     sliding: false, // Know if user is changing view
-    distanceToChangeView: 150, // Minumum distance to change view
+    distanceToChangeViewScreenRatio: 2.3,
+    distanceToChangeView: null, // Minumum distance to change view
     currentTab: 0
   }
   requestForTab = {
@@ -212,6 +213,7 @@ function onResize(){
 function initialize(){
 
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
+  tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
   
   if( tabsScroll.equalTabs ){
     tabsScroll.equalWdith = 100 / dom.tabsLinkArray.length;
