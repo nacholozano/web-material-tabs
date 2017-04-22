@@ -23,7 +23,7 @@ var throttleTime = 300,
     speed: 10, // Scroll speed if tab is not fully visible
     requestAnimationFrameReference: null, // Reference to cancel raf
     tabManaged: null, // Checking if this tab is fully visible
-    equalTabs: false, // All tabs have equal width
+    equalTabs: true, // All tabs have equal width
     equalWdith: null
   },
   tabsViews = {
@@ -210,10 +210,14 @@ function onResize(){
  * Initialize data
  */
 function initialize(){
-  tabsViews.containerWdith = dom.tabsContainer.clientWidth;
 
+  tabsViews.containerWdith = dom.tabsContainer.clientWidth;
+  
   if( tabsScroll.equalTabs ){
     tabsScroll.equalWdith = 100 / dom.tabsLinkArray.length;
+     if( !dom.tabsLink.classList.contains('equal-tabs') ){
+      dom.tabsLink.classList.add('equal-tabs');
+    }
   }else{
     dom.tabsLink.style.overflowX = 'auto';
   }

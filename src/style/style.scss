@@ -64,6 +64,13 @@ button{
       white-space: nowrap;
       overflow-x: auto;
 
+      &.equal-tabs{
+        .tab-link{
+          white-space: normal;
+          //font-size: 0.8rem;
+        }
+      }
+
       .tab-link {
         text-align: center;
         font-size: $base-font-size;
