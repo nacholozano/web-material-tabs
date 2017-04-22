@@ -1,23 +1,21 @@
-html, body {
-  height: 100%; }
-
-button {
-  padding: 1em; }
+html {
+  font-family: "Arial"; }
 
 * {
   box-sizing: border-box; }
 
-body {
-  padding: 0;
-  margin: 0;
-  font-family: "Arial"; }
+html, body, table {
+  height: 100%;
+  margin: 0; }
+
+button {
+  padding: 1em; }
 
 .tabs-container {
-  position: relative;
-  height: 100%;
-  white-space: nowrap;
-  overflow-x: hidden;
-  user-select: none; }
+  width: 100%;
+  table-layout: fixed;
+  display: table;
+  height: 100%; }
   .tabs-container .tab-loader {
     display: inline-block;
     position: absolute;
@@ -38,56 +36,69 @@ body {
       animation: spin 1s linear infinite; }
     .tabs-container .tab-loader.tab-loader-hide {
       display: none; }
-  .tabs-container .tabs-link {
-    font-size: 0;
-    color: #3a3a3a;
-    font-weight: 300;
-    text-transform: uppercase; }
-    .tabs-container .tabs-link .tab-link {
-      line-height: 1rem;
-      text-align: center;
-      font-size: 1rem;
-      display: inline-block;
-      padding: 1em;
-      cursor: pointer;
-      position: relative;
-      vertical-align: middle; }
-      .tabs-container .tabs-link .tab-link.active {
-        color: #4CAF50;
-        font-weight: 600; }
-    .tabs-container .tabs-link .tab-indicator {
-      height: 0.2rem; }
-      .tabs-container .tabs-link .tab-indicator .indicator-helper {
-        transform-origin: 0 0;
-        width: 1px;
-        height: 100%;
-        display: inline-block; }
-        .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
-          height: 100%;
+  .tabs-container .tabs-link-container {
+    display: table-row; }
+    .tabs-container .tabs-link-container .tabs-link {
+      font-size: 0;
+      color: #3a3a3a;
+      font-weight: 300;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow-x: auto; }
+      .tabs-container .tabs-link-container .tabs-link .tab-link {
+        text-align: center;
+        font-size: 1rem;
+        display: inline-block;
+        padding: 1em;
+        cursor: pointer;
+        position: relative;
+        vertical-align: middle; }
+        .tabs-container .tabs-link-container .tabs-link .tab-link.active {
+          color: #4CAF50;
+          font-weight: 600; }
+      .tabs-container .tabs-link-container .tabs-link .tab-indicator {
+        height: 0.2rem; }
+        .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {
+          transform-origin: 0 0;
           width: 1px;
-          background-color: #4CAF50;
+          height: 100%;
           display: inline-block; }
-          @supports (will-change: transform) {
-            .tabs-container .tabs-link .tab-indicator .indicator-helper .indicator {
-              will-change: transform; } }
-  .tabs-container .tabs-move {
-    font-size: 0px;
-    height: calc( 100% - 3.2rem); }
-    .tabs-container .tabs-move .tab {
-      padding: 1em;
-      display: inline-block;
-      width: 100%;
+          .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper .indicator {
+            height: 100%;
+            width: 1px;
+            background-color: #4CAF50;
+            display: inline-block;
+            will-change: transform; }
+  .tabs-container .tabs-move-container {
+    display: table-row;
+    height: 100%; }
+    .tabs-container .tabs-move-container .tabs-move-cell {
+      display: table-cell;
       height: 100%;
-      font-size: 1rem;
-      white-space: normal;
-      vertical-align: top;
-      overflow-y: auto; }
-      .tabs-container .tabs-move .tab:nth-child(odd) {
-        background-color: #4CAF50;
-        color: white; }
-    @supports (will-change: transform) {
-      .tabs-container .tabs-move {
-        will-change: transform; } }
+      overflow-x: hidden;
+      position: relative; }
+      .tabs-container .tabs-move-container .tabs-move-cell .tabs-move {
+        position: absolute;
+        white-space: nowrap;
+        font-size: 0px;
+        height: 100%;
+        width: 100%;
+        will-change: transform; }
+        .tabs-container .tabs-move-container .tabs-move-cell .tabs-move .tab {
+          vertical-align: top;
+          padding: 1em;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          font-size: 1rem;
+          white-space: normal;
+          vertical-align: top;
+          overflow-y: auto;
+          height: 100%;
+          overflow-y: auto; }
+          .tabs-container .tabs-move-container .tabs-move-cell .tabs-move .tab:nth-child(odd) {
+            background-color: #4CAF50;
+            color: white; }
 
 @keyframes spin {
   0% {

@@ -3,8 +3,9 @@ window.onload = function() {
 var throttleTime = 300,
   throttleTimeOut = null,
   dom = {
-    tabsContainer: document.getElementById('tabs-container'),
-    tabsMove: document.getElementById('tabs-move'),
+    tabsContainer: document.getElementsByClassName('tabs-container')[0],
+    tabsMoveContainer: document.getElementsByClassName('tabs-move-container')[0],
+    tabsMove: document.getElementsByClassName('tabs-move')[0],
     tabsLink: document.getElementsByClassName('tabs-link')[0],
     tabsLinkArray: document.getElementsByClassName('tab-link'),
     tabsArray: document.getElementsByClassName('tab'),
@@ -62,9 +63,9 @@ initialize();
 /**
  * Events
  */
-dom.tabsMove.addEventListener('touchstart', touchDown);
-dom.tabsMove.addEventListener('touchmove', touchMove);
-dom.tabsMove.addEventListener('touchend', touchUp);
+dom.tabsMoveContainer.addEventListener('touchstart', touchDown);
+dom.tabsMoveContainer.addEventListener('touchmove', touchMove);
+dom.tabsMoveContainer.addEventListener('touchend', touchUp);
 dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
 window.addEventListener('resize', onResize);

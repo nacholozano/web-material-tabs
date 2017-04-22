@@ -1,43 +1,36 @@
 $green: #4CAF50;
-$base-font: 15px;
 $tab-font-color: #3a3a3a;
 $tab-font-weight: 300;
 $tab-active-font-weight: 600;
-// Calculation to cover screen.
 $tab-indicator-height: 0.2rem;
-$tab-height: 3rem;
-$tabs-link-height: $tab-indicator-height + $tab-height;
 $base-font-size: 1rem;
 $tab-link-space: $base-font-size;
-
+  
 $loader-width: 0.3em;
 $loader-dimensions: 4em;
 
-html,body{
-  height: 100%;
-}
-
-button{
-  padding: 1em;
+html{
+  font-family: "Arial";
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  padding: 0;
-  margin: 0;
-  font-family: "Arial"; 
-}
- 
-.tabs-container {
-  position: relative;
+html,body,table{
   height: 100%;
-  white-space: nowrap; // All tabs in the same line
-  overflow-x: hidden; // Avoid horizontal scroll
-  user-select: none; 
+  margin: 0;
+}
 
+button{
+  padding: 1em;
+}
+
+.tabs-container{
+  width: 100%;
+  table-layout: fixed;
+  display: table;
+  height: 100%;
   .tab-loader {
     display: inline-block;
     position: absolute;
@@ -61,79 +54,89 @@ body {
       display: none;
     }
   }
+  .tabs-link-container{
+    display: table-row;
+    .tabs-link {
+      font-size: 0;
+      color: $tab-font-color;
+      font-weight: $tab-font-weight; 
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow-x: auto;
 
-  .tabs-link {
-    font-size: 0; // Remove space between tabs
-    color: $tab-font-color;
-    font-weight: $tab-font-weight; 
-    text-transform: uppercase;
-    
-    .tab-link {
-      line-height: $tab-link-space;
-      text-align: center;
-      font-size: $tab-link-space;
-      display: inline-block;
-      padding: 1em;
-      cursor: pointer;
-      position: relative;
-      vertical-align: middle;
-
-      &.active{
-        color: $green;
-        font-weight: $tab-active-font-weight; 
-      }
-    }
- 
-    .tab-indicator {
-      height: $tab-indicator-height;  
-
-      .indicator-helper {
-        transform-origin: 0 0;
-        width: 1px;
-        height: 100%;
+      .tab-link {
+        text-align: center;
+        font-size: $base-font-size;
         display: inline-block;
+        padding: 1em;
+        cursor: pointer;
+        position: relative;
+        vertical-align: middle;
 
-        .indicator {
-          height: 100%;
+        &.active{
+          color: $green;
+          font-weight: $tab-active-font-weight; 
+        }
+      }
+
+      .tab-indicator {
+        height: $tab-indicator-height;  
+
+        .indicator-helper {
+          transform-origin: 0 0;
           width: 1px;
-          background-color: $green;
+          height: 100%;
           display: inline-block;
-          @supports (will-change: transform) {
+
+          .indicator {
+            height: 100%;
+            width: 1px;
+            background-color: $green;
+            display: inline-block;
             will-change: transform;
           }
+
         }
-
       }
     }
-
   }
-
-  .tabs-move {
-    font-size: 0px; // Remove space between tabs
-    height: calc( 100% - #{$tabs-link-height} ); // Calculate tabs container height
- 
-    .tab {
-      padding: 1em;
-      display: inline-block;
-      width: 100%;
+  .tabs-move-container{
+    display: table-row;
+    height: 100%;
+    .tabs-move-cell{
+      display: table-cell;
       height: 100%;
-      font-size: $base-font-size;
-      white-space: normal;
-      vertical-align: top;
-      overflow-y: auto; //Scroll by tab
+      overflow-x: hidden;
+      position: relative;
+      .tabs-move{
+        position: absolute;
+        white-space: nowrap;
+        font-size: 0px;
+        height:100%;
+        width: 100%;
+        will-change: transform;
+        .tab{
+          vertical-align: top;
+          padding: 1em;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          font-size: $base-font-size;
+          white-space: normal;
+          vertical-align: top;
+          overflow-y: auto;
 
-      &:nth-child(odd) {
-        background-color: $green;
-        color: white; 
+          &:nth-child(odd) {
+            background-color: $green;
+            color: white; 
+          }
+
+          height: 100%;
+          overflow-y: auto;
+        }
       }
     }
-
-    @supports (will-change: transform) {
-      will-change: transform;
-    }
-    
   }
-  
 }
 
 @keyframes spin {
