@@ -11,7 +11,10 @@ var throttleTime = 300,
     tabsArray: document.getElementsByClassName('tab'),
     indicator: document.getElementsByClassName('indicator')[0],
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
-    tabLoader: document.getElementsByClassName('tab-loader')[0]
+    tabLoader: document.getElementsByClassName('tab-loader')[0],
+    tabReloader: document.getElementsByClassName('tab-reloader')[0],
+    tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
+    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -23,7 +26,7 @@ var throttleTime = 300,
     speed: 10, // Scroll speed if tab is not fully visible
     requestAnimationFrameReference: null, // Reference to cancel raf
     tabManaged: null, // Checking if this tab is fully visible
-    equalTabs: true, // All tabs have equal width
+    equalTabs: false, // All tabs have equal width
     equalWdith: null
   },
   tabsViews = {
@@ -69,6 +72,66 @@ dom.tabsMoveContainer.addEventListener('touchmove', touchMove);
 dom.tabsMoveContainer.addEventListener('touchend', touchUp);
 dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
+
+var a = null,
+    ahora = null;
+
+dom.tabsContainer.addEventListener('touchstart',function(e){
+    dom.tabReloaderContainer.style.transition = "";
+    dom.tabReloader.style.transition = "";
+});
+dom.tabsContainer.addEventListener('touchend', function(e){
+
+  if( ahora > 90 ){
+    requestForTab[tabsViews.currentTab].received = false;
+    loadTabData( tabsViews.currentTab );
+  }
+
+  dom.tabReloaderContainer.style.transition = "transform 0.3s";
+  dom.tabReloader.style.transition = "transform 0.3s";
+
+  dom.tabReloaderContainer.style.transform = "translateY(0px)";
+  dom.tabReloader.style.transform = "rotate(0deg)";
+  //dom.tabReloader.style.backgroundColor = "blue";
+  dom.tabReloaderIcon.classList.remove('ready-for-reload');
+
+  ahora = null;
+  a = null;
+});
+dom.tabsContainer.addEventListener('touchmove',function(e){
+  
+  if( !requestForTab[ tabsViews.currentTab ] ){
+    return;
+  }
+
+  if( dom.tabsArray[ tabsViews.currentTab ].scrollTop === 0 ){
+    //console.log( e.touches[0].clientY );
+    if( !a ){
+      a = e.touches[0].clientY;
+    }
+
+    if( e.touches[0].clientY-a <= 180 + touch.offset && e.touches[0].clientY > a + touch.offset ){
+
+      e.preventDefault();
+
+      ahora = Math.floor(e.touches[0].clientY-a - touch.offset);
+
+      dom.tabReloaderContainer.style.transform = "translateY("+ahora+"px)";
+      dom.tabReloader.style.transform = "rotate("+ahora*2+"deg)";
+
+      if( ahora > 90 ){
+        dom.tabReloaderIcon.classList.add('ready-for-reload');
+      }else{
+        dom.tabReloaderIcon.classList.remove('ready-for-reload');
+      }
+
+    }
+  }else{
+    a = null;
+  }
+});
+
+
 window.addEventListener('resize', onResize);
 document.getElementById('button-change-tab').addEventListener('click', function(){
   changeTab(1);
