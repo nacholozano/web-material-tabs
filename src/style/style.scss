@@ -38,6 +38,8 @@ button{
     width: 100%;
     text-align: center;
     top: -3em;
+    font-size: 14px;
+    transform: translateY(0);
     .tab-reloader{
       background-color: white;
       transform-origin: 50% 50%;
@@ -47,6 +49,7 @@ button{
       border-radius: 50%;
       background-color: white;
       line-height: 3.25em;
+      box-shadow: 0 0.2em 0.5em 0 rgba(0, 0, 0, 0.5);
       .tab-reloader-icon{
         opacity: 0.3;
         width: 1.25em;
@@ -73,28 +76,12 @@ button{
         }
       }
     }
-  }
-  .tab-loader {
-    display: inline-block;
-    position: absolute;
-    z-index: 100;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: $loader-dimensions;
-    height: $loader-dimensions;
-    &:before{
-      content: '';
-      position: absolute;
-      border: $loader-width solid $green;
-      border-top: $loader-width solid white;
-      border-radius: 50%;
-      width: $loader-dimensions;
-      height: $loader-dimensions;
-      animation: spin 1s linear infinite;
-    }
-    &.tab-loader-hide{
-      display: none;
+    &.reloading{
+      transform: translateY(4em)!important;
+      .tab-reloader-icon{
+        animation: spin 1s linear infinite;
+        opacity: 1;
+      }
     }
   }
   .tabs-link-container{

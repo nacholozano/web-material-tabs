@@ -21,7 +21,9 @@ button {
     z-index: 100;
     width: 100%;
     text-align: center;
-    top: -3em; }
+    top: -3em;
+    font-size: 14px;
+    transform: translateY(0); }
     .tabs-container .tab-reloader-container .tab-reloader {
       background-color: white;
       transform-origin: 50% 50%;
@@ -30,7 +32,8 @@ button {
       height: 2.5em;
       border-radius: 50%;
       background-color: white;
-      line-height: 3.25em; }
+      line-height: 3.25em;
+      box-shadow: 0 0.2em 0.5em 0 rgba(0, 0, 0, 0.5); }
       .tabs-container .tab-reloader-container .tab-reloader .tab-reloader-icon {
         opacity: 0.3;
         width: 1.25em;
@@ -53,26 +56,11 @@ button {
           border-top-color: transparent;
           border-bottom-color: transparent;
           right: 0em; }
-  .tabs-container .tab-loader {
-    display: inline-block;
-    position: absolute;
-    z-index: 100;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 4em;
-    height: 4em; }
-    .tabs-container .tab-loader:before {
-      content: '';
-      position: absolute;
-      border: 0.3em solid #4CAF50;
-      border-top: 0.3em solid white;
-      border-radius: 50%;
-      width: 4em;
-      height: 4em;
-      animation: spin 1s linear infinite; }
-    .tabs-container .tab-loader.tab-loader-hide {
-      display: none; }
+    .tabs-container .tab-reloader-container.reloading {
+      transform: translateY(4em) !important; }
+      .tabs-container .tab-reloader-container.reloading .tab-reloader-icon {
+        animation: spin 1s linear infinite;
+        opacity: 1; }
   .tabs-container .tabs-link-container {
     display: table-row; }
     .tabs-container .tabs-link-container .tabs-link {

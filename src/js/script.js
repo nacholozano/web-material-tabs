@@ -11,7 +11,7 @@ var throttleTime = 300,
     tabsArray: document.getElementsByClassName('tab'),
     indicator: document.getElementsByClassName('indicator')[0],
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
-    tabLoader: document.getElementsByClassName('tab-loader')[0],
+    //tabLoader: document.getElementsByClassName('tab-loader')[0],
     tabReloader: document.getElementsByClassName('tab-reloader')[0],
     tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
     tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
@@ -99,7 +99,7 @@ document.getElementById('button-change-tab').addEventListener('click', function(
 
 function startRefresh(e){
     dom.tabReloaderContainer.style.transition = "";
-    dom.tabReloader.style.transition = "";
+    dom.tabReloaderIcon.style.transition = "";
 }
 function finishRefresh(e){
 
@@ -109,10 +109,10 @@ function finishRefresh(e){
   }
 
   dom.tabReloaderContainer.style.transition = "transform 0.3s";
-  dom.tabReloader.style.transition = "transform 0.3s";
+  dom.tabReloaderIcon.style.transition = "transform 0.3s";
 
   dom.tabReloaderContainer.style.transform = "translateY(0px)";
-  dom.tabReloader.style.transform = "rotate(0deg)";
+  dom.tabReloaderIcon.style.transform = "rotate(0deg)";
   dom.tabReloaderIcon.classList.remove('ready-for-reload');
 
   refresh.currentPoint = null;
@@ -143,7 +143,7 @@ function moveRefresh(e){
       refresh.currentPoint = Math.floor(e.touches[0].clientY-refresh.startPoint - touch.offset);
 
       dom.tabReloaderContainer.style.transform = "translateY("+refresh.currentPoint+"px)";
-      dom.tabReloader.style.transform = "rotate("+refresh.currentPoint*2+"deg)";
+      dom.tabReloaderIcon.style.transform = "rotate("+refresh.currentPoint*2+"deg)";
 
       if( refresh.currentPoint > 90 ){
         dom.tabReloaderIcon.classList.add('ready-for-reload');
@@ -509,7 +509,9 @@ function transitionend(event) {
 function loadTabData( numTab ){
   if( !requestForTab[numTab] || requestForTab[numTab].received ){ return; }
    
-  dom.tabLoader.classList.remove('tab-loader-hide');
+  //dom.tabLoader.classList.remove('tab-loader-hide');
+  dom.tabReloaderContainer.style.transition = "transform 0.3s";
+  dom.tabReloaderContainer.classList.add('reloading');
 
   setTimeout(function(){
     makeTestRequest( numTab );
@@ -532,7 +534,9 @@ function makeTestRequest( numTab ){
         requestForTab[numTab].error( JSON.parse(this.responseText) );
       }
 
-      dom.tabLoader.classList.add('tab-loader-hide');
+      //dom.tabLoader.classList.add('tab-loader-hide');
+      dom.tabReloaderContainer.classList.remove('reloading');
+      //dom.tabReloaderContainer.style.transition = "";
       requestForTab[numTab].received = true;
     }
   };
