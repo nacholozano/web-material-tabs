@@ -151,6 +151,8 @@ function moveRefresh(e){
         dom.tabReloaderIcon.classList.remove('ready-for-reload');
       }
 
+    }else{
+      state.refreshing = false;
     }
   }else{
     refresh.startPoint = null;
