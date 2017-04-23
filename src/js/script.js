@@ -60,6 +60,10 @@ var throttleTime = 300,
       }
     } 
   },
+  state = {
+    refreshing: false,
+    sliding: false
+  }
   tabsData = [];
 
 initialize();
@@ -97,10 +101,11 @@ dom.tabsContainer.addEventListener('touchend', function(e){
 
   ahora = null;
   a = null;
+  state.refreshing = false;
 });
 dom.tabsContainer.addEventListener('touchmove',function(e){
   
-  if( !requestForTab[ tabsViews.currentTab ] ){
+  if( !requestForTab[ tabsViews.currentTab ] || state.sliding ){
     return;
   }
 
@@ -113,6 +118,7 @@ dom.tabsContainer.addEventListener('touchmove',function(e){
     if( e.touches[0].clientY-a <= 180 + touch.offset && e.touches[0].clientY > a + touch.offset ){
 
       e.preventDefault();
+      state.refreshing = true;
 
       ahora = Math.floor(e.touches[0].clientY-a - touch.offset);
 
@@ -153,6 +159,10 @@ function touchDown(event) {
  */
 function touchMove(event){
   
+  if( state.refreshing ){
+    return;
+  }
+
   /**
    * 'touchend' would be the right event to set this variable. But it does not have 'clientX' property
    */
@@ -163,6 +173,7 @@ function touchMove(event){
      * Avoid view's scroll while sliding
      */
     event.preventDefault();
+    state.sliding = true;
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
@@ -170,6 +181,7 @@ function touchMove(event){
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
     event.preventDefault();
+    state.sliding = true;
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -226,6 +238,7 @@ function touchUp(event) {
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+  state.sliding = false;
 }
 
 /**
