@@ -43,7 +43,14 @@ var throttleTime = 300,
       received: false,
       url: 'https://jsonplaceholder.typicode.com/posts/1',
       success: function( data ){
-        dom.tabsArray[2].innerText = data.body;
+        dom.tabsArray[2].innerText = data.body + data.body + data.body + 
+          data.body + data.body + data.body +
+          data.body + data.body + data.body +
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body;
       },
       error: function( data ){
         dom.tabsArray[2].innerText = 'Error Loading data.';
@@ -63,6 +70,10 @@ var throttleTime = 300,
   state = {
     refreshing: false,
     sliding: false
+  },
+  refresh = {
+    startPoint: null,
+    currentPoint: null
   }
   tabsData = [];
 
@@ -77,16 +88,22 @@ dom.tabsMoveContainer.addEventListener('touchend', touchUp);
 dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
 
-var a = null,
-    ahora = null;
+dom.tabsContainer.addEventListener('touchstart', startRefresh);
+dom.tabsContainer.addEventListener('touchmove', moveRefresh);
+dom.tabsContainer.addEventListener('touchend', finishRefresh);
 
-dom.tabsContainer.addEventListener('touchstart',function(e){
+window.addEventListener('resize', onResize);
+document.getElementById('button-change-tab').addEventListener('click', function(){
+  changeTab(1);
+});
+
+function startRefresh(e){
     dom.tabReloaderContainer.style.transition = "";
     dom.tabReloader.style.transition = "";
-});
-dom.tabsContainer.addEventListener('touchend', function(e){
+}
+function finishRefresh(e){
 
-  if( ahora > 90 ){
+  if( refresh.currentPoint > 90 ){
     requestForTab[tabsViews.currentTab].received = false;
     loadTabData( tabsViews.currentTab );
   }
@@ -96,36 +113,39 @@ dom.tabsContainer.addEventListener('touchend', function(e){
 
   dom.tabReloaderContainer.style.transform = "translateY(0px)";
   dom.tabReloader.style.transform = "rotate(0deg)";
-  //dom.tabReloader.style.backgroundColor = "blue";
   dom.tabReloaderIcon.classList.remove('ready-for-reload');
 
-  ahora = null;
-  a = null;
+  refresh.currentPoint = null;
+  refresh.startPoint = null;
   state.refreshing = false;
-});
-dom.tabsContainer.addEventListener('touchmove',function(e){
-  
+}
+function moveRefresh(e){
+
   if( !requestForTab[ tabsViews.currentTab ] || state.sliding ){
     return;
   }
 
+  if( state.refreshing ){
+    e.preventDefault();
+  }
+
   if( dom.tabsArray[ tabsViews.currentTab ].scrollTop === 0 ){
-    //console.log( e.touches[0].clientY );
-    if( !a ){
-      a = e.touches[0].clientY;
+    if( !refresh.startPoint ){
+      refresh.startPoint = e.touches[0].clientY;
     }
 
-    if( e.touches[0].clientY-a <= 180 + touch.offset && e.touches[0].clientY > a + touch.offset ){
+    if( e.touches[0].clientY-refresh.startPoint <= 180 + touch.offset && 
+        e.touches[0].clientY > refresh.startPoint + touch.offset ){
 
       e.preventDefault();
       state.refreshing = true;
 
-      ahora = Math.floor(e.touches[0].clientY-a - touch.offset);
+      refresh.currentPoint = Math.floor(e.touches[0].clientY-refresh.startPoint - touch.offset);
 
-      dom.tabReloaderContainer.style.transform = "translateY("+ahora+"px)";
-      dom.tabReloader.style.transform = "rotate("+ahora*2+"deg)";
+      dom.tabReloaderContainer.style.transform = "translateY("+refresh.currentPoint+"px)";
+      dom.tabReloader.style.transform = "rotate("+refresh.currentPoint*2+"deg)";
 
-      if( ahora > 90 ){
+      if( refresh.currentPoint > 90 ){
         dom.tabReloaderIcon.classList.add('ready-for-reload');
       }else{
         dom.tabReloaderIcon.classList.remove('ready-for-reload');
@@ -133,15 +153,9 @@ dom.tabsContainer.addEventListener('touchmove',function(e){
 
     }
   }else{
-    a = null;
+    refresh.startPoint = null;
   }
-});
-
-
-window.addEventListener('resize', onResize);
-document.getElementById('button-change-tab').addEventListener('click', function(){
-  changeTab(1);
-});
+}
 
 /**
  * User touch the screen.

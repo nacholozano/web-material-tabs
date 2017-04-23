@@ -39,7 +39,8 @@ button {
         border: 0.15em solid #4CAF50;
         border-radius: 50%;
         border-bottom-color: white;
-        position: relative; }
+        position: relative;
+        transition: opacity 0.3s; }
         .tabs-container .tab-reloader-container .tab-reloader .tab-reloader-icon.ready-for-reload {
           opacity: 1; }
         .tabs-container .tab-reloader-container .tab-reloader .tab-reloader-icon:before {
