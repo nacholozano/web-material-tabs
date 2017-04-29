@@ -28,10 +28,15 @@ button{
 }
 
 .tabs-container{
-  width: 100%;
-  table-layout: fixed;
-  display: table;
+  display: -webkit-box;
+  box-orient: vertical;
+  display: flex;
+  flex-direction: column;
+  //width: 100%;
+  /*table-layout: fixed;
+  display: table;*/
   height: 100%;
+  overflow-y: hidden;
   .tab-reloader-container{
     position: absolute;
     z-index: 100;
@@ -85,7 +90,7 @@ button{
     }
   }
   .tabs-link-container{
-    display: table-row;
+    //display: table-row;
     .tabs-link {
       font-size: 0;
       color: $tab-font-color;
@@ -137,10 +142,10 @@ button{
     }
   }
   .tabs-move-container{
-    display: table-row;
+    //display: table-row;
     height: 100%;
     .tabs-move-cell{
-      display: table-cell;
+      //display: table-cell;
       height: 100%;
       overflow-x: hidden;
       position: relative;
