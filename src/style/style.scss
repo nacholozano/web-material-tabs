@@ -29,14 +29,20 @@ button{
 
 .tabs-container{
   display: -webkit-box;
-  box-orient: vertical;
   display: flex;
+
+  -webkit-box-orient: vertical;
   flex-direction: column;
+  
   //width: 100%;
   /*table-layout: fixed;
   display: table;*/
   height: 100%;
+/*<<<<<<< HEAD*/
   //overflow-y: hidden;
+/*=======
+  overflow-y: hidden;
+>>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
   .tab-reloader-container{
     position: absolute;
     z-index: 100;
@@ -143,6 +149,8 @@ button{
   }
   .tabs-move-container{
     //display: table-row;
+/*<<<<<<< HEAD*/
+    -webkit-box-flex: 1; 
     flex: 1 0 auto;
     height: 0;
     overflow: hidden;
@@ -151,6 +159,14 @@ button{
       /*height: 100%;
       overflow-x: hidden;*/
       //position: relative;
+/*=======
+    height: 100%;
+    .tabs-move-cell{
+      display: table-cell;
+      height: 100%;
+      overflow-x: hidden;
+      position: relative;
+>>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
       .tabs-move{
         //position: absolute;
         white-space: nowrap;
