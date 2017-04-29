@@ -11,7 +11,10 @@ var throttleTime = 300,
     tabsArray: document.getElementsByClassName('tab'),
     indicator: document.getElementsByClassName('indicator')[0],
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
-    tabLoader: document.getElementsByClassName('tab-loader')[0]
+    //tabLoader: document.getElementsByClassName('tab-loader')[0],
+    tabReloader: document.getElementsByClassName('tab-reloader')[0],
+    tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
+    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -23,7 +26,7 @@ var throttleTime = 300,
     speed: 10, // Scroll speed if tab is not fully visible
     requestAnimationFrameReference: null, // Reference to cancel raf
     tabManaged: null, // Checking if this tab is fully visible
-    equalTabs: true, // All tabs have equal width
+    equalTabs: false, // All tabs have equal width
     equalWdith: null
   },
   tabsViews = {
@@ -40,7 +43,14 @@ var throttleTime = 300,
       received: false,
       url: 'https://jsonplaceholder.typicode.com/posts/1',
       success: function( data ){
-        dom.tabsArray[2].innerText = data.body;
+        dom.tabsArray[2].innerText = data.body + data.body + data.body + 
+          data.body + data.body + data.body +
+          data.body + data.body + data.body +
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body + 
+          data.body + data.body + data.body;
       },
       error: function( data ){
         dom.tabsArray[2].innerText = 'Error Loading data.';
@@ -57,6 +67,14 @@ var throttleTime = 300,
       }
     } 
   },
+  state = {
+    refreshing: false,
+    sliding: false
+  },
+  refresh = {
+    startPoint: null,
+    currentPoint: null
+  }
   tabsData = [];
 
 initialize();
@@ -69,10 +87,78 @@ dom.tabsMoveContainer.addEventListener('touchmove', touchMove);
 dom.tabsMoveContainer.addEventListener('touchend', touchUp);
 dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
+
+dom.tabsContainer.addEventListener('touchstart', startRefresh);
+dom.tabsContainer.addEventListener('touchmove', moveRefresh);
+dom.tabsContainer.addEventListener('touchend', finishRefresh);
+
 window.addEventListener('resize', onResize);
 document.getElementById('button-change-tab').addEventListener('click', function(){
   changeTab(1);
 });
+
+function startRefresh(e){
+    dom.tabReloaderContainer.style.transition = "";
+    dom.tabReloaderIcon.style.transition = "";
+}
+function finishRefresh(e){
+
+  if( refresh.currentPoint > 90 ){
+    requestForTab[tabsViews.currentTab].received = false;
+    loadTabData( tabsViews.currentTab );
+  }
+
+  dom.tabReloaderContainer.style.transition = "transform 0.3s";
+  dom.tabReloaderIcon.style.transition = "transform 0.3s";
+
+  dom.tabReloaderContainer.style.transform = "translateY(0px)";
+  dom.tabReloaderIcon.style.transform = "rotate(0deg)";
+  dom.tabReloaderIcon.classList.remove('ready-for-reload');
+
+  refresh.currentPoint = null;
+  refresh.startPoint = null;
+  state.refreshing = false;
+}
+function moveRefresh(e){
+
+  if( !requestForTab[ tabsViews.currentTab ] || state.sliding ){
+    return;
+  }
+
+  if( state.refreshing ){
+    e.preventDefault();
+  }
+
+  if( dom.tabsArray[ tabsViews.currentTab ].scrollTop === 0 ){
+    if( !refresh.startPoint ){
+      refresh.startPoint = e.touches[0].clientY;
+    }
+
+    if( e.touches[0].clientY-refresh.startPoint <= 180 + touch.offset && 
+        e.touches[0].clientY > refresh.startPoint + touch.offset ){
+
+      e.preventDefault();
+      state.refreshing = true;
+
+      refresh.currentPoint = Math.floor(e.touches[0].clientY-refresh.startPoint - touch.offset);
+
+      dom.tabReloaderContainer.style.transform = "translateY("+refresh.currentPoint+"px)";
+      dom.tabReloaderIcon.style.transform = "rotate("+refresh.currentPoint*2+"deg)";
+
+      if( refresh.currentPoint > 90 ){
+        dom.tabReloaderIcon.classList.add('ready-for-reload');
+      }else{
+        dom.tabReloaderIcon.classList.remove('ready-for-reload');
+      }
+
+    }else{
+      state.refreshing = false;
+    }
+  }else{
+    refresh.startPoint = null;
+    state.refreshing = false;
+  }
+}
 
 /**
  * User touch the screen.
@@ -90,6 +176,10 @@ function touchDown(event) {
  */
 function touchMove(event){
   
+  if( state.refreshing ){
+    return;
+  }
+
   /**
    * 'touchend' would be the right event to set this variable. But it does not have 'clientX' property
    */
@@ -100,6 +190,7 @@ function touchMove(event){
      * Avoid view's scroll while sliding
      */
     event.preventDefault();
+    state.sliding = true;
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
@@ -107,6 +198,7 @@ function touchMove(event){
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
     event.preventDefault();
+    state.sliding = true;
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -163,6 +255,7 @@ function touchUp(event) {
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+  state.sliding = false;
 }
 
 /**
@@ -419,7 +512,9 @@ function transitionend(event) {
 function loadTabData( numTab ){
   if( !requestForTab[numTab] || requestForTab[numTab].received ){ return; }
    
-  dom.tabLoader.classList.remove('tab-loader-hide');
+  //dom.tabLoader.classList.remove('tab-loader-hide');
+  dom.tabReloaderContainer.style.transition = "transform 0.3s";
+  dom.tabReloaderContainer.classList.add('reloading');
 
   setTimeout(function(){
     makeTestRequest( numTab );
@@ -442,7 +537,9 @@ function makeTestRequest( numTab ){
         requestForTab[numTab].error( JSON.parse(this.responseText) );
       }
 
-      dom.tabLoader.classList.add('tab-loader-hide');
+      //dom.tabLoader.classList.add('tab-loader-hide');
+      dom.tabReloaderContainer.classList.remove('reloading');
+      //dom.tabReloaderContainer.style.transition = "";
       requestForTab[numTab].received = true;
     }
   };
