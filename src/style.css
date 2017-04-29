@@ -12,9 +12,12 @@ button {
   padding: 1em; }
 
 .tabs-container {
-  width: 100%;
-  table-layout: fixed;
-  display: table;
+  display: -webkit-box;
+  box-orient: vertical;
+  display: flex;
+  flex-direction: column;
+  /*table-layout: fixed;
+  display: table;*/
   height: 100%; }
   .tabs-container .tab-reloader-container {
     position: absolute;
@@ -61,71 +64,65 @@ button {
       .tabs-container .tab-reloader-container.reloading .tab-reloader-icon {
         animation: spin 1s linear infinite;
         opacity: 1; }
-  .tabs-container .tabs-link-container {
-    display: table-row; }
-    .tabs-container .tabs-link-container .tabs-link {
-      font-size: 0;
-      color: #3a3a3a;
-      font-weight: 300;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow-x: auto; }
-      .tabs-container .tabs-link-container .tabs-link.equal-tabs .tab-link {
-        white-space: normal; }
-      .tabs-container .tabs-link-container .tabs-link .tab-link {
-        text-align: center;
-        font-size: 1rem;
-        display: inline-block;
-        padding: 1em;
-        cursor: pointer;
-        position: relative;
-        vertical-align: middle; }
-        .tabs-container .tabs-link-container .tabs-link .tab-link.active {
-          color: #4CAF50;
-          font-weight: 600; }
-      .tabs-container .tabs-link-container .tabs-link .tab-indicator {
-        height: 0.2rem; }
-        .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {
-          transform-origin: 0 0;
-          width: 1px;
-          height: 100%;
-          display: inline-block; }
-          .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper .indicator {
-            height: 100%;
-            width: 1px;
-            background-color: #4CAF50;
-            display: inline-block;
-            will-change: transform; }
-  .tabs-container .tabs-move-container {
-    display: table-row;
-    height: 100%; }
-    .tabs-container .tabs-move-container .tabs-move-cell {
-      display: table-cell;
-      height: 100%;
-      overflow-x: hidden;
-      position: relative; }
-      .tabs-container .tabs-move-container .tabs-move-cell .tabs-move {
-        position: absolute;
-        white-space: nowrap;
-        font-size: 0px;
+  .tabs-container .tabs-link-container .tabs-link {
+    font-size: 0;
+    color: #3a3a3a;
+    font-weight: 300;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow-x: auto; }
+    .tabs-container .tabs-link-container .tabs-link.equal-tabs .tab-link {
+      white-space: normal; }
+    .tabs-container .tabs-link-container .tabs-link .tab-link {
+      text-align: center;
+      font-size: 1rem;
+      display: inline-block;
+      padding: 1em;
+      cursor: pointer;
+      position: relative;
+      vertical-align: middle; }
+      .tabs-container .tabs-link-container .tabs-link .tab-link.active {
+        color: #4CAF50;
+        font-weight: 600; }
+    .tabs-container .tabs-link-container .tabs-link .tab-indicator {
+      height: 0.2rem; }
+      .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {
+        transform-origin: 0 0;
+        width: 1px;
         height: 100%;
-        width: 100%;
-        will-change: transform; }
-        .tabs-container .tabs-move-container .tabs-move-cell .tabs-move .tab {
-          vertical-align: top;
-          padding: 1em;
+        display: inline-block; }
+        .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper .indicator {
+          height: 100%;
+          width: 1px;
+          background-color: #4CAF50;
           display: inline-block;
-          width: 100%;
-          height: 100%;
-          font-size: 1rem;
-          white-space: normal;
-          vertical-align: top;
-          overflow-y: auto;
-          height: 100%;
-          overflow-y: auto; }
-          .tabs-container .tabs-move-container .tabs-move-cell .tabs-move .tab:nth-child(odd) {
-            background-color: #4CAF50;
-            color: white; }
+          will-change: transform; }
+  .tabs-container .tabs-move-container {
+    flex: 1 0 auto;
+    height: 0;
+    overflow: hidden;
+    /*height: 100%;
+      overflow-x: hidden;*/
+    /*}*/ }
+    .tabs-container .tabs-move-container .tabs-move {
+      white-space: nowrap;
+      font-size: 0px;
+      height: 100%;
+      width: 100%;
+      will-change: transform; }
+      .tabs-container .tabs-move-container .tabs-move .tab {
+        vertical-align: top;
+        padding: 1em;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        font-size: 1rem;
+        white-space: normal;
+        vertical-align: top;
+        overflow-y: auto; }
+        .tabs-container .tabs-move-container .tabs-move .tab:nth-child(odd) {
+          background-color: #4CAF50;
+          color: white; }
 
 @keyframes spin {
   0% {

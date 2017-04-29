@@ -43,14 +43,14 @@ var throttleTime = 300,
       received: false,
       url: 'https://jsonplaceholder.typicode.com/posts/1',
       success: function( data ){
-        dom.tabsArray[2].innerText = data.body + data.body + data.body + 
+        dom.tabsArray[2].innerHTML = data.body + data.body + data.body + 
           data.body + data.body + data.body +
           data.body + data.body + data.body +
           data.body + data.body + data.body + 
           data.body + data.body + data.body + 
           data.body + data.body + data.body + 
           data.body + data.body + data.body + 
-          data.body + data.body + data.body;
+          data.body + data.body + data.body + '<br><br>';
       },
       error: function( data ){
         dom.tabsArray[2].innerText = 'Error Loading data.';
