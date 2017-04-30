@@ -1,7 +1,9 @@
 $green: #4CAF50;
 $tab-font-color: #3a3a3a;
-$tab-font-weight: 300;
-$tab-active-font-weight: 600;
+$tab-font-weight: 600;
+//$tab-active-font-weight: 600;
+$active-tab-color: $green;
+$inactive-tab-color: rgba(0, 0, 0, 0.4);
 $tab-indicator-height: 0.2rem;
 $base-font-size: 1rem;
 $tab-link-space: $base-font-size;
@@ -104,6 +106,7 @@ button{
       text-transform: uppercase;
       white-space: nowrap;
       overflow-x: auto;
+      color: $inactive-tab-color;
 
       &.equal-tabs{
         .tab-link{
@@ -121,8 +124,8 @@ button{
         vertical-align: middle;
 
         &.active{
-          color: $green;
-          font-weight: $tab-active-font-weight; 
+          color: $active-tab-color;
+          //font-weight: $tab-active-font-weight; 
         }
       }
 
