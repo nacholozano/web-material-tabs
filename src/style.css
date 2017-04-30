@@ -103,6 +103,7 @@ button {
           will-change: transform; }
   .tabs-container .tabs-move-container {
     /*<<<<<<< HEAD*/
+    position: relative;
     -webkit-box-flex: 1;
     flex: 1 0 auto;
     height: 0;
