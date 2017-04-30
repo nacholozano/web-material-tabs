@@ -50,7 +50,7 @@ var throttleTime = 300,
           data.body + data.body + data.body + 
           data.body + data.body + data.body + 
           data.body + data.body + data.body + 
-          data.body + data.body + data.body + '<br><br>';
+          data.body + data.body + data.body;
       },
       error: function( data ){
         dom.tabsArray[2].innerText = 'Error Loading data.';
