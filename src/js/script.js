@@ -349,6 +349,7 @@ function changeTab( numTab ){
  */
 function onResize(){
   clearTimeout(throttleTimeOut);
+  dom.tabsContainer.style.height = '';
   throttleTimeOut = setTimeout(function() {
       initialize();
       manageTabs( tabsViews.currentTab );
