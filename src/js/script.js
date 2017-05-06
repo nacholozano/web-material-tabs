@@ -11,10 +11,10 @@ var throttleTime = 300,
     tabsArray: document.getElementsByClassName('tab'),
     indicator: document.getElementsByClassName('indicator')[0],
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
-    //tabLoader: document.getElementsByClassName('tab-loader')[0],
     tabReloader: document.getElementsByClassName('tab-reloader')[0],
     tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
-    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
+    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0],
+    tabsHeader: document.getElementsByClassName('tabs-header')[0]
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -36,7 +36,7 @@ var throttleTime = 300,
     sliding: false, // Know if user is changing view
     distanceToChangeViewScreenRatio: 2.3,
     distanceToChangeView: null, // Minumum distance to change view
-    currentTab: 0
+    currentTab: 0,
   }
   requestForTab = {
     2: {
@@ -74,6 +74,12 @@ var throttleTime = 300,
   refresh = {
     startPoint: null,
     currentPoint: null
+  },
+  header = {
+    height: 0,
+    current: 0,
+    startPosition: null,
+    scrolling: false
   }
   tabsData = [];
 
@@ -82,15 +88,66 @@ initialize();
 /**
  * Events
  */
+// Slide
 dom.tabsMoveContainer.addEventListener('touchstart', touchDown);
 dom.tabsMoveContainer.addEventListener('touchmove', touchMove);
 dom.tabsMoveContainer.addEventListener('touchend', touchUp);
 dom.tabsMove.addEventListener("transitionend", transitionend);
 dom.tabsLink.addEventListener('click', touchTab);
-
+// Reload
 dom.tabsContainer.addEventListener('touchstart', startRefresh);
 dom.tabsContainer.addEventListener('touchmove', moveRefresh);
 dom.tabsContainer.addEventListener('touchend', finishRefresh);
+// Move header
+dom.tabsContainer.addEventListener('touchstart', moveHeaderStart );
+dom.tabsContainer.addEventListener('touchmove', moveHeader );
+dom.tabsArray[0].addEventListener('scroll', watchScrollToMoveHeader );
+dom.tabsContainer.addEventListener('touchend', moveHeaderEnd );
+
+function moveHeaderStart(e){
+  header.startPosition = Math.floor(event.touches[0].clientY);
+}
+
+function watchScrollToMoveHeader(e){
+  var tab = dom.tabsArray[0];
+  if ( tab.scrollTop === 0 || Math.floor(tab.scrollTop) + tab.clientHeight + 1 >= tab.scrollHeight ) {
+    header.scrolling = false;
+  }else{
+    header.scrolling = true;
+  }
+}
+
+function moveHeader(e){
+
+  var currentY = Math.floor(e.touches[0].clientY);
+
+  if( header.scrolling ){
+    header.startPosition = currentY;
+    return;
+  }
+
+  currentPosition = currentY - header.startPosition + header.current;
+
+  if( currentPosition < -header.height ){
+    header.current = -header.height;
+    dom.tabsContainer.style.transform = 'translateY('+header.current+'px)';
+    header.startPosition = currentY;
+  }else if( currentPosition > 0 ){
+    header.current = 0;
+    dom.tabsContainer.style.transform = 'translateY('+header.current+'px)';
+    header.startPosition = currentY;
+  }else{
+    e.preventDefault();
+    dom.tabsContainer.style.transform = 'translateY('+currentPosition+'px)';
+  }
+
+}
+
+function moveHeaderEnd(){
+  header.current = currentPosition;
+  header.startPosition = null;
+  header.scrolling = false;
+}
 
 window.addEventListener('resize', onResize);
 document.getElementById('button-change-tab').addEventListener('click', function(){
@@ -303,7 +360,9 @@ function onResize(){
  */
 function initialize(){
 
-  tabsViews.containerWdith = dom.tabsContainer.clientWidth;
+  header.height = dom.tabsHeader.clientHeight;
+  tabsViews.containerWdith = dom.tabsContainer.clientWidth; 
+  dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
   
   if( tabsScroll.equalTabs ){

@@ -68,13 +68,16 @@ button {
       .tabs-container .tab-reloader-container.reloading .tab-reloader-icon {
         animation: spin 1s linear infinite;
         opacity: 1; }
+  .tabs-container .tabs-header {
+    padding: 1.2em; }
   .tabs-container .tabs-link-container .tabs-link {
     font-size: 0;
     color: #3a3a3a;
-    font-weight: 300;
+    font-weight: 600;
     text-transform: uppercase;
     white-space: nowrap;
-    overflow-x: auto; }
+    overflow-x: auto;
+    color: rgba(0, 0, 0, 0.4); }
     .tabs-container .tabs-link-container .tabs-link.equal-tabs .tab-link {
       white-space: normal; }
     .tabs-container .tabs-link-container .tabs-link .tab-link {
@@ -86,8 +89,7 @@ button {
       position: relative;
       vertical-align: middle; }
       .tabs-container .tabs-link-container .tabs-link .tab-link.active {
-        color: #4CAF50;
-        font-weight: 600; }
+        color: #4CAF50; }
     .tabs-container .tabs-link-container .tabs-link .tab-indicator {
       height: 0.2rem; }
       .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {

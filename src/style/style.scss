@@ -8,7 +8,7 @@ $tab-indicator-height: 0.2rem;
 $base-font-size: 1rem;
 $tab-link-space: $base-font-size;
   
-$loader-width: 0.3em;
+$loader-width: 0.3em; 
 $loader-dimensions: 4em;
 $reloader-icon-size: 4em;
 
@@ -96,6 +96,9 @@ button{
         opacity: 1;
       }
     }
+  }
+  .tabs-header{
+    padding: 1.2em; 
   }
   .tabs-link-container{
     //display: table-row;
