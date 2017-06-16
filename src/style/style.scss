@@ -32,19 +32,10 @@ button{
 .tabs-container{
   display: -webkit-box;
   display: flex;
-
   -webkit-box-orient: vertical;
   flex-direction: column;
-  
-  //width: 100%;
-  /*table-layout: fixed;
-  display: table;*/
   height: 100%;
-/*<<<<<<< HEAD*/
-  //overflow-y: hidden;
-/*=======
-  overflow-y: hidden;
->>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
+
   .tab-reloader-container{
     position: absolute;
     z-index: 100;
@@ -97,11 +88,7 @@ button{
       }
     }
   }
-  /*.tabs-header{
-    padding: 1.2em; 
-  }*/
   .tabs-link-container{
-    //display: table-row;
     .tabs-link {
       font-size: 0;
       color: $tab-font-color;
@@ -128,7 +115,6 @@ button{
 
         &.active{
           color: $active-tab-color;
-          //font-weight: $tab-active-font-weight; 
         }
       }
 
@@ -154,26 +140,11 @@ button{
     }
   }
   .tabs-move-container{
-    //display: table-row;
-/*<<<<<<< HEAD*/
     position: relative;
     -webkit-box-flex: 1; 
     flex: 1 0 auto;
     height: 0;
     overflow: hidden;
-    //.tabs-move-cell{
-      //display: table-cell;
-      /*height: 100%;
-      overflow-x: hidden;*/
-      //position: relative;
-/*=======
-    height: 100%;
-    .tabs-move-cell{
-      display: table-cell;
-      height: 100%;
-      overflow-x: hidden;
-      position: relative;
->>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
       .tabs-move{
         //position: absolute;
         position: relative;

@@ -16,16 +16,7 @@ button {
   display: flex;
   -webkit-box-orient: vertical;
   flex-direction: column;
-  /*table-layout: fixed;
-  display: table;*/
-  height: 100%;
-  /*<<<<<<< HEAD*/
-  /*=======
-  overflow-y: hidden;
->>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
-  /*.tabs-header{
-    padding: 1.2em; 
-  }*/ }
+  height: 100%; }
   .tabs-container .tab-reloader-container {
     position: absolute;
     z-index: 100;
@@ -105,22 +96,11 @@ button {
           display: inline-block;
           will-change: transform; }
   .tabs-container .tabs-move-container {
-    /*<<<<<<< HEAD*/
     position: relative;
     -webkit-box-flex: 1;
     flex: 1 0 auto;
     height: 0;
     overflow: hidden;
-    /*height: 100%;
-      overflow-x: hidden;*/
-    /*=======
-    height: 100%;
-    .tabs-move-cell{
-      display: table-cell;
-      height: 100%;
-      overflow-x: hidden;
-      position: relative;
->>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
     /*}*/ }
     .tabs-container .tabs-move-container .tabs-move {
       position: relative;
