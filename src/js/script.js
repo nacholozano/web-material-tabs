@@ -261,10 +261,14 @@ function touchUp(event) {
  * @param {object} event
  */
 function touchTab(event){
+  
+  if( event.target.className.includes('active') ){ return; }
 
-  if( event.target.className !== 'tab-link' ){ return; }
+  var id = event.target.className === 'tab-link-icon'
+    ? event.target.parentNode.getAttribute('data-id')
+    : event.target.getAttribute('data-id');
 
-  changeTab( parseInt(event.target.getAttribute('data-id')) );
+  changeTab( parseInt(id) );
 }
 
 /**

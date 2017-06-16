@@ -82,6 +82,9 @@ button {
       vertical-align: middle; }
       .tabs-container .tabs-link-container .tabs-link .tab-link.active {
         color: #4CAF50; }
+      .tabs-container .tabs-link-container .tabs-link .tab-link .tab-link-icon {
+        transform: scale(1.5, 1.5);
+        display: inline-block; }
     .tabs-container .tabs-link-container .tabs-link .tab-indicator {
       height: 0.2rem; }
       .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {

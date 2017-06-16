@@ -116,6 +116,11 @@ button{
         &.active{
           color: $active-tab-color;
         }
+        .tab-link-icon{
+          $icon-scale: 1.5;
+          transform: scale($icon-scale, $icon-scale);
+          display: inline-block;
+        }
       }
 
       .tab-indicator {
