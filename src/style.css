@@ -22,7 +22,10 @@ button {
   /*<<<<<<< HEAD*/
   /*=======
   overflow-y: hidden;
->>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/ }
+>>>>>>> 8c43db19c3b96023389ce837d2f72350f2c22a63*/
+  /*.tabs-header{
+    padding: 1.2em; 
+  }*/ }
   .tabs-container .tab-reloader-container {
     position: absolute;
     z-index: 100;
@@ -68,8 +71,6 @@ button {
       .tabs-container .tab-reloader-container.reloading .tab-reloader-icon {
         animation: spin 1s linear infinite;
         opacity: 1; }
-  .tabs-container .tabs-header {
-    padding: 1.2em; }
   .tabs-container .tabs-link-container .tabs-link {
     font-size: 0;
     color: #3a3a3a;
