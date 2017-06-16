@@ -264,7 +264,7 @@ function touchTab(event){
   
   if( event.target.className.includes('active') ){ return; }
 
-  var id = event.target.className === 'tab-link-icon'
+  var id = event.target.className === 'tab-link-icon' || event.target.className === ' tab-link-text'
     ? event.target.parentNode.getAttribute('data-id')
     : event.target.getAttribute('data-id');
 

@@ -84,7 +84,10 @@ button {
         color: #4CAF50; }
       .tabs-container .tabs-link-container .tabs-link .tab-link .tab-link-icon {
         transform: scale(1.5, 1.5);
-        display: inline-block; }
+        display: block; }
+      .tabs-container .tabs-link-container .tabs-link .tab-link .tab-link-text {
+        display: block;
+        margin-top: 0.5em; }
     .tabs-container .tabs-link-container .tabs-link .tab-indicator {
       height: 0.2rem; }
       .tabs-container .tabs-link-container .tabs-link .tab-indicator .indicator-helper {
