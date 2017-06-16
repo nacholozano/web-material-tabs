@@ -49,53 +49,47 @@
 
       <div class="tab">
         <p>
-            Web clone of <a href="https://material.io/guidelines/components/tabs.html">Google Material Tabs trying to imitate native apps' behavior.</a> <br>
+            Web clone of <a href="https://material.io/guidelines/components/tabs.html">Google Material Tabs.</a> <br>
             Made in VanillaJS with requestAnimationFrame and CSS 2D transforms.
           </p>
           <p>
-            Built with ionic2 in mind so Better test touch events in mobile. <br>
-            At the moment is just plain js, not typescript or angular. <br>
-            Good performance in Android 5.0-Chrome 57. Same technology that android WebView. 
+            Built with Ionic 2 in mind so better test touch events in mobile. <br>
+            Good performance in Android 5.0-Chrome 57. Same technology that android's WebView. I can't test it on iPhone.<br>
           </p>
 
-          <!--<p>-->
-            <b>Features: </b>
-            <ul>
-              <li>Change tab with touch event.</li>
-              <li>Change tab in any moment.</li>
-              <li>It works with mobile orientation change.</li>
-              <li>The current and next/previous tab is always visible.</li>
-              <li>Load tab data when user changes tab. <br>
-                  (No request cancellation and not refresh at the moment) 
-              </li>
-              <li>
-                Two modes:
-                <ul>
-                  <li>
-                    Many tabs with auto width and scrollable element (This demo). <br>
-                    <a href="http://i.imgur.com/LQjH2uQ.gifv">Video example</a>
-                  </li>
-                  <li>
-                    Few tabs with same with. <br>
-                    <a href="http://i.imgur.com/ZOWYl2v.png">Photo example</a> <br>
-                    <a href="https://github.com/nacholozano/web-google-material-tabs#usage">See usage in github.</a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          <!--</p>-->
+          <b>Features: </b>
+          <ul>
+            <li>Change tab with sliding your finger on the screen.</li>
+            <li>Change tab touching the wanted tab.</li>
+            <li>It works with screen orientation change.</li>
+            <li>The current and next/previous tab is always visible.</li>
+            <li>Load tab data when user changes tab.</li>
+            <li>Pull to refresh current tab's data.</li>
+            <li>
+              Two modes:
+              <ul>
+                <li>
+                  Many tabs with auto width and scrollable container. (This demo) <br>
+                  <a href="http://i.imgur.com/LQjH2uQ.gifv">GIF example</a> 
+                </li>
+                <li>
+                  Few tabs with same with. 
+                  <a href="http://i.imgur.com/ZOWYl2v.png">Photo example</a> <br>
+                  <a href="https://github.com/nacholozano/web-google-material-tabs#usage">See usage in github.</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
 
-          <!--<p>-->
-            <b>Thanks to: </b>
-            <ul>
-              <li>
-                <a href="https://gist.github.com/paulirish/1579671">requestAnimationFrame polyfill</a> by Erik Möller. Fixes from Paul Irish and Tino Zijdel.
-              </li>
-              <li>
-                typicode for <a href="https://jsonplaceholder.typicode.com/">jsonplaceholder</a> mock data API.
-              </li>
-            </ul>
-          <!--</p>-->
+          <b>Thanks to: </b>
+          <ul>
+            <li>
+              <a href="https://gist.github.com/paulirish/1579671">requestAnimationFrame polyfill</a> by Erik Möller. Fixes from Paul Irish and Tino Zijdel.
+            </li>
+            <li>
+              typicode for <a href="https://jsonplaceholder.typicode.com/">jsonplaceholder</a> mock data API.
+            </li>
+          </ul>
 
           <button id="button-change-tab">I want to see more !</button>
       </div>

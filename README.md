@@ -2,10 +2,8 @@
 
 Web clone of [Google Material Tabs](https://material.io/guidelines/components/tabs.html). <br>
 Made in VanillaJS with requestAnimationFrame and CSS 2D transforms. <br>
-Built with ionic2 in mind so Better test touch events in mobile. <br>
-At the moment is just plain js, not typescript or angular. <br>
-Good performance in Android 5.0-Chrome 57. Same technology that android WebView. I Can't test it on iphone.<br>
-Thinking of make more native app's behavior with web technologies.
+Built with Ionic 2 in mind so better test touch events in mobile. <br>
+Good performance in Android 5.0-Chrome 57. Same technology that android's WebView. I can't test it on iPhone.<br>
 
 ### Table of contents 
 1. [Preview](#preview)
@@ -16,8 +14,8 @@ Thinking of make more native app's behavior with web technologies.
 
 # 1. Preview
 
-[Working with many tabs and screen orintation change.](http://i.imgur.com/LQjH2uQ.gifv) <br>
-[Or you can have tabs with same width.](http://i.imgur.com/ZOWYl2v.png) <br>
+[GIF] [Working with many tabs and screen orintation change.](http://i.imgur.com/LQjH2uQ.gifv) <br>
+[IMG] [Or you can have tabs with same width.](http://i.imgur.com/ZOWYl2v.png) <br>
 
 # 2. Demo
 
@@ -25,17 +23,15 @@ Thinking of make more native app's behavior with web technologies.
 
 # 3. Features
 
-- Change tab with touch event.
-- Change tab in any moment.
-- It works with mobile change orientation.
+- Change tab with sliding your finger on the screen.
+- Change tab touching the wanted tab.
+- It works with screen orientation change.
 - The current and next/previous tab is always visible.
 - Load tab data when user changes tab.
-  (No request cancellation and not refresh at the moment) 
+- Pull to refresh current tab's data.
 - Two modes:
-    - Many tabs with auto width and scrollable element. <br>
-(This demo)
-    - Few tabs with same with. <br>
-    [See usage](https://github.com/nacholozano/web-google-material-tabs#usage).</a>
+    - Many tabs with auto width and scrollable container. (This demo) <br>
+    - Few tabs with same with. [See usage](https://github.com/nacholozano/web-google-material-tabs#usage. <br>
                   
 # 4. Install & run
 
