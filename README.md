@@ -19,7 +19,8 @@ Good performance in Android 5.0-Chrome 57. Same technology that android's WebVie
 
 # 2. Demo
 
-[Working demo](http://codepen.io/nacholozano/full/oWgJKo/) <br>
+[Web version] [Working demo](http://codepen.io/nacholozano/full/oWgJKo/) <br>
+[APK] You can find a quick ionic wrapping in 'demo' folder
 
 # 3. Features
 
