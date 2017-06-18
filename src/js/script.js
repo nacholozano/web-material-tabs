@@ -344,14 +344,14 @@ function setData( element, index ){
 
   var tab = {
     id: index,
-    width: Math.floor(element.getBoundingClientRect().width),
+    width: trimDecimals(element.getBoundingClientRect().width),
     translate: index * -100,
   };
-  tab.center = Math.floor(tab.width/2);
+  tab.center = trimDecimals(tab.width/2);
 
   if( index ){
     tab.left = tabsData[index-1].right;
-    tab.right = tab.left + tab.width;
+    tab.right = trimDecimals(tab.left + tab.width);
     tab.translatePX = -( tabsViews.containerWdith + Math.abs(tabsData[ index - 1 ].translatePX) );
   }else{
     tab.left = 0;
@@ -366,6 +366,7 @@ function setData( element, index ){
   }
 
   tabsData.push(tab);
+  console.log( tab );
 }
 
 /**
@@ -551,6 +552,18 @@ function makeTestRequest( numTab ){
   };
   xhttp.open("GET", requestForTab[numTab].url, true);
   xhttp.send();
+}
+
+/**
+ * Return the number with number of wanted decimals.
+ * 
+ * @param {number} number 
+ * @param {number} decimals Number of decimals
+ * @returns 
+ */
+function trimDecimals(number, decimals){
+  var numOfDecimals = decimals || 4;
+  return +(number.toFixed(numOfDecimals));
 }
 
 }
