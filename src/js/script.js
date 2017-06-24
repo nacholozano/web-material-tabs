@@ -310,6 +310,7 @@ function initialize(){
 
   // header.height = dom.tabsHeader.clientHeight;
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
+  dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + 'px';
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
@@ -366,7 +367,6 @@ function setData( element, index ){
   }
 
   tabsData.push(tab);
-  console.log( tab );
 }
 
 /**

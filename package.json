@@ -1,15 +1,15 @@
 {
-  "name": "infinite-views",
+  "name": "web-google-material-tabs",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/nacholozano/infinite-views.git",
+  "repository": "https://github.com/nacholozano/web-google-material-tabs.git",
   "author": "Nacho Lozano <nacholozanogui@gmail.com>",
   "license": "MIT",
   "scripts": {
     "watch:scss": "node-sass --watch src/style/ -o src/",
     "build:js": "uglifyjs src/js/**.js -o dist/web-google-material-tabs.min.js -c -m --wrap='WGMT'",
     "build:css": "cleancss src/style.css -o dist/web-google-material-tabs.min.css",
-    "sync": "browser-sync start --server 'src/' --files 'src/*.html,src/js/*.js,src/*.css' --host 192.168.1.39",
+    "sync": "browser-sync start --server 'src/' --files 'src/*.html,src/js/*.js,src/*.css' --host 192.168.1.100",
     "dev": "concurrently --kill-others 'yarn run watch:scss' 'yarn run sync'",
     "build": "concurrently 'yarn run build:js' 'yarn run build:css'"
   },
