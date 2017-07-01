@@ -19,13 +19,14 @@ button {
   -webkit-box-orient: vertical;
   flex-direction: column;*/
   /*height: 100%;*/ }
-  .tabs-container .header-container {
+  .tabs-container .tabs-header-container {
+    width: 100%;
     transition: transform 0.3s;
     position: fixed;
     top: 0;
     z-index: 500;
     background-color: white; }
-    .tabs-container .header-container .tabs-header {
+    .tabs-container .tabs-header-container .tabs-header {
       padding: 1em; }
   .tabs-container .tab-reloader-container {
     position: absolute;

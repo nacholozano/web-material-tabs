@@ -15,7 +15,7 @@ var throttleTime = 300,
     tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
     tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0],
     tabHeader: document.getElementsByClassName('tabs-header')[0],
-    headerContainer: document.getElementsByClassName('header-container')[0],
+    tabsHeaderContainer: document.getElementsByClassName('tabs-header-container')[0],
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -76,9 +76,13 @@ var throttleTime = 300,
     startPoint: null,
     currentPoint: null
   },
+  header = {
+    height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
+    scroll: 0,
+    containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height
+  },
   tabsData = [];
 
-var headerHeight = trimDecimals( dom.tabHeader.getBoundingClientRect().height); 
 initialize();
 
 /**
@@ -292,6 +296,8 @@ function changeTab( numTab ){
   dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+
+  controlHeaderVisibility( dom.tabsArray[numTab] );
 }
 
 /**
@@ -315,7 +321,7 @@ function initialize(){
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
   //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height - dom.tabHeader.getBoundingClientRect().height + 'px';
   dom.tabsMoveContainer.style.height = window.innerHeight + 'px';
-  dom.tabsArray[0].style.paddingTop = dom.headerContainer.getBoundingClientRect().height + 10 + 'px';
+  
   //dom.tabsMoveContainer.style.marginTop = dom.tabsLink.getBoundingClientRect().height + dom.tabHeader.getBoundingClientRect().height + 'px';
   //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
@@ -333,10 +339,16 @@ function initialize(){
 
   tabsData = [];
   [].forEach.call( dom.tabsLinkArray, setData);
+  [].forEach.call( dom.tabsArray, setDataTabsContent);
   tabsViews.endTranslate = tabsData[ tabsData.length-1 ].translatePX;
 
   dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   updateIndicator();
+}
+
+function setDataTabsContent( element ) {
+  element.style.paddingTop = header.containerHeight + 10 + 'px';
+  element.addEventListener( 'scroll', onScroll );
 }
 
 /**
@@ -346,6 +358,7 @@ function initialize(){
  */
 function setData( element, index ){
   element.setAttribute('data-id', index);
+
   if( tabsScroll.equalTabs ){
     element.style.width = tabsScroll.equalWdith+'%';
   }
@@ -573,30 +586,28 @@ function trimDecimals(number, decimals){
   return +(number.toFixed(numOfDecimals));
 }
 
-dom.tabsArray[0].addEventListener( 'scroll', function () {
+//dom.tabsArray[0].addEventListener( 'scroll', onScroll );
+
+function onScroll() {
   var tab = this;
-  onscroll(tab);
+  controlHeaderVisibility(tab);
   //clearTimeout(throttleTimeOut);
-  
   /*throttleTimeOut = setTimeout(function() {
       onscroll(tab);
       //console.log('onscroll');
   }, 10);*/
-});
+}
 
-var scroll = 0;
-
-function onscroll(tab) {
-  //var distancia = scroll === 0 ? 30 : 3;
+function controlHeaderVisibility(tab) {
   var scrollTop = Math.floor(tab.scrollTop);
-  distancia = 3;
+  var distancia = 3;
 
-  if ( scrollTop > scroll && ( scrollTop > scroll + distancia || scrollTop > headerHeight ) ) {
-    dom.headerContainer.style.transform = 'translateY(-'+headerHeight+'px)';
-  }else if ( scrollTop < scroll - distancia ) {
-    dom.headerContainer.style.transform = 'translateY(0px)';
+  if ( scrollTop > header.scroll && ( scrollTop > header.scroll + distancia || scrollTop > header.height ) ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
+  }else if ( scrollTop < header.scroll || scrollTop < header.height ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
   }
-  scroll = scrollTop;
+  header.scroll = scrollTop;
 
 }
 
