@@ -13,7 +13,9 @@ var throttleTime = 300,
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
     tabReloader: document.getElementsByClassName('tab-reloader')[0],
     tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
-    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
+    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0],
+    tabHeader: document.getElementsByClassName('tabs-header')[0],
+    headerContainer: document.getElementsByClassName('header-container')[0],
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -76,6 +78,7 @@ var throttleTime = 300,
   },
   tabsData = [];
 
+var headerHeight = trimDecimals( dom.tabHeader.getBoundingClientRect().height); 
 initialize();
 
 /**
@@ -310,7 +313,11 @@ function initialize(){
 
   // header.height = dom.tabsHeader.clientHeight;
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
-  dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
+  //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height - dom.tabHeader.getBoundingClientRect().height + 'px';
+  dom.tabsMoveContainer.style.height = window.innerHeight + 'px';
+  dom.tabsArray[0].style.paddingTop = dom.headerContainer.getBoundingClientRect().height + 10 + 'px';
+  //dom.tabsMoveContainer.style.marginTop = dom.tabsLink.getBoundingClientRect().height + dom.tabHeader.getBoundingClientRect().height + 'px';
+  //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + 'px';
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
@@ -564,6 +571,33 @@ function makeTestRequest( numTab ){
 function trimDecimals(number, decimals){
   var numOfDecimals = decimals || 4;
   return +(number.toFixed(numOfDecimals));
+}
+
+dom.tabsArray[0].addEventListener( 'scroll', function () {
+  var tab = this;
+  onscroll(tab);
+  //clearTimeout(throttleTimeOut);
+  
+  /*throttleTimeOut = setTimeout(function() {
+      onscroll(tab);
+      //console.log('onscroll');
+  }, 10);*/
+});
+
+var scroll = 0;
+
+function onscroll(tab) {
+  //var distancia = scroll === 0 ? 30 : 3;
+  var scrollTop = Math.floor(tab.scrollTop);
+  distancia = 3;
+
+  if ( scrollTop > scroll && ( scrollTop > scroll + distancia || scrollTop > headerHeight ) ) {
+    dom.headerContainer.style.transform = 'translateY(-'+headerHeight+'px)';
+  }else if ( scrollTop < scroll - distancia ) {
+    dom.headerContainer.style.transform = 'translateY(0px)';
+  }
+  scroll = scrollTop;
+
 }
 
 }

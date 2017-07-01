@@ -23,6 +23,7 @@ html{
 html,body,table{
   height: 100%;
   margin: 0;
+  overflow-y: hidden;
 }
 
 button{
@@ -30,11 +31,23 @@ button{
 }
 
 .tabs-container{
-  display: -webkit-box;
+  transition: transform 0.3s;
+  .header-container{
+    transition: transform 0.3s;
+    position: fixed;
+    top: 0;
+    z-index: 500;
+    background-color: white;
+    .tabs-header{
+      padding: 1em;
+    }
+  }
+  
+  /*display: -webkit-box;
   display: flex;
   -webkit-box-orient: vertical;
-  flex-direction: column;
-  height: 100%;
+  flex-direction: column;*/
+  /*height: 100%;*/
 
   .tab-reloader-container{
     position: absolute;
@@ -150,9 +163,9 @@ button{
   }
   .tabs-move-container{
     position: relative;
-    -webkit-box-flex: 1; 
+    /*-webkit-box-flex: 1; 
     flex: 1 0 auto;
-    height: 0;
+    height: 0;*/
     overflow: hidden;
       .tabs-move{
         //position: absolute;
