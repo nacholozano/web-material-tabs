@@ -604,9 +604,9 @@ function onScroll() {
 
 function controlHeaderVisibility(tab) {
   var scrollTop = Math.floor(tab.scrollTop);
-  var distancia = 3;
+  var distancia = 8;
 
-  if ( scrollTop > header.scroll && ( scrollTop > header.scroll + distancia || scrollTop > header.height ) ) {
+  if ( scrollTop > header.scroll && ( scrollTop > header.height || scrollTop > header.scroll + distancia ) ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
   }else if ( scrollTop < header.scroll || scrollTop < header.height ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
