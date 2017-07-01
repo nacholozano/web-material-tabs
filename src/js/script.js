@@ -260,6 +260,7 @@ function touchUp(event) {
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+  setHeaderVisibility(tabsViews.currentTab);
   state.sliding = false;
 }
 
@@ -297,7 +298,7 @@ function changeTab( numTab ){
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
 
-  controlHeaderVisibility( dom.tabsArray[numTab] );
+  setHeaderVisibility(numTab);
 }
 
 /**
@@ -609,6 +610,12 @@ function controlHeaderVisibility(tab) {
   }
   header.scroll = scrollTop;
 
+}
+
+function setHeaderVisibility( numTab ) {
+  if ( dom.tabsArray[numTab].scrollTop < header.height ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
+  }
 }
 
 }
