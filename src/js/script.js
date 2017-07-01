@@ -297,7 +297,10 @@ function changeTab( numTab ){
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
 
-  controlHeaderVisibility( dom.tabsArray[numTab] );
+  //controlHeaderVisibility( dom.tabsArray[numTab] );
+  if ( dom.tabsArray[numTab].scrollTop < header.height ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
+  }
 }
 
 /**
