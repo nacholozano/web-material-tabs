@@ -41,6 +41,8 @@ button{
     background-color: white;
     .tabs-header{
       padding: 1em;
+      display: flex;
+      justify-content: space-between;
     }
   }
   
