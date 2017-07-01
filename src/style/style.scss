@@ -55,7 +55,9 @@ button{
     z-index: 100;
     width: 100%;
     text-align: center;
-    top: -3em;
+    //top: -3em;
+    z-index: -1;
+    bottom: 1em;
     font-size: 14px;
     transform: translateY(0);
     .tab-reloader{
@@ -104,6 +106,7 @@ button{
   }
   .tabs-link-container{
     .tabs-link {
+      background-color: white;
       font-size: 0;
       color: $tab-font-color;
       font-weight: $tab-font-weight; 

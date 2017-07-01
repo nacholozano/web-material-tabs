@@ -33,7 +33,8 @@ button {
     z-index: 100;
     width: 100%;
     text-align: center;
-    top: -3em;
+    z-index: -1;
+    bottom: 1em;
     font-size: 14px;
     transform: translateY(0); }
     .tabs-container .tab-reloader-container .tab-reloader {
@@ -74,6 +75,7 @@ button {
         animation: spin 1s linear infinite;
         opacity: 1; }
   .tabs-container .tabs-link-container .tabs-link {
+    background-color: white;
     font-size: 0;
     color: #3a3a3a;
     font-weight: 600;

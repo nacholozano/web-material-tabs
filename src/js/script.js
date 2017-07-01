@@ -70,7 +70,7 @@ var throttleTime = 300,
   },
   state = {
     refreshing: false,
-    sliding: false
+    sliding: false,
   },
   refresh = {
     startPoint: null,
@@ -80,6 +80,9 @@ var throttleTime = 300,
     height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
     scroll: 0,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height
+  },
+  loader = {
+    top: header.height
   },
   tabsData = [];
 
@@ -322,7 +325,8 @@ function initialize(){
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
   //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height - dom.tabHeader.getBoundingClientRect().height + 'px';
   dom.tabsMoveContainer.style.height = window.innerHeight + 'px';
-  
+
+  //dom.tabReloaderContainer.style.top = loader.top + 15 + 'px';
   //dom.tabsMoveContainer.style.marginTop = dom.tabsLink.getBoundingClientRect().height + dom.tabHeader.getBoundingClientRect().height + 'px';
   //dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
   // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
@@ -591,12 +595,11 @@ function trimDecimals(number, decimals){
 
 function onScroll() {
   var tab = this;
-  controlHeaderVisibility(tab);
-  //clearTimeout(throttleTimeOut);
-  /*throttleTimeOut = setTimeout(function() {
-      onscroll(tab);
-      //console.log('onscroll');
-  }, 10);*/
+  //controlHeaderVisibility(tab);
+  clearTimeout(throttleTimeOut);
+  throttleTimeOut = setTimeout(function() {
+      controlHeaderVisibility(tab);
+  }, 10);
 }
 
 function controlHeaderVisibility(tab) {
