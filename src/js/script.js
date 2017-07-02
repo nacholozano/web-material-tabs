@@ -84,7 +84,7 @@ var throttleTime = 300,
   loader = {
     top: header.height,
     updatedScroll: false,
-    distanceToUpdateVisibility: 18
+    distanceToUpdateVisibility: 20
   },
   tabsData = [];
 
