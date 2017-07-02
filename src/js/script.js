@@ -82,7 +82,8 @@ var throttleTime = 300,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height
   },
   loader = {
-    top: header.height
+    top: header.height,
+    updatedScroll: false
   },
   tabsData = [];
 
@@ -200,13 +201,29 @@ function touchMove(event){
     event.preventDefault();
     state.sliding = true;
 
+    var nexTab = dom.tabsArray[ tabsViews.currentTab + -1 ];
+    controlSiblingTabsHeaderVisibility( nexTab );
+
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft - (touch.move*tabsData[ tabsViews.currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
+
     event.preventDefault();
     state.sliding = true;
+
+    var nexTab = dom.tabsArray[ tabsViews.currentTab + 1 ];
+    controlSiblingTabsHeaderVisibility( nexTab );
+
+    /*if ( nexTab && nexTab.scrollHeight > window.innerHeight && nexTab.scrollTop === 0 ) {
+      //nexTab.scrollTo( 0, header.height );
+      //header.updatedScroll = true;
+      controlHeaderVisibility( nexTab );
+    }else if ( nexTab.scrollHeight === window.innerHeight ){
+      controlHeaderVisibility( nexTab );
+      //header.updatedScroll = false;
+    }*/
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -221,6 +238,8 @@ function touchMove(event){
  * @param {object} event
  */
 function touchUp(event) {
+
+
 
   /**
    * - User's finger has change position
@@ -309,7 +328,7 @@ function changeTab( numTab ){
  */
 function onResize(){
   clearTimeout(throttleTimeOut);
-  dom.tabsContainer.style.height = '';
+  //dom.tabsContainer.style.height = '';
   throttleTimeOut = setTimeout(function() {
       initialize();
       manageTabs( tabsViews.currentTab );
@@ -594,6 +613,10 @@ function trimDecimals(number, decimals){
 //dom.tabsArray[0].addEventListener( 'scroll', onScroll );
 
 function onScroll() {
+  /*if ( header.updatedScroll ) {
+    header.updatedScroll = false;
+    return;
+  }*/
   var tab = this;
   //controlHeaderVisibility(tab);
   clearTimeout(throttleTimeOut);
@@ -619,6 +642,21 @@ function setHeaderVisibility( numTab ) {
   if ( dom.tabsArray[numTab].scrollTop < header.height ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
   }
+}
+
+function controlSiblingTabsHeaderVisibility( tab ) {
+  if ( !tab ) {
+    return;
+  }
+
+  if ( tab && tab.scrollHeight > window.innerHeight && tab.scrollTop === 0 ) {
+    //nexTab.scrollTo( 0, header.height );
+    //header.updatedScroll = true;
+    controlHeaderVisibility( tab );
+  }else if ( tab.scrollHeight === window.innerHeight ){
+    controlHeaderVisibility( tab );
+    //header.updatedScroll = false;
+  }  
 }
 
 }
