@@ -13,7 +13,9 @@ var throttleTime = 300,
     indicatorHelper: document.getElementsByClassName('indicator-helper')[0],
     tabReloader: document.getElementsByClassName('tab-reloader')[0],
     tabReloaderContainer: document.getElementsByClassName('tab-reloader-container')[0],
-    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0]
+    tabReloaderIcon: document.getElementsByClassName('tab-reloader-icon')[0],
+    tabHeader: document.getElementsByClassName('tabs-header')[0],
+    tabsHeaderContainer: document.getElementsByClassName('tabs-header-container')[0],
   },
   touch = {
     startPosition: null, // Position when user touch screen
@@ -68,11 +70,21 @@ var throttleTime = 300,
   },
   state = {
     refreshing: false,
-    sliding: false
+    sliding: false,
   },
   refresh = {
     startPoint: null,
     currentPoint: null
+  },
+  header = {
+    height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
+    scroll: 0,
+    containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height
+  },
+  loader = {
+    top: header.height,
+    updatedScroll: false,
+    distanceToUpdateVisibility: 20
   },
   tabsData = [];
 
@@ -190,13 +202,20 @@ function touchMove(event){
     event.preventDefault();
     state.sliding = true;
 
+    var nexTab = dom.tabsArray[ tabsViews.currentTab + -1 ];
+    controlSiblingTabsHeaderVisibility( nexTab );
+
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
     dom.indicatorHelper.style.transform = "translateX("+ Math.floor(tabsData[tabsViews.currentTab].marginLeft - (touch.move*tabsData[ tabsViews.currentTab ].previousTabScreenRatio) )+"px)";
 
   } else if ( !rightLimit() && ( event.touches[0].clientX < touch.startPosition - touch.offset ) ) {
+
     event.preventDefault();
     state.sliding = true;
+
+    var nexTab = dom.tabsArray[ tabsViews.currentTab + 1 ];
+    controlSiblingTabsHeaderVisibility( nexTab );
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -222,6 +241,7 @@ function touchUp(event) {
         (touch.endPosition > touch.startPosition &&
         touch.endPosition - touch.startPosition >= touch.offset)
       ) ){
+    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     return;
   }
 
@@ -253,6 +273,7 @@ function touchUp(event) {
 
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+  setHeaderVisibility(tabsViews.currentTab);
   state.sliding = false;
 }
 
@@ -289,6 +310,8 @@ function changeTab( numTab ){
   dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   dom.tabsLinkArray[tabsViews.currentTab].classList.add('active');
   updateIndicator();
+
+  setHeaderVisibility(numTab);
 }
 
 /**
@@ -296,7 +319,6 @@ function changeTab( numTab ){
  */
 function onResize(){
   clearTimeout(throttleTimeOut);
-  dom.tabsContainer.style.height = '';
   throttleTimeOut = setTimeout(function() {
       initialize();
       manageTabs( tabsViews.currentTab );
@@ -308,11 +330,8 @@ function onResize(){
  */
 function initialize(){
 
-  // header.height = dom.tabsHeader.clientHeight;
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
-  dom.tabsMoveContainer.style.height = window.innerHeight - dom.tabsLink.getBoundingClientRect().height + 'px';
-  // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + header.height + 'px';
-  // dom.tabsContainer.style.height = dom.tabsContainer.clientHeight + 'px';
+  dom.tabsMoveContainer.style.height = window.innerHeight + 'px';
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
 
   if( tabsScroll.equalTabs ){
@@ -326,10 +345,16 @@ function initialize(){
 
   tabsData = [];
   [].forEach.call( dom.tabsLinkArray, setData);
+  [].forEach.call( dom.tabsArray, setDataTabsContent);
   tabsViews.endTranslate = tabsData[ tabsData.length-1 ].translatePX;
 
   dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
   updateIndicator();
+}
+
+function setDataTabsContent( element ) {
+  element.style.paddingTop = header.containerHeight + 10 + 'px';
+  element.addEventListener( 'scroll', onScroll );
 }
 
 /**
@@ -339,6 +364,7 @@ function initialize(){
  */
 function setData( element, index ){
   element.setAttribute('data-id', index);
+
   if( tabsScroll.equalTabs ){
     element.style.width = tabsScroll.equalWdith+'%';
   }
@@ -382,8 +408,6 @@ function updateIndicator(){
  * @param {number} numTab
  */
 function manageTabs( numTab ){
-
-  //alert('managetabs');
 
   if( tabsScroll.equalTabs ){ return; }
 
@@ -519,7 +543,6 @@ function transitionend(event) {
 function loadTabData( numTab ){
   if( !requestForTab[numTab] || requestForTab[numTab].received ){ return; }
 
-  //dom.tabLoader.classList.remove('tab-loader-hide');
   dom.tabReloaderContainer.style.transition = "transform 0.3s";
   dom.tabReloaderContainer.classList.add('reloading');
 
@@ -544,9 +567,7 @@ function makeTestRequest( numTab ){
         requestForTab[numTab].error( JSON.parse(this.responseText) );
       }
 
-      //dom.tabLoader.classList.add('tab-loader-hide');
       dom.tabReloaderContainer.classList.remove('reloading');
-      //dom.tabReloaderContainer.style.transition = "";
       requestForTab[numTab].received = true;
     }
   };
@@ -564,6 +585,45 @@ function makeTestRequest( numTab ){
 function trimDecimals(number, decimals){
   var numOfDecimals = decimals || 4;
   return +(number.toFixed(numOfDecimals));
+}
+
+function onScroll() {
+  var tab = this;
+  clearTimeout(throttleTimeOut);
+  throttleTimeOut = setTimeout(function() {
+      controlHeaderVisibility(tab);
+  }, 10);
+}
+
+function controlHeaderVisibility(tab) {
+  var scrollTop = Math.floor(tab.scrollTop);
+  var distancia = header.distanceToUpdateVisibility;
+
+  if ( scrollTop > header.scroll && ( scrollTop > header.height || scrollTop > header.scroll + distancia ) ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
+  }else if ( scrollTop < header.scroll || scrollTop < header.height ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
+  }
+  header.scroll = scrollTop;
+
+}
+
+function setHeaderVisibility( numTab ) {
+  if ( dom.tabsArray[numTab].scrollTop < header.height ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
+  }
+}
+
+function controlSiblingTabsHeaderVisibility( tab ) {
+  if ( !tab ) {
+    return;
+  }
+
+  if ( tab && tab.scrollHeight > window.innerHeight && tab.scrollTop === 0 ) {
+    controlHeaderVisibility( tab );
+  }else if ( tab.scrollHeight === window.innerHeight ){
+    controlHeaderVisibility( tab );
+  }  
 }
 
 }

@@ -30,6 +30,7 @@ Good performance in Android 5.0-Chrome 57. Same technology that android's WebVie
 - The current and next/previous tab is always visible.
 - Load tab data when user changes tab.
 - Pull to refresh current tab's data.
+- Ninja header.
 - Two modes:
     - Many tabs with auto width and scrollable container. (This demo) <br>
     - Few tabs with same with. [See usage](https://github.com/nacholozano/web-google-material-tabs#usage. <br>
