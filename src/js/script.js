@@ -241,6 +241,7 @@ function touchUp(event) {
         (touch.endPosition > touch.startPosition &&
         touch.endPosition - touch.startPosition >= touch.offset)
       ) ){
+    dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     return;
   }
 
