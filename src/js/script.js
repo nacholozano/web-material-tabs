@@ -614,13 +614,6 @@ function controlHeaderVisibility(tab) {
     header.scroll = scrollTop;
   }
 
-  /*if ( scrollTop > header.scroll && ( scrollTop > header.height / 2 ||  ) ) {
-    //|| scrollTop > header.scroll + distancia
-    dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
-  }else if ( scrollTop < header.scroll || scrollTop < header.height ) {
-    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
-  }*/
-  //  header.scroll = scrollTop;
 }
 
 function setHeaderVisibility( numTab ) {
