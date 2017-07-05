@@ -1,0 +1,2 @@
+- Change tab with fast and short slide without need of slide a minimun distance. v = d/t
+- Place buttons in bottom of screen
