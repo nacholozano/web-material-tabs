@@ -79,12 +79,14 @@ var throttleTime = 300,
   header = {
     height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
     scroll: 0,
-    containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height
+    containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
+    distanceToToggleHeader: 50,
+    firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2
   },
   loader = {
     top: header.height,
     updatedScroll: false,
-    distanceToUpdateVisibility: 20
+    distanceToUpdateVisibility: 30
   },
   tabsData = [];
 
@@ -176,6 +178,7 @@ function moveRefresh(e){
  */
 function touchDown(event) {
   touch.startPosition = event.touches[0].clientX;
+  touch.startPositionY = event.touches[0].clientY;
   touch.endPosition = null;
   removeTransition();
 }
@@ -194,6 +197,7 @@ function touchMove(event){
    * 'touchend' would be the right event to set this variable. But it does not have 'clientX' property
    */
   touch.endPosition = event.touches[0].clientX;
+  // touch.currentPositionY = event.touches[0].clientY;
 
   if ( !leftLimit() && (event.touches[0].clientX > touch.startPosition + touch.offset) ) {
     /**
@@ -203,7 +207,7 @@ function touchMove(event){
     state.sliding = true;
 
     var nexTab = dom.tabsArray[ tabsViews.currentTab + -1 ];
-    controlSiblingTabsHeaderVisibility( nexTab );
+    controlSiblingTabsHeaderVisibility( nexTab, event );
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
@@ -215,7 +219,7 @@ function touchMove(event){
     state.sliding = true;
 
     var nexTab = dom.tabsArray[ tabsViews.currentTab + 1 ];
-    controlSiblingTabsHeaderVisibility( nexTab );
+    controlSiblingTabsHeaderVisibility( nexTab, event );
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -242,6 +246,7 @@ function touchUp(event) {
         touch.endPosition - touch.startPosition >= touch.offset)
       ) ){
     dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
+    setHeaderScrollReference( tabsViews.currentTab );
     return;
   }
 
@@ -312,6 +317,7 @@ function changeTab( numTab ){
   updateIndicator();
 
   setHeaderVisibility(numTab);
+  setHeaderScrollReference( tabsViews.currentTab );
 }
 
 /**
@@ -589,6 +595,7 @@ function trimDecimals(number, decimals){
 
 function onScroll() {
   var tab = this;
+  //currentScroll
   clearTimeout(throttleTimeOut);
   throttleTimeOut = setTimeout(function() {
       controlHeaderVisibility(tab);
@@ -597,15 +604,23 @@ function onScroll() {
 
 function controlHeaderVisibility(tab) {
   var scrollTop = Math.floor(tab.scrollTop);
-  var distancia = header.distanceToUpdateVisibility;
+  var scroll = scrollTop - header.scroll;
 
-  if ( scrollTop > header.scroll && ( scrollTop > header.height || scrollTop > header.scroll + distancia ) ) {
+  if ( scroll < 0 && ( scroll < -header.distanceToToggleHeader || scrollTop < header.firstToggleDistance ) ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
+    header.scroll = scrollTop;
+  }else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader || scrollTop > header.firstToggleDistance ) ) {
+    dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
+    header.scroll = scrollTop;
+  }
+
+  /*if ( scrollTop > header.scroll && ( scrollTop > header.height / 2 ||  ) ) {
+    //|| scrollTop > header.scroll + distancia
     dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
   }else if ( scrollTop < header.scroll || scrollTop < header.height ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
-  }
-  header.scroll = scrollTop;
-
+  }*/
+  //  header.scroll = scrollTop;
 }
 
 function setHeaderVisibility( numTab ) {
@@ -614,7 +629,7 @@ function setHeaderVisibility( numTab ) {
   }
 }
 
-function controlSiblingTabsHeaderVisibility( tab ) {
+function controlSiblingTabsHeaderVisibility( tab, event ) {
   if ( !tab ) {
     return;
   }
@@ -624,6 +639,10 @@ function controlSiblingTabsHeaderVisibility( tab ) {
   }else if ( tab.scrollHeight === window.innerHeight ){
     controlHeaderVisibility( tab );
   }  
+}
+
+function setHeaderScrollReference( numTab ) {
+  header.scroll = dom.tabsArray[ numTab ].scrollTop;
 }
 
 }
