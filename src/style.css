@@ -118,8 +118,8 @@ button {
   font-weight: 600;
   text-transform: uppercase;
   white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
+  /*overflow-x: auto;
+      overflow-y: hidden;*/
   color: rgba(0, 0, 0, 0.4); }
   .tabs-link.equal-tabs .tab-link {
     white-space: normal; }

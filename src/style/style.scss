@@ -160,8 +160,8 @@ button{
       font-weight: $tab-font-weight; 
       text-transform: uppercase;
       white-space: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
+      /*overflow-x: auto;
+      overflow-y: hidden;*/
       color: $inactive-tab-color;
 
       &.equal-tabs{
