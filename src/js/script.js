@@ -81,7 +81,8 @@ var throttleTime = 300,
     scroll: 0,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
     distanceToToggleHeader: 50,
-    firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2
+    firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
+    bottom: true
   },
   loader = {
     top: header.height,
@@ -337,7 +338,13 @@ function onResize(){
 function initialize(){
 
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
-  dom.tabsMoveContainer.style.height = window.innerHeight + 'px';
+
+  if ( header.bottom ) { 
+    dom.tabsMoveContainer.style.height =  window.innerHeight - dom.tabsLink.clientHeight  + 'px';
+  }else {
+    dom.tabsMoveContainer.style.height =  window.innerHeight + 'px';
+  }
+
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
 
   if( tabsScroll.equalTabs ){
