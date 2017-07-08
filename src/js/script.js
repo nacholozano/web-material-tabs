@@ -24,7 +24,8 @@ var throttleTime = 300,
     offset: 50, // Minimum distance before start to slide views
     timeStart: null,
     offsetTime: 150,
-    fast: null
+    fast: null,
+    distanceToFastSwipe: 50 // avoid tab change if user swipe fast over Y axis
   },
   tabsScroll = {
     speed: 10, // Scroll speed if tab is not fully visible
@@ -83,7 +84,7 @@ var throttleTime = 300,
     height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
     scroll: 0,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
-    distanceToToggleHeader: 50,
+    distanceToToggleHeader: 60,
     firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
     bottom: true
   },
@@ -182,7 +183,7 @@ function moveRefresh(e){
  */
 function touchDown(event) {
   touch.startPosition = event.touches[0].clientX;
-  touch.startPositionY = event.touches[0].clientY;
+  // touch.startPositionY = event.touches[0].clientY;
   touch.endPosition = null;
   touch.timeStart = new Date().getTime();
   removeTransition();
@@ -245,7 +246,9 @@ function touchUp(event) {
    * - Fast swipe
    * - Enough distance has been traversed to change view
    */
-  touch.fast = new Date().getTime() - touch.timeStart < touch.offsetTime;
+  touch.fast = Math.abs(touch.endPosition - touch.startPosition) > touch.distanceToFastSwipe
+    ? new Date().getTime() - touch.timeStart < touch.offsetTime 
+    : false;
   
   if( !touch.endPosition ||
      ( !touch.fast &&
@@ -625,8 +628,10 @@ function controlHeaderVisibility(tab) {
   var scroll = scrollTop - header.scroll;
 
   if ( scroll < 0 && ( scroll < -header.distanceToToggleHeader || scrollTop < header.firstToggleDistance ) ) {
+  //if ( scroll < 0 && ( scrollTop < header.firstToggleDistance || ( !header.scroll && scroll < -header.distanceToToggleHeader) ) ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
     header.scroll = scrollTop;
+  //}else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader || ( !header.scroll && scrollTop > header.firstToggleDistance ) ) ) {
   }else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader || scrollTop > header.firstToggleDistance ) ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
     header.scroll = scrollTop;
@@ -647,7 +652,9 @@ function controlSiblingTabsHeaderVisibility( tab, event ) {
 
   if ( tab && tab.scrollHeight > window.innerHeight && tab.scrollTop === 0 ) {
     controlHeaderVisibility( tab );
-  }else if ( tab.scrollHeight === window.innerHeight ){
+  //}else if ( tab.scrollHeight === window.innerHeight ){
+  }else if( tab.scrollHeight === dom.tabsMoveContainer.clientHeight ){
+    // No se cumple con los botones abajo
     controlHeaderVisibility( tab );
   }  
 }
