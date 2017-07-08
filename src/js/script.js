@@ -21,7 +21,10 @@ var throttleTime = 300,
     startPosition: null, // Position when user touch screen
     endPosition: null, // Position when user stop touching the screen
     move: null, // Distance traversed
-    offset: 50 // Minimum distance before start to slide views
+    offset: 50, // Minimum distance before start to slide views
+    timeStart: null,
+    offsetTime: 150,
+    fast: null
   },
   tabsScroll = {
     speed: 10, // Scroll speed if tab is not fully visible
@@ -37,7 +40,7 @@ var throttleTime = 300,
     sliding: false, // Know if user is changing view
     distanceToChangeViewScreenRatio: 2.3,
     distanceToChangeView: null, // Minumum distance to change view
-    currentTab: 0,
+    currentTab: 0
   }
   requestForTab = {
     2: {
@@ -181,6 +184,7 @@ function touchDown(event) {
   touch.startPosition = event.touches[0].clientX;
   touch.startPositionY = event.touches[0].clientY;
   touch.endPosition = null;
+  touch.timeStart = new Date().getTime();
   removeTransition();
 }
 
@@ -238,19 +242,23 @@ function touchUp(event) {
 
   /**
    * - User's finger has change position
+   * - Fast swipe
    * - Enough distance has been traversed to change view
    */
+  touch.fast = new Date().getTime() - touch.timeStart < touch.offsetTime;
+  
   if( !touch.endPosition ||
+     ( !touch.fast &&
      !( (touch.startPosition > touch.endPosition &&
         touch.startPosition - touch.endPosition >= touch.offset) ||
         (touch.endPosition > touch.startPosition &&
         touch.endPosition - touch.startPosition >= touch.offset)
-      ) ){
+      ))
+  ){
     dom.tabsMove.style.transform = "translateX(" + tabsData[ tabsViews.currentTab ].translatePX + "px)";
     setHeaderScrollReference( tabsViews.currentTab );
     return;
   }
-
   setTransition();
   dom.tabsLinkArray[tabsViews.currentTab].classList.remove('active');
 
@@ -281,6 +289,7 @@ function touchUp(event) {
   updateIndicator();
   setHeaderVisibility(tabsViews.currentTab);
   state.sliding = false;
+  //touch.fast = false
 }
 
 /**
@@ -492,7 +501,7 @@ function increaseScroll( ){
  */
 function setTransition(){
   dom.indicatorHelper.style.transition = "transform 0.3s";
-  dom.tabsMove.style.transition = "transform 0.3s";
+  dom.tabsMove.style.transition = "transform 0.3s ease-out";
   dom.indicator.style.transition = "transform 0.3s";
 }
 
@@ -527,8 +536,9 @@ function rightLimit(){
  */
 function moveToRightView(){
   return !rightLimit() &&
-    touch.startPosition > touch.endPosition &&
-    touch.startPosition - touch.endPosition > tabsViews.distanceToChangeView;
+      touch.startPosition > touch.endPosition &&
+      ( touch.fast || 
+      touch.startPosition - touch.endPosition > tabsViews.distanceToChangeView );
 }
 
 /**
@@ -537,8 +547,9 @@ function moveToRightView(){
  */
 function moveToLeftView(){
   return !leftLimit() &&
-    touch.endPosition > touch.startPosition &&
-    touch.endPosition - touch.startPosition > tabsViews.distanceToChangeView;
+      touch.endPosition > touch.startPosition &&
+      ( touch.fast ||
+        touch.endPosition - touch.startPosition > tabsViews.distanceToChangeView );
 }
 
 /**
