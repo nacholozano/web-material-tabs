@@ -84,9 +84,9 @@ var throttleTime = 300,
     height: trimDecimals( dom.tabHeader.getBoundingClientRect().height),
     scroll: 0,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
-    distanceToToggleHeader: 60,
-    firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
-    bottom: true
+    distanceToToggleHeader: 30,
+    // firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
+    bottom: false
   },
   loader = {
     top: header.height,
@@ -213,7 +213,7 @@ function touchMove(event){
     state.sliding = true;
 
     var nexTab = dom.tabsArray[ tabsViews.currentTab + -1 ];
-    controlSiblingTabsHeaderVisibility( nexTab, event );
+    //controlSiblingTabsHeaderVisibility( nexTab, event );
 
     touch.move = event.touches[0].clientX - touch.offset - touch.startPosition;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX + touch.move) + "px)";
@@ -225,7 +225,7 @@ function touchMove(event){
     state.sliding = true;
 
     var nexTab = dom.tabsArray[ tabsViews.currentTab + 1 ];
-    controlSiblingTabsHeaderVisibility( nexTab, event );
+    //controlSiblingTabsHeaderVisibility( nexTab, event );
 
     touch.move = touch.startPosition - event.touches[0].clientX - touch.offset;
     dom.tabsMove.style.transform = "translateX(" + Math.floor(tabsData[ tabsViews.currentTab ].translatePX - touch.move) + "px)";
@@ -627,12 +627,10 @@ function controlHeaderVisibility(tab) {
   var scrollTop = Math.floor(tab.scrollTop);
   var scroll = scrollTop - header.scroll;
 
-  if ( scroll < 0 && ( scroll < -header.distanceToToggleHeader || scrollTop < header.firstToggleDistance ) ) {
-  //if ( scroll < 0 && ( scrollTop < header.firstToggleDistance || ( !header.scroll && scroll < -header.distanceToToggleHeader) ) ) {
+  if ( scroll < 0 && ( scroll < -header.distanceToToggleHeader ) ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(0px)';
     header.scroll = scrollTop;
-  //}else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader || ( !header.scroll && scrollTop > header.firstToggleDistance ) ) ) {
-  }else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader || scrollTop > header.firstToggleDistance ) ) {
+  }else if ( scroll > 0 && ( scroll > header.distanceToToggleHeader ) ) {
     dom.tabsHeaderContainer.style.transform = 'translateY(-'+header.height+'px)';
     header.scroll = scrollTop;
   }

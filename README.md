@@ -24,8 +24,8 @@ Good performance in Android 5.0-Chrome 57. Same technology that android's WebVie
 
 # 3. Features
 
-- Change tab with sliding your finger on the screen.
-- Change tab touching the wanted tab.
+- Swipe to cahnge tab. It works with a fast and short swipe or swiping 1/3 of screen.
+- Change tab using the buttons.
 - It works with screen orientation change.
 - The current and next/previous tab is always visible.
 - Load tab data when user changes tab.
