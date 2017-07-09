@@ -40,9 +40,13 @@ button{
     z-index: 500;
     background-color: white;
     .tabs-header{
+      // top buttons 
       padding: 1em 1em 0 1em;
+      // bottom buttons
+      //padding: 1em;
       display: flex;
       justify-content: space-between;
+      background-color: white;
     }
   }
   
@@ -107,65 +111,7 @@ button{
     }
   }
   .tabs-link-container{
-    .tabs-link {
-      background-color: white;
-      font-size: 0;
-      color: $tab-font-color;
-      font-weight: $tab-font-weight; 
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow-x: auto;
-      color: $inactive-tab-color;
-
-      &.equal-tabs{
-        .tab-link{
-          white-space: normal;
-        }
-      }
-
-      .tab-link {
-        text-align: center;
-        font-size: $base-font-size;
-        display: inline-block;
-        padding: 1em;
-        cursor: pointer;
-        position: relative;
-        vertical-align: middle;
-
-        &.active{
-          color: $active-tab-color;
-        }
-        .tab-link-icon{
-          $icon-scale: 1.5;
-          transform: scale($icon-scale, $icon-scale);
-          display: block;
-        }
-        .tab-link-text{
-          display: block;
-          margin-top: 0.5em;
-        }
-      }
-
-      .tab-indicator {
-        height: $tab-indicator-height;  
-
-        .indicator-helper {
-          transform-origin: 0 0;
-          width: 1px;
-          height: 100%;
-          display: inline-block;
-
-          .indicator {
-            height: 100%;
-            width: 1px;
-            background-color: $green;
-            display: inline-block;
-            will-change: transform;
-          }
-
-        }
-      }
-    }
+    
   }
   .tabs-move-container{
     position: relative;
@@ -205,4 +151,67 @@ button{
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+
+.tabs-link {
+  background-color: white;
+  font-size: 0;
+  color: $tab-font-color;
+  font-weight: $tab-font-weight; 
+  text-transform: uppercase;
+  white-space: nowrap;
+  /*overflow-x: auto;
+  overflow-y: hidden;*/
+  color: $inactive-tab-color;
+
+  &.equal-tabs{
+    .tab-link{
+      white-space: normal;
+    }
+  }
+
+  .tab-link {
+    text-align: center;
+    font-size: $base-font-size;
+    display: inline-block;
+    padding: 1em;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+
+    &.active{
+      color: $active-tab-color;
+    }
+    .tab-link-icon{
+      $icon-scale: 1.5;
+      transform: scale($icon-scale, $icon-scale);
+      display: block;
+    }
+    .tab-link-text{
+      display: block;
+      margin-top: 0.5em;
+    }
+  }
+
+  .tab-indicator {
+    height: $tab-indicator-height;  
+
+    .indicator-helper {
+      transform-origin: 0 0;
+      width: 1px;
+      height: 100%;
+      display: inline-block;
+
+      .indicator {
+        height: 100%;
+        width: 1px;
+        background-color: $green;
+        display: inline-block;
+        will-change: transform;
+      }
+
+    }
+  }
 }
