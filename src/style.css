@@ -122,9 +122,12 @@ button {
   white-space: nowrap;
   /*overflow-x: auto;
   overflow-y: hidden;*/
-  color: rgba(0, 0, 0, 0.4); }
-  .tabs-link.equal-tabs .tab-link {
-    white-space: normal; }
+  color: rgba(0, 0, 0, 0.4);
+  /*&.equal-tabs{
+    .tab-link{
+      white-space: normal;
+    }
+  }*/ }
   .tabs-link .tab-link {
     text-align: center;
     font-size: 1rem;
@@ -133,6 +136,12 @@ button {
     cursor: pointer;
     position: relative;
     vertical-align: middle; }
+    .tabs-link .tab-link.small-font {
+      white-space: normal;
+      font-size: 0.7rem; }
+    .tabs-link .tab-link > span {
+      max-width: 9em;
+      display: inline-block; }
     .tabs-link .tab-link.active {
       color: #4CAF50; }
     .tabs-link .tab-link .tab-link-icon {

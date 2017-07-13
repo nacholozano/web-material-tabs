@@ -86,7 +86,7 @@ var throttleTime = 300,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
     distanceToToggleHeader: 30,
     // firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
-    bottom: true
+    bottom: false
   },
   loader = {
     top: header.height,
@@ -396,6 +396,12 @@ function setData( element, index ){
 
   if( tabsScroll.equalTabs ){
     element.style.width = tabsScroll.equalWdith+'%';
+  }
+
+  var childSpan = element.children[0];
+
+  if ( childSpan.scrollWidth > childSpan.clientWidth ) {
+    element.classList.add('small-font');
   }
 
   var tab = {

@@ -168,13 +168,21 @@ button{
   overflow-y: hidden;*/
   color: $inactive-tab-color;
 
-  &.equal-tabs{
+  /*&.equal-tabs{
     .tab-link{
       white-space: normal;
     }
-  }
+  }*/
 
   .tab-link {
+    &.small-font{
+      white-space: normal;
+      font-size: 0.7rem;
+    }
+    >span{
+      max-width: 9em;
+      display: inline-block;
+    }
     text-align: center;
     font-size: $base-font-size;
     display: inline-block;
