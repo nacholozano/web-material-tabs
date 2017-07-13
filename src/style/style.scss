@@ -32,6 +32,7 @@ button{
 
 .tabs-container{
   transition: transform 0.3s;
+  height: 100%;
   .tabs-header-container{
     width: 100%;                 
     transition: transform 0.3s;
@@ -118,6 +119,7 @@ button{
     /*-webkit-box-flex: 1; 
     flex: 1 0 auto;
     height: 0;*/
+    height: 100%;
     overflow: hidden;
       .tabs-move{
         //position: absolute;
@@ -212,6 +214,23 @@ button{
         will-change: transform;
       }
 
+    }
+  }
+}
+
+.tabs-container{
+  /*&.top{
+      
+  }*/
+  &.bottom{
+    position: relative;
+    .tabs-header{
+      padding: 1em;
+    } 
+    .tabs-link{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
   }
 }

@@ -14,6 +14,7 @@ button {
 
 .tabs-container {
   transition: transform 0.3s;
+  height: 100%;
   /*display: -webkit-box;
   display: flex;
   -webkit-box-orient: vertical;
@@ -82,6 +83,7 @@ button {
     /*-webkit-box-flex: 1; 
     flex: 1 0 auto;
     height: 0;*/
+    height: 100%;
     overflow: hidden;
     /*}*/ }
     .tabs-container .tabs-move-container .tabs-move {
@@ -152,3 +154,16 @@ button {
         background-color: #4CAF50;
         display: inline-block;
         will-change: transform; }
+
+.tabs-container {
+  /*&.top{
+      
+  }*/ }
+  .tabs-container.bottom {
+    position: relative; }
+    .tabs-container.bottom .tabs-header {
+      padding: 1em; }
+    .tabs-container.bottom .tabs-link {
+      position: absolute;
+      bottom: 0;
+      width: 100%; }

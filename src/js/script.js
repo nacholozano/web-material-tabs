@@ -86,7 +86,7 @@ var throttleTime = 300,
     containerHeight: dom.tabsHeaderContainer.getBoundingClientRect().height,
     distanceToToggleHeader: 30,
     // firstToggleDistance: trimDecimals( dom.tabHeader.getBoundingClientRect().height) / 2,
-    bottom: false
+    bottom: true
   },
   loader = {
     top: header.height,
@@ -351,11 +351,11 @@ function initialize(){
 
   tabsViews.containerWdith = dom.tabsContainer.clientWidth;
 
-  if ( header.bottom ) { 
+  /*if ( header.bottom ) { 
     dom.tabsMoveContainer.style.height =  window.innerHeight - dom.tabsLink.clientHeight  + 'px';
   }else {
     dom.tabsMoveContainer.style.height =  window.innerHeight + 'px';
-  }
+  }*/
 
   tabsViews.distanceToChangeView = tabsViews.containerWdith/tabsViews.distanceToChangeViewScreenRatio;
 
@@ -378,7 +378,11 @@ function initialize(){
 }
 
 function setDataTabsContent( element ) {
+
   element.style.paddingTop = header.containerHeight + 10 + 'px';
+  if ( header.bottom ) {
+    element.style.paddingBottom = Math.ceil( dom.tabsLink.getBoundingClientRect().height ) + 10 + 'px';
+  }
   element.addEventListener( 'scroll', onScroll );
 }
 
