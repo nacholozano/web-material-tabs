@@ -1,4 +1,4 @@
-# Web Google Material Tabs
+# Web Material Tabs
 
 Angular repo --> https://github.com/nacholozano/ionic-shell
 
