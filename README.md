@@ -1,5 +1,7 @@
 # Web Google Material Tabs
 
+Angular repo --> https://github.com/nacholozano/ionic-shell
+
 Web clone of [Google Material Tabs](https://material.io/guidelines/components/tabs.html). <br>
 Made in VanillaJS with requestAnimationFrame and CSS 2D transforms. <br>
 Built with Ionic 2 in mind so better test touch events in mobile. <br>
